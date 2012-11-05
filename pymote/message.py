@@ -1,0 +1,27 @@
+from copy import deepcopy
+from copy import copy
+class Message(object):
+    """
+    Message class.
+    """
+
+    def __init__(self, source=None, destination=None, nexthop=None, header='', data={}):
+        self.source = source
+        self.destination = destination
+        self.nexthop = nexthop
+        self.header = header
+        self.data = data
+        
+    def __repr__(self):
+        destination = self.destination
+        if self.destination is None:
+            destination = 'Broadcasted'
+        elif isinstance(self.destination,list) and len(self.destination)==1 and \
+            self.destination[0] is None:
+            destination = 'Broadcasting'
+        return "\n------ Message ------ \n     source = %s \ndestination = %s \n     header = '%s' \nid(message) = 0x%x>" % (self.source, destination, self.header, id(self))
+    
+    def copy(self):
+        self.data = deepcopy(self.data) # nodes are protected by __deepcopy__()
+        return copy(self)
+        
