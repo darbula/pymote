@@ -1,5 +1,5 @@
-from pymote.nodealgorithm import NodeAlgorithm
-from pymote.networkalgorithm import NetworkAlgorithm
+from pymote.algorithm import NodeAlgorithm
+from pymote.algorithm import NetworkAlgorithm
 from pymote.utils.tree import get_root_node, MissingTreeKey
 from pymote.logger import logger
 from pymote.conf import settings

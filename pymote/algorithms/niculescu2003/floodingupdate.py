@@ -1,5 +1,5 @@
 from pymote.message import Message
-from pymote.nodealgorithm import NodeAlgorithm
+from pymote.algorithm import NodeAlgorithm
 
 
 
