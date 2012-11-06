@@ -1,5 +1,9 @@
 from pymote.logger import logger
 from pymote.conf import settings
+import png
+from itertools import imap
+from numpy import vstack, uint8, ones
+from numpy.core.numeric import sign,sqrt, Inf
 
 class Environment(object):
     """ ChannelType abstract base class """
@@ -18,11 +22,6 @@ class Environment(object):
 
     def are_visible(self,xy1,xy2):
         raise NotImplementedError
-
-import png
-from itertools import imap
-from numpy import vstack, uint8, ones
-from numpy.core.numeric import sign,sqrt, Inf
 
 class Environment2D(Environment):
     """
