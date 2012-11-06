@@ -9,7 +9,7 @@ from networkx.drawing.nx_pylab import draw_networkx_edges
 from datetime import datetime
 from matplotlib.collections import PatchCollection, Collection
 import networkx as nx
-from pymote.nodealgorithm import NodeAlgorithm
+from pymote.algorithm import NodeAlgorithm
    
 class SimulationGui(QtGui.QMainWindow):
     def __init__(self, net=None, parent=None, fname=None):

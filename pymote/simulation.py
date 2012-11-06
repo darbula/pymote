@@ -1,8 +1,8 @@
 from PyQt4 import QtCore
 import logging
 from pymote.network import Network
-from pymote.networkalgorithm import NetworkAlgorithm
-from pymote.nodealgorithm import NodeAlgorithm
+from pymote.algorithm import NetworkAlgorithm
+from pymote.algorithm import NodeAlgorithm
 
 class Simulation(QtCore.QThread):
     """ Controls single network algorithm and node algorithms simulation.
