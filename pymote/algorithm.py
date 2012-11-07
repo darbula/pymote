@@ -1,5 +1,4 @@
 from pymote.message import Message
-from pymote.algorithm import Algorithm
 from pymote.logger import logger
 
 
