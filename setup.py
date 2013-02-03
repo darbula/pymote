@@ -50,9 +50,12 @@ setup(
         'pypng',
         'ipython',
         'matplotlib',
-        #'PyQt4',
         #'PySide',
+        #'PyQt4',
     ],
+
+#TODO: transfer profile_pymote for ipython into IPYTHONDIR
+
 #    scripts = ['pymote/bin/pymote.bat'],
 #    long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
 #    license='BSD License',
