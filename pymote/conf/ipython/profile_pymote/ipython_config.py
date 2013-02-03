@@ -29,3 +29,5 @@ app.gui = 'qt'
 term_app.gui = 'qt'
 term_app.pylab = 'qt'
     
+import os
+os.environ['QT_API'] = 'pyside'
