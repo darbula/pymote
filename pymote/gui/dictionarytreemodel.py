@@ -1,7 +1,7 @@
 """ This module provides model for QTreeView widget that is created out of 
     dictionary data. """
 
-from PyQt4 import QtCore
+from python_qt_binding import QtCore
 
 class DictionaryTreeModel(QtCore.QAbstractItemModel):
     def __init__(self, parent=None, dic={}):

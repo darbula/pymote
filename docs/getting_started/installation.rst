@@ -79,18 +79,18 @@ and then run these commands:
 .. code-block:: bash
 
     > virtualenv pymote_env
-    > pymote_env/bin/activate
-    (pymote_env)> pip install ...
+    > pymote_env\Scripts\activate.bat
+    (pymote_env)>
     
-Note the ``(pymote_env)`` prefix to prompt which indicates we're using newly created
-environment ``pymote_env``. This environment resides in directory ``pymote_env`` 
-and all subsequent installations using pip should go into this new environment.
+Note the ``(pymote_env)`` prefix to prompt in the last line. This indicates 
+that we have activated newly created environment located in directory 
+``pymote_env``. Further installations using pip go into this new environment.
 
 
 Packages
 --------
 
-Next we should install numpy and scipy packages in this environment. Since these
+Next we should install numpy, scipy and matplotlib packages in this environment. Since these
 packages require compiling we use precompiled binaries to install them into 
 virtual environment using a this 
 `solution <http://stackoverflow.com/a/6753898/1247955>`_:
@@ -110,9 +110,19 @@ virtual environment using a this
     try `CPU-Z <http://www.softpedia.com/get/System/System-Info/CPU-Z.shtml>`_.
 
 
-Matplotlib package is installed the same way as numpy and scipy. Only 
+`Matplotlib binary <https://github.com/matplotlib/matplotlib/downloads>`_
+package is installed the same way as numpy and scipy. Only 
 difference is in the 3rd step where the extracted contents from directory 
 `PLATLIB` should be copied to ``pymote_env/Lib/site-packages/`` directory.
+
+
+For pyreadline package use `easy_install` as pip installs 1.7.1.dev-r0 which
+does not work for iPython:
+
+.. code-block:: bash
+
+    > easy_install pyreadline
+    
 
 Finally to install Pymote and all other required packages use:
 
@@ -120,14 +130,36 @@ Finally to install Pymote and all other required packages use:
 
     > pip install pymote
 
-.. 
-    GUI
-    ---
+iPython config
+--------------
+To set up and tweak IPython default profile first we need to tell it where to look for it. IPython is using environment variable IPYTHONDIR so open editor and load ``pymote_env\Scripts\activate.bat`` file. Add ``set IPYTHONDIR=%VIRTUAL_ENV%\.ipython`` at the top just below the line that sets ``VIRTUAL_ENV`` environment variable.
+Next, on enviroment deactivation IPYTHONDIR environment variable should be unset so edit ``pymote_env\Scripts\deactivate.bat`` and at the top just below the line ``@echo off`` insert this line ``set IPYTHONDIR=``.
+
+TODO: auto transfer profile_pymote dir to IPYTHONDIR 
 
 
-    http://cyrille.rossant.net/making-pyqt4-pyside-and-ipython-work-together/
-    http://stackoverflow.com/questions/1961997/is-it-possible-to-add-pyqt4-pyside-packages-on-a-virtualenv-sandbox
+GUI
+---
+
+For GUI to work properly you need to install PySide (or PyQt4?) Qt bindings? for
+Python. This is achieved by executing 
+`following commands <http://stackoverflow.com/a/4673823/1247955>`_:
+
+.. code-block:: bash
+
+    > easy_install PySide
+    > python pymote_env\Scripts\pyside_postinstall.py -install
+
+
+
     
+TODO: http://cyrille.rossant.net/making-pyqt4-pyside-and-ipython-work-together/
+
+TODO: how to install sip (pyqt) in virtualenv -> pyside is default
+
+TODO: how to install pth so that python_qt_binding is available
+
+.. 
     Ubuntu
     ======
     http://cysec.org/content/installing-matplotlib-and-numpy-virtualenv
