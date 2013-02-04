@@ -33,8 +33,8 @@ class Environment2D(Environment):
         if (path):
             try:
                 r = png.Reader(path)
-                # take every third column
-                self.im = vstack(imap(uint8, r.asDirect()[2]))[:,::3]
+                planes = r.read()[3]['planes'] 
+                self.im = vstack(imap(uint8, r.asDirect()[2]))[:,::planes]
                 assert((r.height,r.width)==self.im.shape)
             except IOError:
                 print 'Can\'t open %s creating new default environment.' % path
