@@ -82,9 +82,9 @@ and then run these commands:
     > pymote_env\Scripts\activate.bat
     (pymote_env)>
     
-Note the ``(pymote_env)`` prefix to prompt in the last line. This indicates 
-that we have activated newly created environment located in directory 
-``pymote_env``. Further installations using pip go into this new environment.
+Note the ``(pymote_env)`` prefix to prompt in the last line. This indicates that we have activated
+newly created environment located in directory ``pymote_env``. Further installations using pip will
+go into this new environment.
 
 
 Packages
@@ -101,8 +101,8 @@ virtual environment using a this
 
 .. code-block:: bash
 
-    > easy_install numpy-x.y.z-<nosse/sse2/sse3>.exe
-    > easy_install scipy-i.j.k-<nosse/sse2/sse3>.exe
+    (pymote_env)> easy_install numpy-x.y.z-<nosse/sse2/sse3>.exe
+    (pymote_env)> easy_install scipy-i.j.k-<nosse/sse2/sse3>.exe
     
 .. note::
 
@@ -121,21 +121,33 @@ does not work for iPython:
 
 .. code-block:: bash
 
-    > easy_install pyreadline
+    (pymote_env)> easy_install pyreadline
     
 
 Finally to install Pymote and all other required packages use:
 
 .. code-block:: bash
 
-    > pip install pymote
+    (pymote_env)> pip install pymote
 
 iPython config
 --------------
 To set up and tweak IPython default profile first we need to tell it where to look for it. IPython is using environment variable IPYTHONDIR so open editor and load ``pymote_env\Scripts\activate.bat`` file. Add ``set IPYTHONDIR=%VIRTUAL_ENV%\.ipython`` at the top just below the line that sets ``VIRTUAL_ENV`` environment variable.
 Next, on enviroment deactivation IPYTHONDIR environment variable should be unset so edit ``pymote_env\Scripts\deactivate.bat`` and at the top just below the line ``@echo off`` insert this line ``set IPYTHONDIR=``.
 
-TODO: auto transfer profile_pymote dir to IPYTHONDIR 
+Start ipython to create IPYTHONDIR directory or create it manually.
+
+Copy pymote/conf/profile_pymote.py dir to IPYTHONDIR.
+
+Start ipython using new profile::
+
+    (pymote_env)> ipython --profile=pymote
+
+
+Shortcut
+--------
+
+For starting ipython in virtual environment with imported pymote there is a batch script provided in ``pymote_env\bin\pymote.bat``. It can be pinned to taskbar using instructions given in that file. It requires PYMOTE_ENV environment variable to be created as path to the pymote virtual environment.
 
 
 GUI
@@ -147,12 +159,10 @@ Python. This is achieved by executing
 
 .. code-block:: bash
 
-    > easy_install PySide
-    > python pymote_env\Scripts\pyside_postinstall.py -install
+    (pymote_env)> easy_install PySide
+    (pymote_env)> python pymote_env\Scripts\pyside_postinstall.py -install
 
 
-
-    
 TODO: http://cyrille.rossant.net/making-pyqt4-pyside-and-ipython-work-together/
 
 TODO: how to install sip (pyqt) in virtualenv -> pyside is default
@@ -168,7 +178,6 @@ TODO: how to install pth so that python_qt_binding is available
     Mac OSX
     =======
 
-    **TODO** (Should setup everything up to but not including
-    "pip install django-cms" like the above)
+    **TODO** 
 
 .. _virtualenv: http://www.virtualenv.org/
