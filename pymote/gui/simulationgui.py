@@ -75,7 +75,7 @@ class SimulationGui(QtGui.QMainWindow):
     
     def draw_network(self, net=None, clear=True, subclusters=None, drawMessages=True):
         if not net: net = self.net
-        currentAlgorithm = self.net.algorithms[self.net.algorithmState['index']]
+        currentAlgorithm = self.net.algorithms[self.net.algorithmState['index']] if self.net.algorithms else None
         if clear: self.axes.clear()
         self.axes.imshow(self.net.environment.im,vmin=0,cmap='binary_r')
         
@@ -92,7 +92,7 @@ class SimulationGui(QtGui.QMainWindow):
         self.draw_labels(net)
         self.drawnNet = net
         step_text = ' (step %d)' % self.net.algorithmState['step'] if isinstance(currentAlgorithm,NodeAlgorithm) else ''
-        self.axes.set_title(currentAlgorithm.name+step_text)
+        self.axes.set_title((currentAlgorithm.name if self.net.algorithms else '')+step_text)
         
         self.refresh_visibility()
         
@@ -392,8 +392,17 @@ class MessageCircle(Circle):
             y=(yd+y)/2.0
         return (x,y)
 
-if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
+def create_window(window_class,**kwargs):
+    """Create a QT window in Python, or interactively in IPython with QT GUI
+    event loop integration.
+    """
+    app_created = False
+    app = QtCore.QCoreApplication.instance() # its already there in interactive console
+    if app is None:
+        app = QtGui.QApplication(sys.argv)
+        app_created = True
+    app.references = set()
+    
     net = None
     fname = None
     if len(sys.argv) > 1:
@@ -402,10 +411,19 @@ if __name__ == '__main__':
             net = read_npickle(fname)
         else:
             QtGui.QMessageBox.critical(
-                        app, "Error opening file %s", fname,
+                        None, "Error opening file %s", fname,
                         QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
-        
-    simgui = SimulationGui(net,fname=fname)
-    simgui.show()
-    try: sys.exit(app.exec_())
-    except SystemExit: pass
+
+    window = window_class(net,fname)
+    app.references.add(window)
+    if app_created:
+        try: sys.exit(app.exec_())
+        except SystemExit: pass
+        app.exec_()
+    window.show()
+    return window
+    
+if __name__ == '__main__':
+    simgui = create_window(SimulationGui)
+
+    

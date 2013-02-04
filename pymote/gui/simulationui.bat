@@ -11,9 +11,10 @@ goto end
 
 :all
 echo Compilation of simulationui.py 
-call pyuic4 simulation.ui -o simulationui.py
-echo Compilation of icons_rc.py
-call pyrcc4 icons.qrc -o icons_rc.py
+call pyside-uic simulation.ui -o simulationui.py
+REM pyside-rcc.exe is in site-packages/PySide dir so either put it in a PATH or copy exe to Scripts
+echo Compilation of icons_rc.py 
+call pyside-rcc icons.qrc -o icons_rc.py
 goto end
 
 :end
