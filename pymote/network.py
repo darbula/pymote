@@ -275,7 +275,7 @@ class Network(Graph):
         #TODO: environment, channeltype
         return {'nodes':pos,
                 'algorithms':algorithms, 
-                'algorithmState':{'name':self.algorithms[self.algorithmState['index']].name,
+                'algorithmState':{'name': self.algorithms[self.algorithmState['index']].name if algorithms else '',
                                   'step':self.algorithmState['step'],
                                   'finished':self.algorithmState['finished']}}
     
