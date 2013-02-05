@@ -628,6 +628,12 @@
    </property>
   </action>
   <action name="actionOpenNetwork">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/fileopen.png</normaloff>:/icons/fileopen.png</iconset>

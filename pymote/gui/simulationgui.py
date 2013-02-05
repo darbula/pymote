@@ -49,6 +49,7 @@ class SimulationGui(QtGui.QMainWindow):
         self.connect(self.ui.treeKey,QtCore.SIGNAL('textEdited(QString)'),self.redraw)
         self.connect(self.ui.propagationError,QtCore.SIGNAL('toggled(bool)'),self.refresh_visibility)
         self.connect(self.ui.locKey,QtCore.SIGNAL('textEdited(QString)'),self.redraw)
+        self.ui.actionOpenNetwork.activated.connect(self.on_actionOpenNetwork_triggered)
 
         # http://matplotlib.sourceforge.net/api/backend_bases_api.html#matplotlib.backend_bases.FigureCanvasBase.mpl_connect
         self.canvas.mpl_connect('pick_event', self.on_pick)
