@@ -26,7 +26,7 @@ class DictionaryTreeModel(QtCore.QAbstractItemModel):
 
     def data(self, index, role):
         if not index.isValid():
-            return QtCore.QVariant()
+            return None
 
         item = index.internalPointer()
         if role == QtCore.Qt.DisplayRole:
@@ -35,7 +35,7 @@ class DictionaryTreeModel(QtCore.QAbstractItemModel):
             if item:
                 return item.data(0)
 
-        return QtCore.QVariant()
+        return None
 
     def index(self, row, column, parent):
         if not self.hasIndex(row, column, parent):
@@ -116,7 +116,7 @@ class TreeItem(object):
         return 1
     
     def data(self, column):
-        return QtCore.QVariant(self.itemData)
+        return self.itemData
 
     def parent(self):
         return self.parentItem
