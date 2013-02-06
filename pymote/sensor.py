@@ -5,6 +5,8 @@ import inspect
 
 
 class Sensor(object):
+    def __init__(self):
+        self.probabilityFunction = None
     def read(self):
         raise NotImplementedError
     def name(self):

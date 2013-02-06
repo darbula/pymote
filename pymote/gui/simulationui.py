@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'simulation.ui'
 #
-# Created: Mon Feb 04 11:43:22 2013
+# Created: Wed Feb 06 01:24:05 2013
 #      by: pyside-uic 0.2.14 running on PySide 1.1.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -268,6 +268,8 @@ class Ui_SimulationWindow(object):
         self.actionSaveNetwork.setIcon(icon4)
         self.actionSaveNetwork.setObjectName("actionSaveNetwork")
         self.actionOpenNetwork = QtGui.QAction(SimulationWindow)
+        self.actionOpenNetwork.setCheckable(False)
+        self.actionOpenNetwork.setChecked(False)
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap(":/icons/fileopen.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionOpenNetwork.setIcon(icon5)
@@ -337,5 +339,6 @@ class Ui_SimulationWindow(object):
         self.actionOpenNetwork.setShortcut(QtGui.QApplication.translate("SimulationWindow", "Ctrl+O", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShowLocalizedSubclusters.setText(QtGui.QApplication.translate("SimulationWindow", "Show localized subclusters", None, QtGui.QApplication.UnicodeUTF8))
         self.actionShowLocalizedSubclusters.setToolTip(QtGui.QApplication.translate("SimulationWindow", "Show localized subclusters based on memory field that has positions and subclusters items.", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionShowLocalizedSubclusters.setShortcut(QtGui.QApplication.translate("SimulationWindow", "Ctrl+L", None, QtGui.QApplication.UnicodeUTF8))
 
 import icons_rc

@@ -10,7 +10,7 @@ from datetime import datetime
 from matplotlib.collections import PatchCollection, Collection
 import networkx as nx
 from pymote.algorithm import NodeAlgorithm
-   
+
 class SimulationGui(QtGui.QMainWindow):
     def __init__(self, net=None, parent=None, fname=None):
         QtGui.QMainWindow.__init__(self)
@@ -23,6 +23,9 @@ class SimulationGui(QtGui.QMainWindow):
         # context menu
         self.ui.nodeInspector.addAction(self.ui.actionCopyInspectorData)
         self.ui.nodeInspector.addAction(self.ui.actionShowLocalizedSubclusters)
+        # callbacks
+        self.ui.actionCopyInspectorData.activated.connect(self.on_actionCopyInspectorData_triggered)
+        self.ui.actionShowLocalizedSubclusters.activated.connect(self.on_actionShowLocalizedSubclusters_triggered)
         
         self.dpi = 72
         # take size of networDisplayWidget
@@ -49,11 +52,21 @@ class SimulationGui(QtGui.QMainWindow):
         self.connect(self.ui.treeKey,QtCore.SIGNAL('textEdited(QString)'),self.redraw)
         self.connect(self.ui.propagationError,QtCore.SIGNAL('toggled(bool)'),self.refresh_visibility)
         self.connect(self.ui.locKey,QtCore.SIGNAL('textEdited(QString)'),self.redraw)
+        # callbacks
         self.ui.actionOpenNetwork.activated.connect(self.on_actionOpenNetwork_triggered)
+        self.ui.actionSaveNetwork.activated.connect(self.on_actionSaveNetwork_triggered)
+        self.ui.actionRun.activated.connect(self.on_actionRun_triggered)
+        self.ui.actionStep.activated.connect(self.on_actionStep_triggered)
+        self.ui.actionReset.activated.connect(self.on_actionReset_triggered)
 
         # http://matplotlib.sourceforge.net/api/backend_bases_api.html#matplotlib.backend_bases.FigureCanvasBase.mpl_connect
         self.canvas.mpl_connect('pick_event', self.on_pick)
     
+    def handleInspectorMenu(self, pos):
+        menu = QtGui.QMenu()
+        menu.addAction('Add')
+        menu.addAction('Delete')
+        menu.exec_(QtGui.QCursor.pos())
     
     def init_sim(self, net):
         self.net = net
@@ -73,6 +86,7 @@ class SimulationGui(QtGui.QMainWindow):
         self.refresh_network_inspector()
         self.draw_network()
         self.reset_zoom()
+        self.refresh_visibility()
     
     def draw_network(self, net=None, clear=True, subclusters=None, drawMessages=True):
         if not net: net = self.net
@@ -169,7 +183,7 @@ class SimulationGui(QtGui.QMainWindow):
                     self.messages.append(msg)
                     msgCircles.append(c)
             for msg in node.inbox:
-                c = MessageCircle(msg,net,'in',3.0,lw=0,picker=3,zorder=3,color='r')
+                c = MessageCircle(msg,net,'in',3.0,lw=0,picker=3,zorder=3,color='g')
                 self.messages.append(msg)
                 msgCircles.append(c)
         if self.messages:
@@ -246,26 +260,22 @@ class SimulationGui(QtGui.QMainWindow):
     Callbacks
     """
     
-    def on_actionRun_triggered(self,checked=None):
-        if checked is None: return
+    def on_actionRun_triggered(self):
         self.ui.logListWidget.clear()        
         print 'running ...',     
         self.sim.stepping = True
         self.sim.run_all()
 
-    def on_actionStep_triggered(self,checked=None):
-        if checked is None: return
+    def on_actionStep_triggered(self):
         print 'next step ...',
         self.sim.run(self.ui.stepSize.value())      
 
-    def on_actionReset_triggered(self,checked=None):
-        if checked is None: return
+    def on_actionReset_triggered(self):
         print 'reset ...',
         self.sim.reset()
         self.redraw()    
 
-    def on_actionCopyInspectorData_triggered(self,checked=None):
-        if checked is None: return
+    def on_actionCopyInspectorData_triggered(self):
         str = 'Node inspector data\n-------------------'
         #raise()
         for qModelIndex in self.ui.nodeInspector.selectedIndexes():
@@ -276,8 +286,7 @@ class SimulationGui(QtGui.QMainWindow):
         event = QtCore.QEvent(QtCore.QEvent.Clipboard)
         app.sendEvent(clipboard, event)
         
-    def on_actionShowLocalizedSubclusters_triggered(self,checked=None):
-        if checked is None: return
+    def on_actionShowLocalizedSubclusters_triggered(self):
         if len(self.ui.nodeInspector.selectedIndexes())==1:
             qModelIndex = self.ui.nodeInspector.selectedIndexes()[0]
             treeItem = qModelIndex.internalPointer()
@@ -301,8 +310,7 @@ class SimulationGui(QtGui.QMainWindow):
                             (len(estimated)*1./len(self.net.pos)*100,
                             len(estimated),len(self.net.pos)))
         
-    def on_actionSaveNetwork_triggered(self, checked=None, *args):
-        if checked is None: return
+    def on_actionSaveNetwork_triggered(self, *args):
         default_filetype = 'gz'
         start = datetime.now().strftime('%Y%m%d') + default_filetype
         
@@ -311,7 +319,7 @@ class SimulationGui(QtGui.QMainWindow):
         filters = ';;'.join(filters)
 
         fname = QtGui.QFileDialog.getSaveFileName(
-            self, "Choose a filename to save to", start, filters, selectedFilter)
+            self, "Choose a filename to save to", start, filters, selectedFilter)[0]
         if fname:
             try:
                 write_npickle(self.net, fname) 
@@ -322,8 +330,7 @@ class SimulationGui(QtGui.QMainWindow):
             else:
                 self.set_title(fname)
     
-    def on_actionOpenNetwork_triggered(self, checked=None, *args):
-        if checked is None: return
+    def on_actionOpenNetwork_triggered(self, *args):
         default_filetype = 'gz'
         start = datetime.now().strftime('%Y%m%d') + default_filetype
         
@@ -332,9 +339,10 @@ class SimulationGui(QtGui.QMainWindow):
         filters = ';;'.join(filters)
 
         fname = QtGui.QFileDialog.getOpenFileName(
-            self, "Choose a file to open", start, filters, selectedFilter)
+            self, "Choose a file to open", start, filters, selectedFilter)[0]
         if fname:
             try:
+                print "open" + fname
                 net = read_npickle(fname)
                 self.init_sim(net)
             except Exception, e:
@@ -397,6 +405,7 @@ def create_window(window_class,**kwargs):
     """Create a QT window in Python, or interactively in IPython with QT GUI
     event loop integration.
     """
+    global app
     app_created = False
     app = QtCore.QCoreApplication.instance() # its already there in interactive console
     if app is None:
@@ -417,11 +426,15 @@ def create_window(window_class,**kwargs):
 
     window = window_class(net,fname)
     app.references.add(window)
+    window.show()
     if app_created:
         try: sys.exit(app.exec_())
         except SystemExit: pass
         app.exec_()
-    window.show()
+    
+    #TODO: if this is enabled then context menu works but console is blocking
+    #app.exec_()
+
     return window
     
 if __name__ == '__main__':

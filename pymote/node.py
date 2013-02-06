@@ -104,7 +104,7 @@ class Node(object):
                                     'outbox':self.box_as_dic('outbox')},
                 '3. memory':self.memory,
                 '4. sensors':{sensor.name(): '%s(%.3f)' % 
-                              (sensor.probabilityFunction.name,sensor.probabilityFunction.scale) 
+                              (sensor.probabilityFunction.name,sensor.probabilityFunction.scale) if hasattr(sensor,'probabilityFunction') else ('',0)  
                               for sensor in self.compositeSensor.sensors}}
                 
     

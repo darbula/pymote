@@ -78,10 +78,10 @@ class DictionaryTreeModel(QtCore.QAbstractItemModel):
     
         
 class TreeItem(object):
-    '''
+    """
     a python object used to return row/column data, and keep note of
     it's parents and/or children
-    '''
+    """
     def __init__(self, dicItem, parentItem):
         key,value = dicItem
         self.itemDataKey = key
@@ -94,12 +94,13 @@ class TreeItem(object):
             items.sort()
             for item in items:
                 self.appendChild(TreeItem(item,self))
-        elif hasattr(value,'get_dic'):
-            self.itemData = key
-            items = value.get_dic().items()
-            items.sort()
-            for item in items:
-                self.appendChild(TreeItem(item,self))
+        #TODO: solve infinite recursion problem 
+        #elif hasattr(value,'get_dic'):
+        #    self.itemData = key
+        #    items = value.get_dic().items()
+        #    items.sort()
+        #    for item in items:
+        #        self.appendChild(TreeItem(item,self))
         else:
             self.itemData = ': '.join([key.__str__(),value.__str__()])
 
