@@ -8,4 +8,4 @@ REM In porperties optionally change font, layout and turn on Quick Edit mode in 
 
 REM Set PYMOTE_ENV environment variable to a path to virtual_env
 if NOT "%PYMOTE_ENV%" == "" ( call %PYMOTE_ENV%\Scripts\activate.bat )
-ipython --pylab --profile=pymote
+ipython --pylab=qt --profile=pymote
