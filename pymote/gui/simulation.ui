@@ -655,6 +655,9 @@
    <property name="toolTip">
     <string>Show localized subclusters based on memory field that has positions and subclusters items.</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
  </widget>
  <tabstops>
