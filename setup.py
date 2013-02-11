@@ -1,48 +1,43 @@
-from distutils.core import setup
-import os
+import os, sys
+import distribute_setup
+distribute_setup.use_setuptools()
+from setuptools import setup, find_packages
 
-# Compile the list of packages available, because distutils doesn't have
-# an easy way to do this.
-packages, data_files = [], []
+
 root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
 pymote_dir = 'pymote'
 
-def fullsplit(path, result=None):
-    """
-    Split a pathname into components (the opposite of os.path.join) in a
-    platform-neutral way.
-    """
-    if result is None:
-        result = []
-    head, tail = os.path.split(path)
-    if head == '':
-        return [tail] + result
-    if head == path:
-        return result
-    return fullsplit(head, [tail] + result)
+import shutil
+#TODO: install bat on windows
+#if sys.platform="win32":
+#    shutil.copy(os.path.join('pymote','conf','ipython','ipython_config.py'),os.path.join(ipythondir, 'profile_pymote'))
+
+# transfer profile_pymote for ipython into IPYTHONDIR
+try:
+    import IPython
+    ipythondir = IPython.utils.path.get_ipython_dir()
+except ImportError, AttributeError:
+    print("Pymote IPython configuration not installed. Install latest IPython and then copy the conf/ipython/profile_pymote/ipython_config.py manually to IPython config dir.")
+else:
+    shutil.copy(os.path.join('pymote','conf','ipython','ipython_config.py'),os.path.join(ipythondir, 'profile_pymote'))
     
-for dirpath, dirnames, filenames in os.walk(pymote_dir):
-    # Ignore PEP 3147 cache dirs and those whose names start with '.'
-    for i, dirname in enumerate(dirnames):
-        if dirname.startswith('.') or dirname == '__pycache__':
-            del dirnames[i]
-    if '__init__.py' in filenames:
-        packages.append('.'.join(fullsplit(dirpath)))
-    elif filenames:
-        data_files.append([dirpath, [os.path.join(dirpath, f) for f in filenames]])
+
 
 setup(
     name = "Pymote",
-    version = '0.1',
+    version = '0.1.1',
     url = 'https://github.com/darbula/pymote',
     author = 'Damir Arbula',
     author_email = 'damir.arbula@gmail.com',
     description = 'A high-level Python library for simulation of distributed algorithms.',
     download_url = '',
-    packages = packages,
-    data_files = data_files,
+    packages = find_packages(),
+    package_data = {
+        '': ['*.bat'],
+    },
+    exclude_package_data = { '': ['README.rst'] },
     install_requires=[
         'networkx',
         'numpy',
@@ -50,14 +45,23 @@ setup(
         'pypng',
         'ipython',
         'matplotlib',
-        #'PySide',
-        #'PyQt4',
+        'PySide',
     ],
+    long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
 
-#TODO: transfer profile_pymote for ipython into IPYTHONDIR
+    #TODO: make algorithms extensible http://pythonhosted.org/distribute/setuptools.html#dynamic-discovery-of-services-and-plugins
+    entry_points = {
+        'pymote.algorithms': [],
+        #TODO: make scripts
+        #'console_scripts': [
+        #    'pymote = pymote.bin:pymote',
+        #],
+        #'gui_scripts': [
+        #    'pymote_simgui = pymote.gui.simulationgui',
+        #]
+    },
 
 #    scripts = ['pymote/bin/pymote.bat'],
-#    long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
 #    license='BSD License',
 #    platforms=['OS Independent'],
 #    classifiers=CLASSIFIERS,
