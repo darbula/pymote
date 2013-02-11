@@ -1,4 +1,4 @@
-from python_qt_binding import QtCore
+from PySide import QtCore
 import logging
 from pymote.network import Network
 from pymote.algorithm import NetworkAlgorithm

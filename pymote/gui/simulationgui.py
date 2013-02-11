@@ -1,5 +1,5 @@
 import sys, os, numpy
-from python_qt_binding import QtGui
+from PySide import QtGui
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
