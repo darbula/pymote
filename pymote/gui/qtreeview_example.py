@@ -1,4 +1,4 @@
-from python_qt_binding import QtGui, QtCore
+from PySide import QtGui, QtCore
 
 HORIZONTAL_HEADERS = ("Surname", "Given Name")
     
