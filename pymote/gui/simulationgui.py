@@ -401,16 +401,14 @@ class MessageCircle(Circle):
             y=(yd+y)/2.0
         return (x,y)
 
+from IPython.lib.guisupport import get_app_qt4, start_event_loop_qt4
 def create_window(window_class,**kwargs):
     """Create a QT window in Python, or interactively in IPython with QT GUI
     event loop integration.
     """
     global app
-    app_created = False
-    app = QtCore.QCoreApplication.instance() # its already there in interactive console
-    if app is None:
-        app = QtGui.QApplication(sys.argv)
-        app_created = True
+    
+    app = get_app_qt4(sys.argv)
     app.references = set()
     
     net = None
@@ -427,14 +425,8 @@ def create_window(window_class,**kwargs):
     window = window_class(net,fname)
     app.references.add(window)
     window.show()
-    if app_created:
-        try: sys.exit(app.exec_())
-        except SystemExit: pass
-        app.exec_()
     
-    #TODO: if this is enabled then context menu works but console is blocking
-    #app.exec_()
-
+    start_event_loop_qt4(app)
     return window
     
 if __name__ == '__main__':
