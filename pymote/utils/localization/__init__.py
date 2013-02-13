@@ -123,7 +123,6 @@ def show_subclusters(net, subclusters):
     
 def show_localized(net, estimated, scale=False, align=True,\
                    display_loc_err=True, show_labels=True):
-        
     # copy estimated so that passed estimated remains unchanged 
     estimated = deepcopy(estimated)
     if align:

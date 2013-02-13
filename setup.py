@@ -3,27 +3,21 @@ import distribute_setup
 distribute_setup.use_setuptools()
 from setuptools import setup, find_packages
 
-
-root_dir = os.path.dirname(__file__)
-if root_dir != '':
-    os.chdir(root_dir)
-pymote_dir = 'pymote'
-
-import shutil
-#TODO: install bat on windows
-#if sys.platform="win32":
-#    shutil.copy(os.path.join('pymote','conf','ipython','ipython_config.py'),os.path.join(ipythondir, 'profile_pymote'))
-
 # transfer profile_pymote for ipython into IPYTHONDIR
-try:
-    import IPython
-    ipythondir = IPython.utils.path.get_ipython_dir()
-except ImportError, AttributeError:
-    print("Pymote IPython configuration not installed. Install latest IPython and then copy the conf/ipython/profile_pymote/ipython_config.py manually to IPython config dir.")
-else:
-    shutil.copy(os.path.join('pymote','conf','ipython','ipython_config.py'),os.path.join(ipythondir, 'profile_pymote'))
+import sys
+if 'install' in sys.argv:
+    import shutil
+    try:
+        import IPython
+        ipythondir = IPython.utils.path.get_ipython_dir()
+    except ImportError, AttributeError:
+        print("Pymote IPython configuration not installed. Install latest IPython and then copy the conf/ipython/profile_pymote/ipython_config.py manually to IPython config dir.")
+    else:
+        profiledir = os.path.join(ipythondir, 'profile_pymote')
+        if not os.path.exists(profiledir):
+            os.makedirs(profiledir)
+        shutil.copy(os.path.join('pymote','conf','ipython','ipython_config.py'),profiledir)
     
-
 
 setup(
     name = "Pymote",
@@ -34,9 +28,9 @@ setup(
     description = 'A high-level Python library for simulation of distributed algorithms.',
     download_url = '',
     packages = find_packages(),
-    package_data = {
-        '': ['*.bat'],
-    },
+    #package_data = {
+    #    '': ['*.bat'],
+    #},
     exclude_package_data = { '': ['README.rst'] },
     install_requires=[
         'networkx',
@@ -52,16 +46,14 @@ setup(
     #TODO: make algorithms extensible http://pythonhosted.org/distribute/setuptools.html#dynamic-discovery-of-services-and-plugins
     entry_points = {
         'pymote.algorithms': [],
-        #TODO: make scripts
-        #'console_scripts': [
-        #    'pymote = pymote.bin:pymote',
-        #],
-        #'gui_scripts': [
-        #    'pymote_simgui = pymote.gui.simulationgui',
-        #]
+        'console_scripts': [
+            'ipymote = pymote.bin.ipymote:start_ipymote',
+        ],
+        'gui_scripts': [
+            'pymote-simgui = pymote.gui.simulationgui:main',
+        ]
     },
 
-#    scripts = ['pymote/bin/pymote.bat'],
 #    license='BSD License',
 #    platforms=['OS Independent'],
 #    classifiers=CLASSIFIERS,
