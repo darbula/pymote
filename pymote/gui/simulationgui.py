@@ -1,15 +1,17 @@
+from pymote import * #@UnusedWildImport
 import sys, os, numpy
-from PySide import QtGui
+from PySide import QtGui, QtCore
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
-from pymote import * #@UnusedWildImport
 from networkx.drawing.nx_pylab import draw_networkx_edges
 from datetime import datetime
 from matplotlib.collections import PatchCollection, Collection
 import networkx as nx
 from pymote.algorithm import NodeAlgorithm
+from simulationui import Ui_SimulationWindow
+from dictionarytreemodel import DictionaryTreeModel
 
 class SimulationGui(QtGui.QMainWindow):
     def __init__(self, net=None, parent=None, fname=None):
@@ -428,8 +430,11 @@ def create_window(window_class,**kwargs):
     
     start_event_loop_qt4(app)
     return window
-    
-if __name__ == '__main__':
+
+def main():
     simgui = create_window(SimulationGui)
+
+if __name__ == '__main__':
+    main()
 
     
