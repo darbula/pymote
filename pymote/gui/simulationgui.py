@@ -432,6 +432,7 @@ def create_window(window_class,**kwargs):
     return window
 
 def main():
+    global simgui
     simgui = create_window(SimulationGui)
 
 if __name__ == '__main__':
