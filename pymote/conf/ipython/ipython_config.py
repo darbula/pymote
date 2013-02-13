@@ -28,6 +28,8 @@ app.gui = 'qt'
 term_app.gui = 'qt'
 term_app.pylab = 'qt'
 
+import os
+os.environ['QT_API'] = 'pyside'
 # Section below is a hack to avoid (context menu) bug http://stackoverflow.com/q/14788501/1247955
 #TODO: check for IPython version, for 0.14 hack is not needed
 from IPython.lib import inputhookqt4

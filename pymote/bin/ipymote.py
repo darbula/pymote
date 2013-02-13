@@ -14,7 +14,8 @@ def start_ipymote():
         
         from IPython.frontend.terminal.ipapp import TerminalIPythonApp
         app = TerminalIPythonApp.instance()
-        app.initialize(argv=['--profile=pymote'])#
+        #TODO: load_entry_point imports pymote and sets matplotlib backend so there is a user warning to be removed
+        app.initialize(argv=['--profile=pymote'])
         app.start()
 
         """
