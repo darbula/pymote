@@ -97,7 +97,7 @@ installed packages.
     ``setx PYMOTE_ENV "C:\path\to\pymote_env"`` to save environment variable permanently.
 
 Open editor and load ``pymote_env\Scripts\activate.bat`` file.
-Add ``set IPYTHONDIR="%VIRTUAL_ENV%\.ipython"`` at the top below the line that sets ``VIRTUAL_ENV``
+Add ``set IPYTHONDIR=%VIRTUAL_ENV%\.ipython`` at the top below the line that sets ``VIRTUAL_ENV``
 environment variable. Next, in ``pymote_env\Scripts\deactivate.bat`` insert line 
 ``set IPYTHONDIR=`` at the top below the line ``@echo off``.
 This way IPython package which is not yet fully compatible with the virtualenv knows where to look
