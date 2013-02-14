@@ -46,15 +46,17 @@ Install Python 2.7 using appropriate `installers <http://www.python.org/download
 
 .. warning::
 
-    After instalation append paths to ``python.exe`` (i.e. ``C:\Python27``) and path to directory ``Scripts`` folder (i.e. ``C:\Python27\Scripts``) in the PATH 
+    After installation append paths to ``python.exe`` (i.e. ``C:\Python27``) and path to directory 
+    ``Scripts`` (i.e. ``C:\Python27\Scripts``) in the PATH 
     `environment variable <http://superuser.com/a/284351/169714>`_.
 
 
 Virtualenv
 ==========
 
-Instead of installing packages globally in these instructions we use `virtualenv`_ to create 
-isolated Python environment and then install packages into this environment.
+Instead of installing packages systemwide in these instructions we use `virtualenv`_ to create an
+isolated Python environment and then install packages into this environment. This procedure is
+more demanding but has the advantage of being independent from the rest of the system.
     
 To install virtualenv first install `distribute <http://pypi.python.org/pypi/distribute>`_ and
 `pip <http://www.pip-installer.org/en/latest/>`_ by downloading 
@@ -88,8 +90,8 @@ environment located in directory ``pymote_env`` is activated so further packages
 into this new environment. You can deactivate environment by running command ``deactivate``.
 
 Set ``PYMOTE_ENV`` environment variable as path to ``pymote_env`` directory. This way all
-executables not being started from the console should know where to look for the environment and
-installed packages.
+executables not being started from the command prompt with activated environment should know where
+to look for the environment and installed packages.
 
 .. note::
 
@@ -106,23 +108,24 @@ for its conguration files.
 .. warning::
 
     After setting the environment variable and changing activate and deactivate scripts you should
-    restart the command prompt and activate ``pymote_env``. If all goes well commands 
-    ``echo %PYMOTE_ENV%`` and ``echo %IPYTHONDIR%`` should print appropriate values.
+    restart the command prompt and reactivate ``pymote_env``. If all goes well commands 
+    ``echo %PYMOTE_ENV%`` and ``echo %IPYTHONDIR%`` should print appropriate environment paths.
 
 Required packages
 =================
 
-All required packages are installed in previously created environment so before continuing ensure 
-that the environment is activated This is indicated with prompt prefix i.e. ``(pymote_env)``.
+All required packages are installed in the environment created in the previous section so before
+continuing ensure that the environment is activated. Active environment is indicated with prompt 
+prefix i.e. ``(pymote_env)``.
 
 NumPy and SciPy
 ---------------
 Since normal installation of these packages requires compiling we make a shortcut by using 
-precompiled binaries and installing them into virtual environment using this 
-`solution <http://stackoverflow.com/a/6753898/1247955>`_:
+precompiled binaries and installing them into virtual environment using
+`this solution <http://stackoverflow.com/a/6753898/1247955>`_:
 
 #. Download `numpy binary <http://sourceforge.net/projects/numpy/files/NumPy/>`_ and `scipy binary <http://sourceforge.net/projects/scipy/files/scipy/>`_ superpack binaries
-#. Extract downloaded exe files with `7-zip <http://www.7-zip.org/download.html>`_
+#. Extract downloaded exe files i.e. with `7-zip <http://www.7-zip.org/download.html>`_
 #. Based on your processor support of `SSE <http://en.wikipedia.org/wiki/Streaming_SIMD_Extensions>`_ instructions install appropriate extracted exe files (nosse/sse2/sse3) using:
 
 .. code-block:: bash
@@ -175,7 +178,7 @@ Finally in order to download and install Pymote and all other required packages 
 
     (pymote_env)> pip install pymote
 
-To check all packages installed in the environment run ``pip freeze`` and the output should look 
+To list all packages installed in the environment run ``pip freeze``. The output should look 
 something like this::
 
     (pymote_env)> pip freeze
@@ -189,22 +192,51 @@ something like this::
     pyside==1.1.2
     scipy==0.11.0
 
-IPython config
-==============
-Start IPython using new profile and in pylab mode with qt4 backend::
+    
+Starting Pymote
+===============
 
-    (pymote_env)> ipython --pylab=qt --profile=pymote
+Pymote can be used in many different ways. Here are some of the recommended ways to start.
+
+Interactive console (IPython)
+-----------------------------
+To use Pymote from interactive console (IPython) simply start provided program ``ipymote.exe``.
+It is located in ``pymote_env\Scripts`` directory and when the ``pymote_env`` environment is
+activated this directory is in the path so you can simply run::
+
+    (pymote_env)> ipymote
+
+The recommended way to avoid starting command prompt, activating the environment and running 
+``ipymote`` is to make a shortcut to the ``ipymote.exe`` on the desktop, taskbar or start menu.
+
+This way console can be additionaly customized by right clicking on the sortcut and selecting
+properties. Highly recommended customizations are:
+
+* in Options tab enable QuickEdit mode
+* in Font tab change font to Consolas and size to 16
+* in Layout tab increase Screen buffer size Height from 300 to at least 3000
+
+.. note::
+
+    The loading of the right environment when shortcut is double clicked is possible via previously
+    set ``PYMOTE_ENV`` environment variable which points to the environment location.
+    
+Finally IPython can be started manually with proper profile::
+
+    (pymote_env)> ipython --profile=pymote
 
 
-Quickstart console
-==================
-For quickstart IPython console with imported pymote and proper config and 
-backend there is a batch script provided in ``pymote_env\bin\pymote.bat``.
-It can be pinned to taskbar as a shortcut using instructions given in that file.
+Simulation GUI
+--------------
+Pymote features simulation GUI which can be started independently by using ``pymote-simgui.exe``.
+The other very convenient way of starting and working with the GUI is from the interactive console 
+by running ``simulationgui.py``::
 
-If Pymote and required packages are installed in dedicated virtual environment 
-you should set PYMOTE_ENV environment variable to a path to the Pymote virtual 
-environment directory.
+    In [1]: %run pymote_env/Lib/site-packages/pymote/gui/simulationgui.py
+
+Since the gui event loop is separated from the console and simulation window can be accessed by
+using variable ``simgui`` all simulation objects (network, nodes, messages...) are fully
+inspectable and usable via console. This can be very convenient when inspecting simulation.
 
 
 .. 
