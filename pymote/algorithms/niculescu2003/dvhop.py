@@ -1,6 +1,5 @@
 from pymote.algorithms.niculescu2003.floodingupdate import FloodingUpdate
-from numpy import concatenate, array
-from matplotlib.mlab import dist
+from numpy import concatenate, array, sqrt, dot
 
 class DVHop(FloodingUpdate):
     """
@@ -46,6 +45,7 @@ class DVHop(FloodingUpdate):
         except KeyError:
             pass
         else:
+            dist = lambda x,y: sqrt(dot(x-y,x-y))
             if landmarks_count>0:
                 node.memory[self.hopsizeKey] = sum([dist(lp[:2],pos) for lp in node.memory[self.dataKey].values()])/\
                                                sum([lp[2] for lp in node.memory[self.dataKey].values()])        

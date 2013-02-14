@@ -10,7 +10,6 @@ from channeltype import ChannelType
 from node import Node
 from numpy.random import rand
 from numpy import array, pi
-from matplotlib import pyplot as plt
 
 class Network(Graph):
     
@@ -147,6 +146,12 @@ class Network(Graph):
                 
     def show(self, savefig='', positions=None, edgelist=None, nodeColor='r',\
              show_labels = True):
+        
+        try:
+            from matplotlib import pyplot as plt
+        except ImportError:
+            raise ImportError("Matplotlib required for show()")
+        
         #TODO: environment when positions defined
         node_size = 30
         label_delta = array([10,10])

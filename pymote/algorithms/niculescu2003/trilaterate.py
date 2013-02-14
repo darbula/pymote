@@ -1,7 +1,6 @@
 from pymote.algorithms.niculescu2003.floodingupdate import FloodingUpdate
 from numpy import array, sqrt, average, dot, diag, ones
 from numpy import linalg
-from matplotlib.mlab import dist
 
 class Trilaterate(FloodingUpdate):
 
@@ -37,6 +36,7 @@ class Trilaterate(FloodingUpdate):
             pos = average(landmark_positions,axis=0)
             W = diag(ones(len(landmarks)))
             counter = 0
+            dist = lambda x,y: sqrt(dot(x-y,x-y))
             while True:
                 J = array([(lp-pos)/dist(lp,pos) for lp in landmark_positions])
                 range_correction = array([dist(landmark_positions[li],pos)-landmark_distances[li] for li,l in enumerate(landmarks)])

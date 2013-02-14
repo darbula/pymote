@@ -1,4 +1,3 @@
-from matplotlib.pyplot import gca
 from pymote.utils.tree import get_root_node
 
 def show_mst(net, treeKey='mst'):
@@ -19,5 +18,6 @@ def show_mst(net, treeKey='mst'):
         levels[net.nodes().index(node)] = level  
         nodesToCheck += [(child,level+1) for child in node.memory[treeKey]['children']]
     net.show(edgelist=edgelist,nodeColor=levels)
+    from matplotlib.pyplot import gca
     gca().set_title('Minimum spanning tree in memory[\'%s\']' % treeKey)
     
