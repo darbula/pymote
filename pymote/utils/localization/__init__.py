@@ -4,8 +4,6 @@ from pymote.utils.localization.aoastitcher import AoAStitcher
 from numpy.linalg import eig, det, inv, pinv
 from copy import deepcopy
 from pymote.utils.localization.diststitcher import DistStitcher
-from matplotlib.pyplot import gca
-from matplotlib.collections import LineCollection
 
 def align_clusters(dst, src, scale):
     """ Scale, rotate, translate srcLoc w.r.t. dst. """ 
@@ -123,6 +121,9 @@ def show_subclusters(net, subclusters):
     
 def show_localized(net, estimated, scale=False, align=True,\
                    display_loc_err=True, show_labels=True):
+    from matplotlib.pyplot import gca
+    from matplotlib.collections import LineCollection
+    
     # copy estimated so that passed estimated remains unchanged 
     estimated = deepcopy(estimated)
     if align:
