@@ -38,7 +38,7 @@ environment (see note below) please follow the instructions for your OS in the f
     this can result in situation where two programs need different versions of
     same package. This is resolved by using isolated environments.
 
-.. figure:: _images\virtualenv_system.png
+.. figure:: _images/virtualenv_system.png
    :align: center
    
    Virtual environments live in a separate directories and they are independent form systemwide
@@ -78,7 +78,7 @@ To install ``virtualenv`` first install ``distribute`` and ``pip``:
 #.  enter elevated/administrator command prompt: right click on the Command prompt icon and select
     Run as administrator
 
-        .. image:: _images\command_prompt_administrator.png
+        .. image:: _images/command_prompt_administrator.png
            :align: center
 
 #.  Navigate to the directory where the files were downloaded (i.e. ``C:\Users\user\Desktop``) and
@@ -267,7 +267,7 @@ activated this directory is in the system path so you can simply run::
 
     (pymote_env)> ipymote
 
-.. image:: _images\ipymote_screenshot.png
+.. image:: _images/ipymote_screenshot.png
    :align: center
     
 The recommended way to avoid starting command prompt, activating the environment and running 
