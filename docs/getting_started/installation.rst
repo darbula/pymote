@@ -93,7 +93,7 @@ To install ``virtualenv`` first install ``distribute`` and ``pip``:
 
 #.  Install ``virtualenv``::
 
-        C:\Users\user\Desktop> pip install ``virtualenv``.
+        C:\Users\user\Desktop> pip install virtualenv
 
 .. note::
 
@@ -222,7 +222,7 @@ PySide
 ------
 For Pymote GUI part of the library PySide Qt bindings for Python should be installed. This is 
 achieved `using this solution <http://stackoverflow.com/a/4673823/1247955>`__, that is, running 
-following commands::
+following commands:
 
 .. code-block:: bash
 
