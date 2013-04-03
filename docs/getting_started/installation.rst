@@ -76,14 +76,19 @@ Create virtual environment::
 
 Activate virtual environment::
     
-    $ source bmo_env/bin/activate
+    $ source pymote_env/bin/activate
 
 Required packages
 =================
-
 Install required python packages into virtual environment::
     
-    (pymote_env)$ pip install distribute numpy scipy tornado pyzmq ipython pygments matplotlib networkx pypng
+    (pymote_env)$ pip install numpy scipy ipython matplotlib networkx pypng distribute
+
+IPython notebook
+----------------
+Optionally for IPython notebook install these::
+
+    (pymote_env)$ pip install tornado pyzmq pygments
     
 PySide
 ------
@@ -93,7 +98,7 @@ Installing PySide into virtual environment can take some time and disk space. To
     $ sudo apt-get update
     $ sudo apt-get install python-pyside
     
-To install it into virtual environment use these commands with environment activated::
+To install it into virtual environment use these commands::
 
     $ sudo apt-get install cmake qt4-qmake qt-sdk
     (pymote_env)$ pip install pyside
