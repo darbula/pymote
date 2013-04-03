@@ -51,6 +51,67 @@ simply by using::
     > pip install pymote
 
 
+Linux (Ubuntu)
+**************
+
+Python 2.7 should already be installed on all new releases of Linux.
+
+Install packages required for getting and compiling the source::
+    
+    $ sudo apt-get install git libatlas-dev libpng12-dev libfreetype6 libfreetype6-dev g++ libzmq-dev liblapack-dev gfortran python-dev build-essential
+
+Virtualenv
+==========
+
+Install pip and virtualenv::
+    
+    $ sudo apt-get install python-pip python-virtualenv
+
+Create virtual environment::
+    
+    $ virtualenv pymote_env
+
+.. 
+    u ~/.profile datoteku ubaciti export PYMOTE_ENV="/path/to/pymote_env"
+
+Activate virtual environment::
+    
+    $ source bmo_env/bin/activate
+
+Required packages
+=================
+
+Install required python packages into virtual environment::
+    
+    (pymote_env)$ pip install distribute numpy scipy tornado pyzmq ipython pygments matplotlib networkx pypng
+    
+PySide
+------
+Installing PySide into virtual environment can take some time and disk space. To avoid this, it can be installed systemwide using `these instructions <http://qt-project.org/wiki/PySide_Binaries_Linux>`_ like this::
+
+    $ sudo add-apt-repository ppa:pyside
+    $ sudo apt-get update
+    $ sudo apt-get install python-pyside
+    
+To install it into virtual environment use these commands with environment activated::
+
+    $ sudo apt-get install cmake qt4-qmake qt-sdk
+    (pymote_env)$ pip install pyside
+
+Pymote
+======
+
+To install latest development vesrion of the Pymote use source from github repo::
+    
+    pip install -e git+https://github.com/darbula/pymote.git#egg=Pymote
+
+or for latest version use package from PyPI::
+    
+    (pymote_env)$ pip install Pymote
+
+Start interactive console::
+    
+    (pymote_env)$ ipymote
 
 Windows
 *******
