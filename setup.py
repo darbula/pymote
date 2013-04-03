@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 # transfer profile_pymote for ipython into IPYTHONDIR
 import sys
-if 'install' in sys.argv:
+if 'install' in sys.argv or 'develop' in sys.argv:
     import shutil
     try:
         import IPython
