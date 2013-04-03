@@ -1,6 +1,6 @@
 def start_ipymote():
     import os, sys
-    if sys.platform.startswith("win32"):
+    if sys.platform.startswith("win32") or sys.platform.startswith("linux2"):
         try:
             os.environ['VIRTUAL_ENV'] = os.environ['PYMOTE_ENV']
             os.environ['IPYTHONDIR'] = os.path.join(os.environ['PYMOTE_ENV'],'.ipython')
@@ -13,5 +13,4 @@ def start_ipymote():
         app.start()
     
     #TODO: support other platforms
-    #elif sys.platform.startswith("linux2"):
     #elif sys.platform.startswith("darwin"):
