@@ -51,9 +51,10 @@ def get_crb(net, sensor,compass='off', loc_type='anchor-free', anchors=[]):
     POS is n by 2 matrix of X and Y coordinates of n nodes 
     SIGMA is standard deviation on measurement vector.
     
-     'compass' - 'off' (default) or 'on' which means all nodes have compass
-     'loc_type' - 'anchor-free' (default) or 'anchored'
-     'anchors' - list of anchor nodes, used only when loc_type is 'anchored' 
+    Arguments:
+     `compass` -- 'off' (default) or 'on' which means all nodes have compass
+     `loc_type` -- 'anchor-free' (default) or 'anchored'
+     `anchors` -- list of anchor nodes, used only when loc_type is 'anchored' 
     """
     
     if loc_type=='anchored' and not anchors:

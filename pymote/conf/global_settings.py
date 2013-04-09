@@ -1,9 +1,13 @@
-# Default pymote settings. Override these with settings in the module
-# pointed-to by the PYMOTE_SETTINGS_MODULE environment variable or by
-# using settings.configure(**settings) or settings.load('path.to.settings')
+"""Default pymote settings.
+
+Override these with settings in the module pointed-to by the 
+PYMOTE_SETTINGS_MODULE environment variable or by using 
+settings.configure(**settings) or settings.load('path.to.settings')
+
+"""
+
 import scipy.stats 
 from numpy import pi
-from pymote.algorithms.readsensors import ReadSensors
 
 ###########
 # NETWORK #

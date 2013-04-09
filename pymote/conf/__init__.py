@@ -4,10 +4,13 @@ Settings and configuration for pymote.
 Values are taken first from pymote.conf.global_settings as defaults. 
 To override default values 
 - specify PYMOTE_SETTINGS_MODULE environment variable as module name to be used
- or if settings are imported but not configured (accessed):
-- use settings.configure(SETTING1=value1,SETTING2=value2)
- or if they are configured:
+
+or if settings are imported but not configured (accessed):
+- use settings.configure(SETTING1=value1, SETTING2=value2)
+
+or if they are configured:
 - use settings.load(module)
+
 """
 
 import os
@@ -21,11 +24,15 @@ from pymote.logger import logger
 ENVIRONMENT_VARIABLE = "PYMOTE_SETTINGS_MODULE"
 
 class LazySettings(object):
+    
     """
-    A lazy proxy for either global pymote settings or a custom settings object.
+    A lazy proxy for either global pymote settings or custom settings object.
+    
     The user can manually configure settings prior to using them. Otherwise,
     pymote uses the settings module pointed to by PYMOTE_SETTINGS_MODULE.
+    
     """
+    
     def __init__(self):
         self._wrapped = None
 
@@ -43,7 +50,9 @@ class LazySettings(object):
                 self._setup()
                 setattr(self._wrapped, name, value)
             else:
-                logger.error('For manual settings override use settings.configure(SETTING1=value1,SETTING2=value2) or PYMOTE_SETTINGS_MODULE.')
+                logger.error('For manual settings override use'
+                             ' settings.configure(SETTING1=value1,'
+                             ' SETTING2=value2) or PYMOTE_SETTINGS_MODULE.')
 
     def __delattr__(self, name):
         if name == "_wrapped":
@@ -52,7 +61,9 @@ class LazySettings(object):
             self._setup()
             delattr(self._wrapped, name)
         else:
-            logger.error('For manual settings override use settings.configure(SETTING1=value1,SETTING2=value2) or PYMOTE_SETTINGS_MODULE.')
+            logger.error('For manual settings override use'
+                         ' settings.configure(SETTING1=value1, SETTING2=value2)'
+                         ' or PYMOTE_SETTINGS_MODULE.')
 
     # introspection support:
     __members__ = property(lambda self: self.__dir__())
@@ -64,9 +75,11 @@ class LazySettings(object):
     
     def _setup(self, settings_module=None):
         """
-        Load the settings module pointed to by the environment variable. This
-        is used the first time we need any settings at all, if the user has not
-        previously configured the settings manually.
+        Load the settings module pointed to by the environment variable.
+        
+        This is used the first time we need any settings at all, if the user 
+        has not previously configured the settings manually.
+        
         """
         if settings_module is None:
             try:
@@ -75,49 +88,59 @@ class LazySettings(object):
                     raise KeyError
             except KeyError:
                 settings_module = None
-                logger.warning("Environment variable %s is undefined, using global_settings." % ENVIRONMENT_VARIABLE)
-                #raise ImportError("Settings cannot be imported, because environment variable %s is undefined." % ENVIRONMENT_VARIABLE)
+                logger.warning("Environment variable %s is undefined, using"
+                               " global_settings." % ENVIRONMENT_VARIABLE)
+                # raise ImportError("Settings cannot be imported, because 
+                # environment variable %s is undefined." % ENVIRONMENT_VARIABLE)
             else:
-                logger.info("Settings module is specified in environment variable %s." % (ENVIRONMENT_VARIABLE))
+                logger.info("Settings module is specified in environment"
+                            "variable %s." % (ENVIRONMENT_VARIABLE))
 
         if settings_module is not None:
-            logger.info("Using module %s to override global_settings." % (settings_module))
+            logger.info("Using module %s to override global_settings."\
+                         % (settings_module))
         
         self._wrapped = Settings(settings_module)
 
     def configure(self, default_settings=global_settings, **options):
         """
-        Called to manually configure the settings. The 'default_settings'
-        parameter sets where to retrieve any unspecified values from (its
-        argument must support attribute access (__getattr__)).
+        Called to manually configure the settings.
+        
+        The `default_settings` parameter sets where to retrieve any unspecified
+        values from (its argument must support attribute access (__getattr__)).
+        
         """
         if self._wrapped != None:
-            raise RuntimeError('Settings already configured or accessed no further configuration allowed.')
+            raise RuntimeError('Settings already configured or accessed no'
+                               ' further configuration allowed.')
         holder = UserSettingsHolder(default_settings)
         for name, value in options.items():
             setattr(holder, name, value)
         self._wrapped = holder
     
     def load(self, module):
-        """ Load module and override settings with values in it. It works  even 
-            if settings have been configured already. """
+        """
+        Load module and override settings with values in it. It works  even if 
+        settings have been configured already.
+        """
         self._setup(module)
         
         
     def configured(self):
-        """
-        Returns True if the settings have already been configured.
-        """
+        """Returns True if the settings have already been configured."""
         return bool(self._wrapped)
+    
     configured = property(configured)
 
 
 class Settings(object):
+    
     def __init__(self, settings_module=None):
         # update this dict from global settings (but only for ALL_CAPS settings)
         for setting in dir(global_settings):
             if setting == setting.upper():
-                logger.info('Setting %s on global value: %s' % (setting,str(getattr(global_settings, setting))))
+                logger.info('Setting %s on global value: %s'\
+                            % (setting,str(getattr(global_settings, setting))))
                 setattr(self, setting, getattr(global_settings, setting))
 
         # store the settings module in case someone later cares
@@ -127,7 +150,9 @@ class Settings(object):
             try:
                 mod = import_module(self.SETTINGS_MODULE)
             except ImportError, e:
-                raise ImportError("Could not import settings '%s' (Is it on sys.path? Does it have syntax errors?): %s" % (self.SETTINGS_MODULE, e))
+                raise ImportError("Could not import settings '%s' (Is it on"
+                                  " sys.path? Does it have syntax errors?): %s"\
+                                   % (self.SETTINGS_MODULE, e))
         
             for setting in dir(mod):
                 if setting == setting.upper():
@@ -135,10 +160,9 @@ class Settings(object):
                     setattr(self, setting, getattr(mod, setting))
 
 class UserSettingsHolder(object):
-    """
-    Holder for user configured settings.
-    """
-    # SETTINGS_MODULE doesn't make much sense in the manually configured (standalone) case.
+    """Holder for user configured settings."""
+    # SETTINGS_MODULE doesn't make much sense in the manually configured
+    # (standalone) case.
     SETTINGS_MODULE = None
 
     def __init__(self, default_settings):
@@ -175,16 +199,17 @@ def _resolve_name(name, package, level):
 
 
 def import_module(name, package=None):
-    """Import a module.
+    """
+    Import a module.
 
-    The 'package' argument is required when performing a relative import. It
+    The `package` argument is required when performing a relative import. It
     specifies the package to use as the anchor point from which to resolve the
     relative import to an absolute import.
 
     """
     if name.startswith('.'):
         if not package:
-            raise TypeError("relative imports require the 'package' argument")
+            raise TypeError("Relative imports require the 'package' argument.")
         level = 0
         for character in name:
             if character != '.':

@@ -1,6 +1,9 @@
 from pymote.algorithm import NetworkAlgorithm
+
+
 class ReadSensors(NetworkAlgorithm):
-    """ Read all sensors and save data in memory for latter usage. """
+
+    """Read all sensors and save data in memory for latter usage."""
     
     def run(self):
         if not hasattr(self, 'sensorReadingsKey'):

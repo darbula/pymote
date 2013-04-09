@@ -5,6 +5,14 @@ from pymote.logger import logger
 
 class Algorithm(object):
     
+    """
+    Abstract base class for all algorithms.
+    
+    Currently there are two subclasses NodeAlgorithm for distributed algorithms
+    and NetworkAlgorithm for centralized algorithms. 
+     
+    """
+    
     required_params = ()
     default_params = {}
 
@@ -33,27 +41,31 @@ class Algorithm(object):
             
 
 class NodeAlgorithm(Algorithm):
-    """ NodeAlgorithm class. 
-        This class is used as base class and specific algorithm should be its 
-        subclass. In subclass these functions and attributes should be defined:
-        - class attribute STATUS - dictionary in which keys are all possible 
-          node statuses and values are functions defining what node should do 
-          if in that status. STATUS must be written at the bottom after all
-          functions are defined
-        - all functions in STATUS.values() should be defined
-        - initializer: (optionally) Pass INI message to nodes that should 
-          start the algorithm and set some attributes needed by the specific 
-          algorithm
-        As indication of global termination of algorithm function should 
-        optionally return true."""
+    
+    """
+    Abstract base class for specific distributed algorithms.
+    
+    In subclass following functions and attributes should be defined:
+    
+    - class attribute STATUS - dictionary in which keys are all possible 
+      node statuses and values are functions defining what node should do 
+      if in that status.
+      STATUS must be written at the bottom after all functions are defined
+    - all functions in STATUS.values() should be defined as class methods
+    - initializer: (optionally) Pass INI message to nodes that should 
+      start the algorithm and set some attributes needed by the specific 
+      algorithm
+       
+    As indication of global termination of algorithm some method could 
+    optionally return True.
+    
+    """
         
     INI = 'initialize'
     STATUS = {}
     
-    
     def initializer(self):
-        """ Pass INI message to certain nodes in network based on type. """
-        
+        """ Pass INI message to certain nodes in network based on type."""
         node = self.network.nodes()[0]
         self.network.outbox.insert(0,Message(header=NodeAlgorithm.INI, 
                                              destination=node))
@@ -61,7 +73,7 @@ class NodeAlgorithm(Algorithm):
             node.status = 'IDLE'
             
     def step(self, node):
-        """ Executes one step of the algorithm for given node. """
+        """ Executes one step of the algorithm for given node."""
         message = node.receive()
         if message:
             if (message.destination==None or message.destination==node):
@@ -88,10 +100,16 @@ class NodeAlgorithm(Algorithm):
         
 
 class NetworkAlgorithm(Algorithm):
-    """ NetworkAlgorithm class. 
-        This class is used as base class holding real network algorithm 
-        classes in its __subclassess__ for easy instantiation
-        Method __init__ and run should be implemented in subclass. """
+    
+    """
+    Abstract base class for specific centralized algorithms.
+    
+    This class is used as base class holding real network algorithm 
+    classes in its __subclassess__ for easy instantiation
+   
+    Method __init__ and run should be implemented in subclass.
+       
+    """
     
     def run(self):
         raise NotImplementedError
