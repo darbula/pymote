@@ -17,4 +17,7 @@ develop-eggs
 # Installer logs
 pip-log.txt
 
-
+*.log
+*.tar.gz
+*.project
+*.pydevproject
