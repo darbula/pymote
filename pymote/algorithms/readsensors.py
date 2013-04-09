@@ -10,4 +10,4 @@ class ReadSensors(NetworkAlgorithm):
             self.sensorReadingsKey = 'sensorReadings'
         for node in self.network.nodes():
             node.memory.update({self.sensorReadingsKey:
-                                node.compositeSensor.read(node)})
+                                node.compositeSensor.read()})

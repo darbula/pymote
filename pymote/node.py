@@ -1,19 +1,14 @@
-from pymote.utils.memory.positions import Positions
-from copy import deepcopy
-from pymote.utils.memory import MemoryStructure
 from pymote.logger import logger
 from pymote.sensor import CompositeSensor
-#from pymote.actuator import *
 from pymote.conf import settings
 
 
 class Node(object):
-    """ Node class. """
+
     cid = 1
     
     def __init__(self, network=None, commRange=None, sensors=None):
-        self.compositeSensor = CompositeSensor(sensors or settings.SENSORS)
-        #self.compositeActuator = CompositeActuator(actuators or settings.ACTUATORS)
+        self._compositeSensor = CompositeSensor(self, sensors or settings.SENSORS)
         self.network = network
         self._commRange = commRange or settings.COMM_RANGE
         self.id = self.__class__.cid
@@ -52,6 +47,7 @@ class Node(object):
         Messages are processed without delay only if they are pushed into empty 
         inbox. So if inbox is empty when push_to_inbox is called _inboxDelay is
         set to True. 
+        
         """
         if self._inbox and not self._inboxDelay:
             message = self._inbox.pop()
@@ -70,6 +66,14 @@ class Node(object):
         self._inboxDelay = self._inboxDelay or not self._inbox
         self._inbox.insert(0,message)
 
+    @property
+    def compositeSensor(self):
+        return self._compositeSensor
+    
+    @compositeSensor.setter
+    def compositeSensor(self,compositeSensor):
+        self._compositeSensor = CompositeSensor(self, compositeSensor)
+        
     @property
     def commRange(self):
         return self._commRange

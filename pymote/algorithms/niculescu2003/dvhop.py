@@ -11,7 +11,7 @@ class DVHop(FloodingUpdate):
                                                         )
     
     def initiator_condition(self, node):
-        node.memory[self.truePositionKey] = node.compositeSensor.read(node).get('TruePos',None)
+        node.memory[self.truePositionKey] = node.compositeSensor.read().get('TruePos',None)
         # true if node is one of the landmarks
         return node.memory[self.truePositionKey] is not None
             

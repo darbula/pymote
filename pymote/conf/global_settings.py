@@ -29,7 +29,7 @@ CHANNEL_TYPE = 'Udg'
 ##########
 #  NODE  #
 ##########
-SENSORS = ()
+SENSORS = ('NeighborsSensor')
 #SENSORS = ('AoASensor','DistSensor')
 ACTUATORS = ()
 COMM_RANGE = 100
