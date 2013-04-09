@@ -1,4 +1,3 @@
-from pymote.logger import logger
 from pymote.conf import settings
 import png
 from itertools import imap
@@ -38,9 +37,9 @@ class Environment2D(Environment):
                 assert((r.height,r.width)==self.im.shape)
             except IOError:
                 print 'Can\'t open %s creating new default environment.' % path
-                self.im = uint8(ones((settings.ENVIRONMENT2D_SIZE))*255)
+                self.im = uint8(ones((settings.ENVIRONMENT2D_SHAPE))*255)
         else:
-            self.im = uint8(ones((settings.ENVIRONMENT2D_SIZE))*255)
+            self.im = uint8(ones((settings.ENVIRONMENT2D_SHAPE))*255)
         
         self.dim = 2
         scale = not scale and 1 or int(scale)

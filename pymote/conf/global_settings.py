@@ -13,7 +13,7 @@ from numpy import pi
 # NETWORK #
 ###########
 ENVIRONMENT = 'Environment2D'
-ENVIRONMENT2D_SIZE = (600,600)
+ENVIRONMENT2D_SHAPE = (600,600)
 
 
 ALGORITHMS = ()
