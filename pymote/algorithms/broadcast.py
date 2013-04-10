@@ -8,20 +8,22 @@ class Flood(NodeAlgorithm):
     default_params = {'neighborsKey':'Neighbors'}
 
     def initializer(self):
+        ini_nodes = []
         for node in self.network.nodes():
             node.memory[self.neighborsKey] = node.compositeSensor.read()['Neighbors']
             node.status = 'IDLE'
-        ini_node = self.network.nodes()[0]
-        ini_node.status = 'INITIATOR'
-        self.network.outbox.insert(0,Message(header=NodeAlgorithm.INI,
-                                             destination=ini_node))
+            if node.memory.has_key(self.informationKey):
+                node.status = 'INITIATOR'
+                ini_nodes.append(node)
+        for ini_node in ini_nodes:
+            self.network.outbox.insert(0,Message(header=NodeAlgorithm.INI,
+                                                 destination=ini_node))
 
     def initiator(self, node, message):
         if message.header==NodeAlgorithm.INI:
-            node.memory[self.informationKey] = message.data
             node.send(Message(header='Information',  # default destination: send to every neighbor
-                              data=message.data))
-        node.status = 'DONE'
+                              data=node.memory[self.informationKey]))
+            node.status = 'DONE'
 
     def idle(self, node, message):
         if message.header=='Information':
