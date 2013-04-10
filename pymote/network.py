@@ -221,7 +221,7 @@ class Network(Graph):
         logger.info('Resetting all nodes.')
     
     def communicate(self):
-        """ Pass all messages from node's outboxes to its neighbors inboxes. """
+        """Pass all messages from node's outboxes to its neighbors inboxes."""
         # Collect messages
         for node in self.nodes():
             self.outbox.extend(node.outbox)
