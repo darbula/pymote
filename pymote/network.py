@@ -93,11 +93,15 @@ class Network(Graph):
         logger.debug('Node with id %d is removed.' % node.id)
     
     def add_node(self, node=None, pos=None, ori=None, commRange=None):
-        """ Add node to network.
+        """
+        Add node to network.
         
-            node -- node to add, default: new node is created
-            pos -- position (x,y), default: random free position in environment 
-            ori -- orientation from 0 to 2*pi, default: random orientation """
+        Attributes:
+          `node` -- node to add, default: new node is created
+          `pos` -- position (x,y), default: random free position in environment 
+          `ori` -- orientation from 0 to 2*pi, default: random orientation
+            
+        """
         if (not node):
             node = Node(commRange=commRange)
         assert(isinstance(node,Node))

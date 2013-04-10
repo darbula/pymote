@@ -31,8 +31,18 @@ class Node(object):
         self.memory = {}
     
     def send(self, message):
+        """
+        Send a message to nodes listed in message's destination field. 
+        
+        Note: Destination should be a list of nodes or one node.
+        
+        Update message's source field and  inserts in node's outbox one copy 
+        of it for each destination. 
+        
+        """
         message.source = self
-        message.destination = isinstance(message.destination,list) and message.destination or [message.destination]
+        message.destination = isinstance(message.destination,list) and\
+                              message.destination or [message.destination]
         for destination in message.destination:
             logger.debug('Node %d sent message %s.' % (self.id,message.__repr__()))
             m = message.copy()
@@ -46,7 +56,10 @@ class Node(object):
         Messages should be delayed for one step for visualization purposes.
         Messages are processed without delay only if they are pushed into empty 
         inbox. So if inbox is empty when push_to_inbox is called _inboxDelay is
-        set to True. 
+        set to True.
+        
+        This method is used only internally and is not supposed to be used 
+        inside algorithms. 
         
         """
         if self._inbox and not self._inboxDelay:
