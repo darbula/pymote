@@ -1,6 +1,9 @@
 Distributing to PyPI
 ====================
 
+http://docs.python.org/2/distutils/index.html#distutils-index
+
+
 Windows
 -------
 
@@ -24,3 +27,5 @@ Issue these commands::
 
     > setx HOME C:\Users\<user>
     > python setup.py sdist upload register
+    
+    
