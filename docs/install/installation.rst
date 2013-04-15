@@ -1,10 +1,8 @@
 Installation
 ############
-
-
 This document assumes you are familiar with Python and using command prompt or shell. It should 
 outline the necessary steps to install software needed for using Pymote i.e. to start with the 
-:doc:`tutorial`.
+:doc:`../getting_started/tutorial`.
 
 Requirements
 ************
@@ -32,16 +30,18 @@ Requirements
 If you don't have all required packages already installed and/or want them installed in an isolated
 environment (see note below) please follow the instructions for your OS in the following sections.
 
-..  note::
+.. _discourage-systemwide:
 
+..  note::
+    
     Since there can be only one version of any package installed systemwide in some cases 
-    this can result in situation where two programs need different versions of
-    same package. This is resolved by using isolated environments.
+    this can result in situation where two programs need different versions of the
+    same package. This is resolved by using isolated virtual environments.
 
 .. figure:: _images/virtualenv_system.png
    :align: center
    
-   Virtual environments live in a separate directories and they are independent form systemwide
+   Virtual environments *live* in a separate directories and they are independent form systemwide
    Python installation.
    
 Alternatively, if none of the above is your concern all required packages can be installed 
@@ -70,6 +70,8 @@ Install pip and virtualenv::
 Create virtual environment::
     
     $ virtualenv pymote_env
+
+.. _linux-venvact:
 
 Activate virtual environment::
     
@@ -106,11 +108,11 @@ Pymote
 Finally, in order to download and install Pymote and all other required packages there are two
 aviliable options, use one of them:
 
-#. Development: to install latest development version of the Pymote use source from github repo::
+#. *Development*: to install latest development version of the Pymote use source from github repo::
     
     (pymote_env)> pip install -e git+https://github.com/darbula/pymote.git#egg=Pymote
 
-#. Stable: for latest stable version use package from PyPI::
+#. *Stable*: for latest stable version use package from PyPI::
     
     (pymote_env)> pip install Pymote
 
@@ -181,6 +183,8 @@ Pymote virtual environment
     
     This command has made a new directory ``pymote_env`` inside ``C:\Users\user\Documents`` with
     separate python interpreter and two necessary packages. 
+
+.. _windows-venvact:
 
 #.  Activate environment::
 
@@ -307,6 +311,7 @@ aviliable options, use one of them:
     
     (pymote_env)> pip install Pymote
     
+.. _pymote-deps:
 
 To list all packages installed in the environment run ``pip freeze``. The output should look 
 something like this::

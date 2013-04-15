@@ -1,6 +1,8 @@
 Starting Pymote
 ***************
-Pymote can be used in many different ways and here are some few recommended ways to start it.
+Before starting, make sure that virtual environment is activated (:ref:`linux <linux-venvact>`, 
+:ref:`windows <windows-venvact>`), unless packages are installed systemwide, which is 
+:ref:`discouraged <discourage-systemwide>` and check all :ref:`dependencies <pymote-deps>`.
 
 
 Interactive console (IPython)
@@ -9,12 +11,13 @@ To use Pymote from the interactive console (IPython) start provided program
 ``ipymote`` (in Windows ``ipymote.exe``) with previously activated virtual environment::
     
     (pymote_env)> ipymote
+
 .. note::
 
     **Windows only**
     
     The recommended way to avoid starting command prompt, activating the virtual environment and
-    running ``ipymote`` in is to make a shortcut to the ``ipymote.exe`` file on the desktop, 
+    running ``ipymote`` in it is to make a shortcut to the ``ipymote.exe`` file on the desktop, 
     taskbar or start menu.
 
     This way console can be additionaly customized by right clicking on the shortcut and selecting
@@ -42,7 +45,7 @@ To use Pymote from the interactive console (IPython) start provided program
     Add shortcut...
 
 
-IPython can also be started by starting IPython directly and using dedicated ``pymote`` profile::
+Pymote can also be started by starting IPython directly and using dedicated ``pymote`` profile::
 
     (pymote_env)> ipython --profile=pymote
 
@@ -56,7 +59,7 @@ IPython can also be started by starting IPython directly and using dedicated ``p
 Simulation GUI
 --------------
 Pymote features simulation GUI which can be started as standalone application using 
-``pymote-simgui`` (in Windows ``pymote-simgui.exe``). The other very convenient way of starting and
+``pymote-simgui`` (in Windows ``pymote-simgui.exe``). The other, convenient way of starting and
 working with the GUI is from the interactive console by running ``simulationgui.py`` like this::
 
     In [1]: %run pymote_env/Lib/site-packages/pymote/gui/simulationgui.py

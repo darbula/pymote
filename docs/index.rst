@@ -8,16 +8,15 @@ Welcome to Pymote's documentation!
 
 This document refers to version |release|
 
-*******
-Install
-*******
+Install and run
+***************
 
 
 .. toctree::
     :maxdepth: 1
 
-    getting_started/installation
-    getting_started/starting
+    install/installation
+    install/starting
     
 ..
     upgrade/0.2
