@@ -71,12 +71,10 @@ Create virtual environment::
     
     $ virtualenv pymote_env
 
-.. 
-    u ~/.profile datoteku ubaciti export PYMOTE_ENV="/path/to/pymote_env"
-
 Activate virtual environment::
     
     $ source pymote_env/bin/activate
+
 
 Required packages
 =================
@@ -105,18 +103,19 @@ To install it into virtual environment use these commands::
 
 Pymote
 ======
+Finally, in order to download and install Pymote and all other required packages there are two
+aviliable options, use one of them:
 
-To install latest development vesrion of the Pymote use source from github repo::
+#. Development: to install latest development version of the Pymote use source from github repo::
     
-    pip install -e git+https://github.com/darbula/pymote.git#egg=Pymote
+    (pymote_env)> pip install -e git+https://github.com/darbula/pymote.git#egg=Pymote
 
-or for latest version use package from PyPI::
+#. Stable: for latest stable version use package from PyPI::
     
-    (pymote_env)$ pip install Pymote
+    (pymote_env)> pip install Pymote
 
-Start interactive console::
-    
-    (pymote_env)$ ipymote
+For starting Pymote refer to :doc:`starting`.
+
 
 Windows
 *******
@@ -297,12 +296,17 @@ following commands:
     
 Pymote
 ======
+Finally, in order to download and install Pymote and all other required packages there are two
+aviliable options, use one of them:
 
-Finally in order to download and install Pymote and all other required packages use:
+#. Development: to install latest development version of the Pymote use source from github repo::
+    
+    (pymote_env)> pip install -e git+https://github.com/darbula/pymote.git#egg=Pymote
 
-.. code-block:: bash
-
-    (pymote_env)> pip install pymote
+#. Stable: for latest stable version use package from PyPI::
+    
+    (pymote_env)> pip install Pymote
+    
 
 To list all packages installed in the environment run ``pip freeze``. The output should look 
 something like this::
@@ -318,57 +322,7 @@ something like this::
     pyside==1.1.2
     scipy==0.11.0
 
-    
-Starting Pymote
-===============
-
-Pymote can be used in many different ways which is described in the tutorials. Here are some of the
-recommended ways to start it.
-
-Interactive console (IPython)
------------------------------
-To use Pymote from interactive console (IPython) simply start provided program ``ipymote.exe``.
-It is located in ``%PYMOTE_ENV%\Scripts`` directory and when the ``pymote_env`` environment is
-activated this directory is in the system path so you can simply run::
-
-    (pymote_env)> ipymote
-
-.. image:: _images/ipymote_screenshot.png
-   :align: center
-    
-The recommended way to avoid starting command prompt, activating the environment and running 
-``ipymote`` is to make a shortcut to the ``ipymote.exe`` file on the desktop, taskbar or start menu.
-
-This way console can be additionaly customized by right clicking on the shortcut and selecting
-Properties from the menu. Highly recommended customizations are:
-
-* in Options tab enable QuickEdit mode
-* in Font tab change font to Consolas and size to 16
-* in Layout tab increase Screen buffer size Height from 300 to at least 3000
-
-.. note::
-
-    The loading of the correct environment when shortcut is double clicked is possible via
-    previously set ``PYMOTE_ENV`` environment variable which points to the environment location.
-    
-Finally IPython can be started manually using dedicated ``pymote`` profile that has been installed
-in ``%IPYTHONDIR%``::
-
-    (pymote_env)> ipython --profile=pymote
-
-
-Simulation GUI
---------------
-Pymote features simulation GUI which can be started as standalone application using 
-``pymote-simgui.exe``. The other very convenient way of starting and working with the GUI is from
-the interactive console by running ``simulationgui.py`` like this::
-
-    In [1]: %run pymote_env/Lib/site-packages/pymote/gui/simulationgui.py
-
-Since the gui event loop is separated from the console and simulation window can be accessed by
-using variable ``simgui`` all simulation objects (network, nodes, messages...) are fully
-inspectable and usable via console. This can be very convenient when inspecting simulation.
-
+For starting Pymote refer to :doc:`starting`.
 
 .. 
     Ubuntu

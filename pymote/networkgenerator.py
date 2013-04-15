@@ -28,7 +28,9 @@ class NetworkGenerator:
                 net.add_node()
             if is_connected(net):
                 return net
-        logger.error("Could not generate connected network")
+        logger.error("Could not generate connected network with %d nodes.\n"
+                     "You can try to increase number of nodes or commRange." %
+                     self.n_count)
         #TODO: increase comm_range to value that is enough for connected network
         return None
     

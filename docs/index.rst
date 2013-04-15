@@ -17,6 +17,8 @@ Install
     :maxdepth: 1
 
     getting_started/installation
+    getting_started/starting
+    
 ..
     upgrade/0.2
 
