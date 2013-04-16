@@ -21,15 +21,22 @@ if 'install' in sys.argv or 'develop' in sys.argv:
         print ("copying ipython_config.py to "+profiledir)
         shutil.copy(os.path.join('pymote','conf','ipython','ipython_config.py'),profiledir)
     
+sys.path.insert(0, 'pymote')
+import release
+sys.path.pop(0)
 
 setup(
-    name = "Pymote",
-    version = '0.1.1',
-    url = 'https://github.com/darbula/pymote',
-    author = 'Damir Arbula',
-    author_email = 'damir.arbula@gmail.com',
-    description = 'A high-level Python library for simulation of distributed algorithms.',
-    download_url = '',
+    name = release.name,
+    version = release.version,
+    url = release.url,
+    author = release.authors['Arbula'][0],
+    author_email = release.authors['Arbula'][1],
+    description = release.description,
+    keywords = release.keywords,
+    download_url = release.download_url,
+    license = release.license,
+    platforms = release.platforms,
+    classifiers = release.classifiers,
     packages = find_packages(),
     #package_data = {
     #    '': ['*.bat'],
@@ -46,7 +53,6 @@ setup(
     ],
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
 
-    #TODO: make algorithms extensible http://pythonhosted.org/distribute/setuptools.html#dynamic-discovery-of-services-and-plugins
     entry_points = {
         'pymote.algorithms': [],
         'console_scripts': [
@@ -57,11 +63,8 @@ setup(
         ]
     },
 
-#    license='BSD License',
-#    platforms=['OS Independent'],
-#    classifiers=CLASSIFIERS,
+#    test_suite = 'runtests.main',
 #    tests_require=[],
 #    include_package_data=True,
 #    zip_safe = False,
-#    test_suite = 'runtests.main',
 )
