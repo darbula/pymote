@@ -3,8 +3,7 @@ This module provides model for QTreeView widget that is created out of
 dictionary data. 
 """
 
-from PySide.QtCore import QAbstractItemModel, QModelIndex
-from PySide.QtCore.Qt import DisplayRole, UserRole
+from PySide.QtCore import QAbstractItemModel, QModelIndex, Qt
 
 class DictionaryTreeModel(QAbstractItemModel):
     def __init__(self, parent=None, dic={}):
@@ -32,9 +31,9 @@ class DictionaryTreeModel(QAbstractItemModel):
             return None
 
         item = index.internalPointer()
-        if role == DisplayRole:
+        if role == Qt.DisplayRole:
             return item.data(index.column())
-        if role == UserRole:
+        if role == Qt.UserRole:
             if item:
                 return item.data(0)
 

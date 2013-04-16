@@ -1,8 +1,7 @@
 from PySide.QtGui import QApplication, QDialog, QVBoxLayout, QTreeView, QLabel,\
                          QFrame, QHBoxLayout, QPushButton
 from PySide.QtCore import QVariant, QAbstractItemModel, QModelIndex, QObject,\
-                          SIGNAL
-from PySide.QtCore.Qt import DisplayRole, UserRole, Horizontal
+                          SIGNAL, Qt
 
 HORIZONTAL_HEADERS = ("Surname", "Given Name")
     
@@ -89,17 +88,17 @@ class treeModel(QAbstractItemModel):
             return QVariant()
 
         item = index.internalPointer()
-        if role == DisplayRole:
+        if role == Qt.DisplayRole:
             return item.data(index.column())
-        if role == UserRole:
+        if role == Qt.UserRole:
             if item:
                 return item.person
 
         return QVariant()
 
     def headerData(self, column, orientation, role):
-        if (orientation == Horizontal and
-        role == DisplayRole):
+        if (orientation == Qt.Horizontal and
+        role == Qt.DisplayRole):
             try:
                 return QVariant(HORIZONTAL_HEADERS[column])
             except IndexError:
@@ -202,7 +201,7 @@ if __name__ == "__main__":
         '''
         when a row is clicked... show the name
         '''
-        print tv.model().data(index, UserRole)
+        print tv.model().data(index, Qt.UserRole)
         
     def but_clicked():
         '''
