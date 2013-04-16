@@ -1,35 +1,37 @@
-.. Pymote documentation master file, created by
-   sphinx-quickstart on Wed Nov 07 19:26:40 2012.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. _contents:
 
-Welcome to Pymote's documentation!
-==================================
+Pymote documentation
+====================
 
-This document refers to version |release|
+This document refers to the Pymote version |release|
 
-Install and run
-***************
+.. only:: html
+
+    :Date: |today|
 
 
 .. toctree::
-    :maxdepth: 1
+   :maxdepth: 2
 
-    install/installation
-    install/starting
+   install/installation
+   install/starting
+   tutorials/hello_distributed_world
+   reference/index
+   developer/index
+.. extending/algorithms
+   
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+* :ref:`glossary`
+
+
     
-..
-    upgrade/0.2
-
-
-Getting Started
-***************
-
-.. toctree::
-    :maxdepth: 2
-    :numbered:
-
-    getting_started/tutorial
 ..    faq/common_issues
     
 

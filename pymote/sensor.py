@@ -1,3 +1,16 @@
+"""
+Sensors provide a way for node to interact with its environment.
+
+Sensors can also be used to satisfy algorithm prerequisites. For example
+if algorithm depends on the assumption that all nodes know who their neighbors
+are then nodes should be equipped with :class:`NeighborsSensor`.
+
+Generally sensors should incorporate some model of measurement insecurity that 
+is inherent in real world sensors. This is implemented as a 
+:class:`ProbabilityFunction`.
+
+"""
+
 from pymote.conf import settings
 from numpy import arctan2, pi, sqrt
 import inspect
@@ -5,6 +18,7 @@ import inspect
 
 
 class Sensor(object):
+    
     """
     Abstract base class for all Sensors.
     
@@ -19,6 +33,10 @@ class Sensor(object):
         
     def name(self):
         return self.__class__.__name__
+    
+    def read(self):
+        """This method should be overriden in subclass."""
+        pass
 
 
 def node_in_network(fun):
@@ -92,15 +110,23 @@ class TruePosSensor(Sensor):
     
 class CompositeSensor(object):
     
-    """Wrap multiple sensors, coalesce results, return composite readout."""
+    """
+    Wrap multiple sensors, coalesce results and return composite readout.
+    
+            
+    This class is not a sensor itself, i.e. subclass of :class:`Sensor`, 
+    instead it serves as a placeholder for multiple sensors that can be 
+    attached to a :class:`Node`.
+    
+    """
 
     def __init__(self, node, componentSensors=None):
         """
-        Attach a set of sensors to a node.
-        
-        Attributes:
-            `node`  
-            `componentSensors` -- can be tuple of classes or class names 
+        Args:
+            node (:class:`Node`): 
+                Node that has this composite sensor is attached to.
+            componentSensors (tuple):
+                Tuple of :class:`Sensor` subclasses or their class names.
             
         """
         self.node = node
@@ -130,8 +156,16 @@ class CompositeSensor(object):
     
     
 class ProbabilityFunction(object):
+    
+    """Provides a way to get noisy reading."""
 
     def __init__(self, settings_key):
+        """This is init.
+        
+        Arguments:
+            settings_key: a settings parameter
+            
+        """
         self.pf = getattr(settings,settings_key)['pf'] # class or gen object
         self.name = self.pf.__class__.__name__ 
         self.scale = getattr(settings,settings_key)['scale'] 

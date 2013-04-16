@@ -19,5 +19,7 @@ pip-log.txt
 
 *.log
 *.tar.gz
-*.project
-*.pydevproject
+.project*
+.pydevproject*
+.settings*
+docs/reference/generated*
