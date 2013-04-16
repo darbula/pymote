@@ -1,8 +1,7 @@
 Installation
 ############
 This document assumes you are familiar with Python and using command prompt or shell. It should 
-outline the necessary steps to install software needed for using Pymote i.e. to start with the 
-:doc:`../getting_started/tutorial`.
+outline the necessary steps to install software needed for using Pymote.
 
 Requirements
 ************
