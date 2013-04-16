@@ -1,7 +1,7 @@
 # Readthedocs default blue theme  
 html_style = None
 
-# Mock modules
+# Mock modules that are not present on readthedocs
 # http://read-the-docs.readthedocs.org/en/latest/faq.html#i-get-import-errors-on-libraries-that-depend-on-c-modules
 import sys
 class Mock(object):
@@ -22,6 +22,6 @@ class Mock(object):
         else:
             return Mock()
 
-MOCK_MODULES = ['networkx',]
+MOCK_MODULES = ['networkx','png',]
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = Mock()
