@@ -1,9 +1,12 @@
-""" This module provides model for QTreeView widget that is created out of 
-    dictionary data. """
+""" 
+This module provides model for QTreeView widget that is created out of 
+dictionary data. 
+"""
 
-from PySide import QtCore
+from PySide.QtCore import QAbstractItemModel, QModelIndex
+from PySide.QtCore.Qt import DisplayRole, UserRole
 
-class DictionaryTreeModel(QtCore.QAbstractItemModel):
+class DictionaryTreeModel(QAbstractItemModel):
     def __init__(self, parent=None, dic={}):
         super(DictionaryTreeModel, self).__init__(parent)
         self.dic = dic
@@ -29,9 +32,9 @@ class DictionaryTreeModel(QtCore.QAbstractItemModel):
             return None
 
         item = index.internalPointer()
-        if role == QtCore.Qt.DisplayRole:
+        if role == DisplayRole:
             return item.data(index.column())
-        if role == QtCore.Qt.UserRole:
+        if role == UserRole:
             if item:
                 return item.data(0)
 
@@ -39,7 +42,7 @@ class DictionaryTreeModel(QtCore.QAbstractItemModel):
 
     def index(self, row, column, parent):
         if not self.hasIndex(row, column, parent):
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
         if not parent.isValid():
             parentItem = self.rootItem
@@ -50,24 +53,24 @@ class DictionaryTreeModel(QtCore.QAbstractItemModel):
         if childItem:
             return self.createIndex(row, column, childItem)
         else:
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
     def parent(self, index):
         if not index.isValid():
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
         childItem = index.internalPointer()
         if not childItem:
-            return QtCore.QModelIndex()
+            return QModelIndex()
         
         parentItem = childItem.parent()
 
         if parentItem == self.rootItem:
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
         return self.createIndex(parentItem.row(), 0, parentItem)
 
-    def rowCount(self, parent=QtCore.QModelIndex()):
+    def rowCount(self, parent=QModelIndex()):
         if parent.column() > 0:
             return 0
         if not parent.isValid():

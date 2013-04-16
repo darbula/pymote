@@ -1,10 +1,10 @@
-from PySide import QtCore
+from PySide.QtCore import QThread, SIGNAL
 import logging
 from pymote.network import Network
 from pymote.algorithm import NetworkAlgorithm
 from pymote.algorithm import NodeAlgorithm
 
-class Simulation(QtCore.QThread):
+class Simulation(QThread):
     """ Controls single network algorithm and node algorithms simulation.
         It is responsible for visualization and logging, also. """
     
@@ -15,7 +15,7 @@ class Simulation(QtCore.QThread):
         self.logger = logging.getLogger('pymote.simulation')
         self.logger.debug('Simulation %s created successfully.' % (hex(id(self))))
         self.logger.level = logLevel or logging.DEBUG
-        QtCore.QThread.__init__(self)
+        QThread.__init__(self)
 
         
     def __del__(self):
@@ -49,10 +49,10 @@ class Simulation(QtCore.QThread):
                 self.logger.info('Simulation has finished. There are no '
                                  'algorithms left to run. '
                                  'To run it from the start use sim.reset().')
-                self.emit(QtCore.SIGNAL('redraw()'))
+                self.emit(SIGNAL('redraw()'))
                 break
             self.run_algorithm(algorithm)
-            self.emit(QtCore.SIGNAL('redraw()'))
+            self.emit(SIGNAL('redraw()'))
             if self.stepsLeft>=0:
                 break
     
@@ -76,7 +76,7 @@ class Simulation(QtCore.QThread):
                 self.network.communicate()
                 for node in self.network.nodes():
                     nodeTerminated = algorithm.step(node)
-                self.emit(QtCore.SIGNAL('updateLog(QString)'), 
+                self.emit(SIGNAL('updateLog(QString)'), 
                           '[%s] Step %d finished' % 
                           (algorithm.name,self.network.algorithmState['step']) )
                 self.logger.debug('[%s] Step %d finished' % 
@@ -86,7 +86,7 @@ class Simulation(QtCore.QThread):
                     break
                 if self.stepsLeft==0:
                     return # not finished
-        self.emit(QtCore.SIGNAL('updateLog(QString)'),'[%s] Algorithm finished' % 
+        self.emit(SIGNAL('updateLog(QString)'),'[%s] Algorithm finished' % 
                                                       (algorithm.name))
         self.logger.debug('[%s] Algorithm finished' % (algorithm.name))
         self.network.algorithmState['finished'] = True
@@ -119,5 +119,5 @@ class Simulation(QtCore.QThread):
         self._network.simulation = None
         self._network = network
         self._network.simulation = self
-        self.emit(QtCore.SIGNAL('updateLog(QString)'),'Network loaded')
-        self.emit(QtCore.SIGNAL('redraw()'))
+        self.emit(SIGNAL('updateLog(QString)'),'Network loaded')
+        self.emit(SIGNAL('redraw()'))

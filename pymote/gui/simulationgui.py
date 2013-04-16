@@ -1,6 +1,7 @@
 from pymote import * #@UnusedWildImport
 import sys, os, numpy
-from PySide import QtGui, QtCore
+from PySide.QtGui import QMainWindow, QMenu, QCursor, QFileDialog, QMessageBox
+from PySide.QtCore import SIGNAL, QRect, QSize, QEvent
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
@@ -13,9 +14,9 @@ from pymote.algorithm import NodeAlgorithm
 from simulationui import Ui_SimulationWindow
 from dictionarytreemodel import DictionaryTreeModel
 
-class SimulationGui(QtGui.QMainWindow):
+class SimulationGui(QMainWindow):
     def __init__(self, net=None, parent=None, fname=None):
-        QtGui.QMainWindow.__init__(self)
+        QMainWindow.__init__(self)
         
         self.ui = Ui_SimulationWindow()
         self.ui.setupUi(self)
@@ -35,8 +36,8 @@ class SimulationGui(QtGui.QMainWindow):
         self.canvas = FigureCanvas(self.fig)
         self.canvas.setParent(self.ui.networkDisplayWidget)
         self.nav = NavigationToolbar(self.canvas, self.ui.networkDisplayWidget, coordinates=True)
-        self.nav.setGeometry(QtCore.QRect(0, 0, 651, 36))
-        self.nav.setIconSize(QtCore.QSize(24, 24))
+        self.nav.setGeometry(QRect(0, 0, 651, 36))
+        self.nav.setIconSize(QSize(24, 24))
         
         self.axes = self.fig.add_subplot(111)
         #http://matplotlib.sourceforge.net/api/figure_api.html#matplotlib.figure.SubplotParams
@@ -45,15 +46,15 @@ class SimulationGui(QtGui.QMainWindow):
         if net:
             self.init_sim(net)
         
-        self.connect(self.ui.showNodes,QtCore.SIGNAL('stateChanged(int)'),self.refresh_visibility)
-        self.connect(self.ui.showEdges,QtCore.SIGNAL('stateChanged(int)'),self.refresh_visibility)
-        self.connect(self.ui.showMessages,QtCore.SIGNAL('stateChanged(int)'),self.refresh_visibility)
-        self.connect(self.ui.showLabels,QtCore.SIGNAL('stateChanged(int)'),self.refresh_visibility)
-        self.connect(self.ui.redrawNetworkButton,QtCore.SIGNAL('clicked(bool)'),self.redraw)
-        self.connect(self.ui.treeGroupBox,QtCore.SIGNAL('toggled(bool)'),self.refresh_visibility)
-        self.connect(self.ui.treeKey,QtCore.SIGNAL('textEdited(QString)'),self.redraw)
-        self.connect(self.ui.propagationError,QtCore.SIGNAL('toggled(bool)'),self.refresh_visibility)
-        self.connect(self.ui.locKey,QtCore.SIGNAL('textEdited(QString)'),self.redraw)
+        self.connect(self.ui.showNodes,SIGNAL('stateChanged(int)'),self.refresh_visibility)
+        self.connect(self.ui.showEdges,SIGNAL('stateChanged(int)'),self.refresh_visibility)
+        self.connect(self.ui.showMessages,SIGNAL('stateChanged(int)'),self.refresh_visibility)
+        self.connect(self.ui.showLabels,SIGNAL('stateChanged(int)'),self.refresh_visibility)
+        self.connect(self.ui.redrawNetworkButton,SIGNAL('clicked(bool)'),self.redraw)
+        self.connect(self.ui.treeGroupBox,SIGNAL('toggled(bool)'),self.refresh_visibility)
+        self.connect(self.ui.treeKey,SIGNAL('textEdited(QString)'),self.redraw)
+        self.connect(self.ui.propagationError,SIGNAL('toggled(bool)'),self.refresh_visibility)
+        self.connect(self.ui.locKey,SIGNAL('textEdited(QString)'),self.redraw)
         # callbacks
         self.ui.actionOpenNetwork.activated.connect(self.on_actionOpenNetwork_triggered)
         self.ui.actionSaveNetwork.activated.connect(self.on_actionSaveNetwork_triggered)
@@ -65,16 +66,16 @@ class SimulationGui(QtGui.QMainWindow):
         self.canvas.mpl_connect('pick_event', self.on_pick)
     
     def handleInspectorMenu(self, pos):
-        menu = QtGui.QMenu()
+        menu = QMenu()
         menu.addAction('Add')
         menu.addAction('Delete')
-        menu.exec_(QtGui.QCursor.pos())
+        menu.exec_(QCursor.pos())
     
     def init_sim(self, net):
         self.net = net
         self.sim = Simulation(net)
-        self.connect(self.sim,QtCore.SIGNAL("redraw()"),self.redraw)
-        self.connect(self.sim,QtCore.SIGNAL("updateLog(QString)"),self.update_log)
+        self.connect(self.sim,SIGNAL("redraw()"),self.redraw)
+        self.connect(self.sim,SIGNAL("updateLog(QString)"),self.update_log)
         self.redraw()
         
         
@@ -285,7 +286,7 @@ class SimulationGui(QtGui.QMainWindow):
             
         clipboard = app.clipboard()
         clipboard.setText(str)
-        event = QtCore.QEvent(QtCore.QEvent.Clipboard)
+        event = QEvent(QEvent.Clipboard)
         app.sendEvent(clipboard, event)
         
     def on_actionShowLocalizedSubclusters_triggered(self):
@@ -320,15 +321,15 @@ class SimulationGui(QtGui.QMainWindow):
         selectedFilter = 'Network pickle (gz)'
         filters = ';;'.join(filters)
 
-        fname = QtGui.QFileDialog.getSaveFileName(
+        fname = QFileDialog.getSaveFileName(
             self, "Choose a filename to save to", start, filters, selectedFilter)[0]
         if fname:
             try:
                 write_npickle(self.net, fname) 
             except Exception, e:
-                QtGui.QMessageBox.critical(
+                QMessageBox.critical(
                     self, "Error saving file", str(e),
-                    QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+                    QMessageBox.Ok, QMessageBox.NoButton)
             else:
                 self.set_title(fname)
     
@@ -340,7 +341,7 @@ class SimulationGui(QtGui.QMainWindow):
         selectedFilter = 'Network pickle (gz)'
         filters = ';;'.join(filters)
 
-        fname = QtGui.QFileDialog.getOpenFileName(
+        fname = QFileDialog.getOpenFileName(
             self, "Choose a file to open", start, filters, selectedFilter)[0]
         if fname:
             try:
@@ -349,9 +350,9 @@ class SimulationGui(QtGui.QMainWindow):
                 self.init_sim(net)
             except Exception, e:
                 print "Error opening file %s" % str(e),
-                QtGui.QMessageBox.critical(
+                QMessageBox.critical(
                     self, "Error opening file", str(e),
-                    QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+                    QMessageBox.Ok, QMessageBox.NoButton)
             else:
                 self.set_title(fname)
                 
@@ -420,9 +421,9 @@ def create_window(window_class,**kwargs):
         if os.path.exists(fname):
             net = read_npickle(fname)
         else:
-            QtGui.QMessageBox.critical(
+            QMessageBox.critical(
                         None, "Error opening file %s", fname,
-                        QtGui.QMessageBox.Ok, QtGui.QMessageBox.NoButton)
+                        QMessageBox.Ok, QMessageBox.NoButton)
 
     window = window_class(net,fname)
     app.references.add(window)

@@ -1,4 +1,8 @@
-from PySide import QtGui, QtCore
+from PySide.QtGui import QApplication, QDialog, QVBoxLayout, QTreeView, QLabel,\
+                         QFrame, QHBoxLayout, QPushButton
+from PySide.QtCore import QVariant, QAbstractItemModel, QModelIndex, QObject,\
+                          SIGNAL
+from PySide.QtCore.Qt import DisplayRole, UserRole, Horizontal
 
 HORIZONTAL_HEADERS = ("Surname", "Given Name")
     
@@ -40,15 +44,15 @@ class TreeItem(object):
     def data(self, column):
         if self.person == None:
             if column == 0:
-                return QtCore.QVariant(self.header)
+                return QVariant(self.header)
             if column == 1:
-                return QtCore.QVariant("")                
+                return QVariant("")                
         else:
             if column == 0:
-                return QtCore.QVariant(self.person.sname)
+                return QVariant(self.person.sname)
             if column == 1:
-                return QtCore.QVariant(self.person.fname)
-        return QtCore.QVariant()
+                return QVariant(self.person.fname)
+        return QVariant()
 
     def parent(self):
         return self.parentItem
@@ -58,7 +62,7 @@ class TreeItem(object):
             return self.parentItem.childItems.index(self)
         return 0
 
-class treeModel(QtCore.QAbstractItemModel):
+class treeModel(QAbstractItemModel):
     '''
     a model to display a few names, ordered by sex
     '''
@@ -82,30 +86,30 @@ class treeModel(QtCore.QAbstractItemModel):
 
     def data(self, index, role):
         if not index.isValid():
-            return QtCore.QVariant()
+            return QVariant()
 
         item = index.internalPointer()
-        if role == QtCore.Qt.DisplayRole:
+        if role == DisplayRole:
             return item.data(index.column())
-        if role == QtCore.Qt.UserRole:
+        if role == UserRole:
             if item:
                 return item.person
 
-        return QtCore.QVariant()
+        return QVariant()
 
     def headerData(self, column, orientation, role):
-        if (orientation == QtCore.Qt.Horizontal and
-        role == QtCore.Qt.DisplayRole):
+        if (orientation == Horizontal and
+        role == DisplayRole):
             try:
-                return QtCore.QVariant(HORIZONTAL_HEADERS[column])
+                return QVariant(HORIZONTAL_HEADERS[column])
             except IndexError:
                 pass
 
-        return QtCore.QVariant()
+        return QVariant()
 
     def index(self, row, column, parent):
         if not self.hasIndex(row, column, parent):
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
         if not parent.isValid():
             parentItem = self.rootItem
@@ -116,24 +120,24 @@ class treeModel(QtCore.QAbstractItemModel):
         if childItem:
             return self.createIndex(row, column, childItem)
         else:
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
     def parent(self, index):
         if not index.isValid():
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
         childItem = index.internalPointer()
         if not childItem:
-            return QtCore.QModelIndex()
+            return QModelIndex()
         
         parentItem = childItem.parent()
 
         if parentItem == self.rootItem:
-            return QtCore.QModelIndex()
+            return QModelIndex()
 
         return self.createIndex(parentItem.row(), 0, parentItem)
 
-    def rowCount(self, parent=QtCore.QModelIndex()):
+    def rowCount(self, parent=QModelIndex()):
         if parent.column() > 0:
             return 0
         if not parent.isValid():
@@ -198,7 +202,7 @@ if __name__ == "__main__":
         '''
         when a row is clicked... show the name
         '''
-        print tv.model().data(index, QtCore.Qt.UserRole)
+        print tv.model().data(index, UserRole)
         
     def but_clicked():
         '''
@@ -214,39 +218,39 @@ if __name__ == "__main__":
                 return
         tv.clearSelection()
         
-    app = QtGui.QApplication([])
+    app = QApplication([])
     
     model = treeModel()
-    dialog = QtGui.QDialog()
+    dialog = QDialog()
 
     dialog.setMinimumSize(300,150)
-    layout = QtGui.QVBoxLayout(dialog)
+    layout = QVBoxLayout(dialog)
 
-    tv = QtGui.QTreeView(dialog)
+    tv = QTreeView(dialog)
     tv.setModel(model)
     tv.setAlternatingRowColors(True)
     layout.addWidget(tv)
     
-    label = QtGui.QLabel("Search for the following person")
+    label = QLabel("Search for the following person")
     layout.addWidget(label)
     
     buts = []
-    frame = QtGui.QFrame(dialog)
-    layout2 = QtGui.QHBoxLayout(frame)
+    frame = QFrame(dialog)
+    layout2 = QHBoxLayout(frame)
     
     for person in model.people:
-        but = QtGui.QPushButton(person.fname, frame)
+        but = QPushButton(person.fname, frame)
         buts.append(but)
         layout2.addWidget(but)
-        QtCore.QObject.connect(but, QtCore.SIGNAL("clicked()"), but_clicked)
+        QObject.connect(but, SIGNAL("clicked()"), but_clicked)
         
     layout.addWidget(frame)
 
-    but = QtGui.QPushButton("Clear Selection")
+    but = QPushButton("Clear Selection")
     layout.addWidget(but)
-    QtCore.QObject.connect(but, QtCore.SIGNAL("clicked()"), tv.clearSelection)
+    QObject.connect(but, SIGNAL("clicked()"), tv.clearSelection)
 
-    QtCore.QObject.connect(tv, QtCore.SIGNAL("clicked (QModelIndex)"),
+    QObject.connect(tv, SIGNAL("clicked (QModelIndex)"),
         row_clicked)
 
     dialog.exec_()
