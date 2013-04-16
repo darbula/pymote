@@ -14,8 +14,8 @@ description = 'A high-level Python library for simulation of distributed algorit
 
 long_description = \
 """
-NetworkX is a Python package for the creation, manipulation, and
-study of the structure, dynamics, and functions of complex networks.
+Pymote is a Python library for event based simulation and evaluation of 
+distributed algorithms.
 
 """
 license = 'BSD'

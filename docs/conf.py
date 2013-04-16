@@ -14,7 +14,9 @@
 import sys, os
 
 if os.environ.get('READTHEDOCS', None) == 'True':
+    sys.path.insert(0,'.')
     from readthedocs import *
+    sys.path.pop(0)
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -63,7 +65,7 @@ copyright = u'2011-2013, Damir Arbula'
 # built documents.
 #
 # The short X.Y version.
-from pymote.release import __version__
+from pymote import __version__
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__.replace('_','')
