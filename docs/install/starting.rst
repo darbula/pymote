@@ -30,9 +30,6 @@ To use Pymote from the interactive console (IPython) start provided program
     The loading of the correct environment when shortcut is double clicked is possible via
     previously set ``PYMOTE_ENV`` environment variable which points to the environment location.
 
-.. image:: _images/ipymote_screenshot.png
-   :align: center
-
 ..
     **For linux**
     
@@ -68,3 +65,7 @@ The gui event loop is separated from the console. Simulation window can be acces
 ``simgui`` and network in the simulator window by using ``simgui.net`` so all simulation objects 
 (network, nodes, messages...) are fully inspectable and usable via console.
 
+.. figure:: _images/pymote_console_gui.png
+   :align: center
+   
+   Pymote console and GUI
