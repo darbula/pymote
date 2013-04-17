@@ -1,7 +1,7 @@
 import unittest
 from pymote.networkgenerator import NetworkGenerator
-from pymote.algorithm import Algorithm, NodeAlgorithm, NetworkAlgorithm,\
-                             PymoteAlgorithmException
+from pymote.algorithm import NodeAlgorithm, NetworkAlgorithm, Algorithm,\
+    PymoteAlgorithmException
 from pymote.network import PymoteNetworkError
 
 def set_algorithms(net, algorithms):
