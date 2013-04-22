@@ -57,6 +57,7 @@ class Network(Graph):
     
     @algorithms.setter
     def algorithms(self, algorithms):
+        self.reset()
         self._algorithms = ()
         if not isinstance(algorithms,tuple):
             raise PymoteNetworkError('algorithm')
@@ -147,7 +148,13 @@ class Network(Graph):
             else:
                 return None
         return self.algorithms[self.algorithmState['index']]
-                
+
+    def reset(self):
+        logger.info('Resetting network.')
+        self.algorithmState = {'index':0, 'step':1, 'finished':False}
+        self.reset_all_nodes()
+
+
     def show(self, savefig='', positions=None, edgelist=None, nodeColor='r',\
              show_labels = True):
         

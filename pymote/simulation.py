@@ -97,8 +97,7 @@ class Simulation(QThread):
     
     def reset(self):
         self.logger.info('Resetting simulation.')
-        self.network.algorithmState = {'index':0,'step':1,'finished':False}
-        self._network.reset_all_nodes()
+        self._network.reset()
         
     def is_halted(self):
         """ Check if distributed algorithm have come to end or deadlock 
