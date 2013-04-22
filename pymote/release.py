@@ -10,22 +10,23 @@ version = ''.join([str(major), '.', str(minor)])
 if dev:
     version += '.dev'
 
-description = 'A high-level Python library for simulation of distributed algorithms.'
+description = ('A high-level Python library for simulation of distributed '
+               'algorithms.')
 
 long_description = \
 """
-Pymote is a Python library for event based simulation and evaluation of 
+Pymote is a Python library for event based simulation and evaluation of
 distributed algorithms.
 
 """
-license = 'BSD'
-authors = {'Arbula' : ('Damir Arbula','damir.arbula@gmail.com'),
+license = 'BSD'  # @ReservedAssignment
+authors = {'Arbula': ('Damir Arbula', 'damir.arbula@gmail.com'),
            }
 #maintainer = "Pymote Developers"
 #maintainer_email = "pymote-discuss@googlegroups.com"
 url = 'https://github.com/darbula/pymote'
-download_url=''
-platforms = ['Windows','Linux','Mac OSX']
+download_url = ''
+platforms = ['Windows', 'Linux', 'Mac OSX']
 keywords = ['Networks', 'Distributed algorithms']
 classifiers = [
         'Development Status :: 3 - Alpha',

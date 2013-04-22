@@ -22,9 +22,10 @@ class TestSensor(unittest.TestCase):
         """Test setting compositeSensors on a node"""
         net = Network()
         node = net.add_node()
-        node.compositeSensor = ('AoASensor',NeighborsSensor)
-        self.assertTrue(len(node.compositeSensor.sensors)==2)
+        node.compositeSensor = ('AoASensor', NeighborsSensor)
+        self.assertTrue(len(node.compositeSensor.sensors) == 2)
         readings = node.compositeSensor.read()
-        self.assertTrue('AoA' in readings.keys() and 'Neighbors' in readings.keys())
+        self.assertTrue('AoA' in readings.keys() and
+                        'Neighbors' in readings.keys())
         
         #TODO: check normal distribution

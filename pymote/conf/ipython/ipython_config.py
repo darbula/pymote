@@ -1,11 +1,11 @@
-c = get_config()
+c = get_config()  # @UndefinedVariable
 app = c.InteractiveShellApp
 term_app = c.TerminalIPythonApp
 
 
 # This can be used at any point in a config file to load a sub config
 # and merge it into the current one.
-load_subconfig('ipython_config.py', profile='default')
+load_subconfig('ipython_config.py', profile='default')  # @UndefinedVariable
 lines = """
 from pymote import *
 """
@@ -30,13 +30,15 @@ term_app.pylab = 'qt'
 
 import os
 os.environ['QT_API'] = 'pyside'
-# Section below is a hack to avoid (context menu) bug http://stackoverflow.com/q/14788501/1247955
+# Section below is a hack to avoid (context menu) bug
+# http://stackoverflow.com/q/14788501/1247955
 #TODO: check for IPython version, for 0.14 hack is not needed
 from IPython.lib import inputhookqt4
 
 from IPython.core.interactiveshell import InteractiveShell
 from IPython.external.qt_for_kernel import QtCore, QtGui
 from IPython.lib.inputhook import allow_CTRL_C, ignore_CTRL_C, stdin_ready
+
 
 def create_inputhook_qt4(mgr, app=None):
     """Create an input hook for running the Qt4 application event loop.
@@ -95,7 +97,7 @@ def create_inputhook_qt4(mgr, app=None):
         try:
             allow_CTRL_C()
             app = QtCore.QCoreApplication.instance()
-            if not app: # shouldn't happen, but safer if it happens anyway...
+            if not app:  # shouldn't happen, but safer if it happens anyway...
                 return 0
             app.processEvents(QtCore.QEventLoop.AllEvents, 300)
             if not stdin_ready():
@@ -132,7 +134,7 @@ def create_inputhook_qt4(mgr, app=None):
             got_kbdint[0] = True
             print("\nKeyboardInterrupt - Ctrl-C again for new prompt")
             mgr.clear_inputhook()
-        except: # NO exceptions are allowed to escape from a ctypes callback
+        except:  # NO exceptions are allowed to escape from a ctypes callback
             ignore_CTRL_C()
             from traceback import print_exc
             print_exc()

@@ -1,16 +1,17 @@
-""" 
-This module provides model for QTreeView widget that is created out of 
-dictionary data. 
+"""
+This module provides model for QTreeView widget that is created out of
+dictionary data.
 """
 
 from PySide.QtCore import QAbstractItemModel, QModelIndex, Qt
+
 
 class DictionaryTreeModel(QAbstractItemModel):
     def __init__(self, parent=None, dic={}):
         super(DictionaryTreeModel, self).__init__(parent)
         self.dic = dic
-        self.rootItem = TreeItem(('tree','root'), None)
-        self.parents = {0 : self.rootItem}
+        self.rootItem = TreeItem(('tree', 'root'), None)
+        self.parents = {0: self.rootItem}
         self.setupModelData()
 
     def setupModelData(self):
@@ -61,7 +62,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         childItem = index.internalPointer()
         if not childItem:
             return QModelIndex()
-        
+
         parentItem = childItem.parent()
 
         if parentItem == self.rootItem:
@@ -77,34 +78,34 @@ class DictionaryTreeModel(QAbstractItemModel):
         else:
             p_Item = parent.internalPointer()
         return p_Item.childCount()
-    
-        
+
+
 class TreeItem(object):
     """
     a python object used to return row/column data, and keep note of
     it's parents and/or children
     """
     def __init__(self, dicItem, parentItem):
-        key,value = dicItem
+        key, value = dicItem
         self.itemDataKey = key
         self.itemDataValue = value
         self.parentItem = parentItem
         self.childItems = []
-        if isinstance(value,dict):
+        if isinstance(value, dict):
             self.itemData = key
             items = value.items()
             items.sort()
             for item in items:
-                self.appendChild(TreeItem(item,self))
-        #TODO: solve infinite recursion problem 
-        #elif hasattr(value,'get_dic'):
+                self.appendChild(TreeItem(item, self))
+        # TODO: solve infinite recursion problem
+        # elif hasattr(value,'get_dic'):
         #    self.itemData = key
         #    items = value.get_dic().items()
         #    items.sort()
         #    for item in items:
         #        self.appendChild(TreeItem(item,self))
         else:
-            self.itemData = ': '.join([key.__str__(),value.__str__()])
+            self.itemData = ': '.join([key.__str__(), value.__str__()])
 
     def appendChild(self, item):
         self.childItems.append(item)
@@ -117,23 +118,23 @@ class TreeItem(object):
 
     def columnCount(self):
         return 1
-    
+
     def data(self, column):
         return self.itemData
 
     def parent(self):
         return self.parentItem
-    
+
     def row(self):
         if self.parentItem:
             return self.parentItem.childItems.index(self)
         return 0
-    
-    def toString(self,indentation=''):
+
+    def toString(self, indentation=''):
         """
         Return string that represents all data in this item and all children.
         """
-        str = self.itemData
+        s = self.itemData
         for child in self.childItems:
-            str += '\n'+indentation+child.toString(indentation+'    ')
-        return str
+            s += '\n' + indentation + child.toString(indentation + '    ')
+        return s

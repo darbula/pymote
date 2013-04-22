@@ -1,7 +1,7 @@
 from pymote import release
 
-__author__   = '%s <%s>' % release.authors['Arbula']
-__license__  = release.license
+__author__ = '%s <%s>' % release.authors['Arbula']
+__license__ = release.license
 __version__ = release.version
 
 # For interactive sessions these import names with from pymote import *
@@ -20,4 +20,4 @@ from pymote.utils.localization import *
 
 # Declare namespace package
 from pkgutil import extend_path
-__path__ = extend_path(__path__, __name__)
+__path__ = extend_path(__path__, __name__)  # @ReservedAssignment

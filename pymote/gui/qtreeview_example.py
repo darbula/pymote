@@ -1,10 +1,11 @@
-from PySide.QtGui import QApplication, QDialog, QVBoxLayout, QTreeView, QLabel,\
-                         QFrame, QHBoxLayout, QPushButton
-from PySide.QtCore import QVariant, QAbstractItemModel, QModelIndex, QObject,\
-                          SIGNAL, Qt
+from PySide.QtGui import QApplication, QDialog, QVBoxLayout, QTreeView, \
+                         QLabel, QFrame, QHBoxLayout, QPushButton
+from PySide.QtCore import QAbstractItemModel, QModelIndex, QObject, SIGNAL, \
+                          Qt, QVariant  # @UnresolvedImport
 
 HORIZONTAL_HEADERS = ("Surname", "Given Name")
-    
+
+
 class person_class(object):
     '''
     a trivial custom data object
@@ -15,13 +16,14 @@ class person_class(object):
         self.isMale = isMale
 
     def __repr__(self):
-        return "PERSON - %s %s"% (self.fname, self.sname)
-    
+        return "PERSON - %s %s" % (self.fname, self.sname)
+
+
 class TreeItem(object):
-    '''
+    """
     a python object used to return row/column data, and keep note of
     it's parents and/or children
-    '''
+    """
     def __init__(self, person, header, parentItem):
         self.person = person
         self.parentItem = parentItem
@@ -45,7 +47,7 @@ class TreeItem(object):
             if column == 0:
                 return QVariant(self.header)
             if column == 1:
-                return QVariant("")                
+                return QVariant("")
         else:
             if column == 0:
                 return QVariant(self.person.sname)
@@ -61,6 +63,7 @@ class TreeItem(object):
             return self.parentItem.childItems.index(self)
         return 0
 
+
 class treeModel(QAbstractItemModel):
     '''
     a model to display a few names, ordered by sex
@@ -68,13 +71,13 @@ class treeModel(QAbstractItemModel):
     def __init__(self, parent=None):
         super(treeModel, self).__init__(parent)
         self.people = []
-        for fname, sname, isMale in (("John","Brown", 1), 
+        for fname, sname, isMale in (("John", "Brown", 1),
         ("Fred", "Bloggs", 1), ("Sue", "Smith", 0)):
             person = person_class(sname, fname, isMale)
             self.people.append(person)
             
         self.rootItem = TreeItem(None, "ALL", None)
-        self.parents = {0 : self.rootItem}
+        self.parents = {0: self.rootItem}
         self.setupModelData()
 
     def columnCount(self, parent=None):
@@ -152,7 +155,7 @@ class treeModel(QAbstractItemModel):
             else:
                 sex = "FEMALES"
             
-            if not self.parents.has_key(sex):                
+            if not sex in self.parents:
                 newparent = TreeItem(None, sex, self.rootItem)
                 self.rootItem.appendChild(newparent)
 
@@ -163,9 +166,9 @@ class treeModel(QAbstractItemModel):
             parentItem.appendChild(newItem)
         
     def searchModel(self, person):
-        '''
+        """
         get the modelIndex for a given appointment
-        '''
+        """
         def searchNode(node):
             '''
             a function called recursively, looking at all nodes beneath node
@@ -192,10 +195,10 @@ class treeModel(QAbstractItemModel):
                 break
         if app != None:
             index = self.searchModel(app)
-            return (True, index)            
+            return (True, index)
         return (False, None)
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
 
     def row_clicked(index):
         '''
@@ -205,7 +208,7 @@ if __name__ == "__main__":
         
     def but_clicked():
         '''
-        when a name button is clicked, I iterate over the model, 
+        when a name button is clicked, I iterate over the model,
         find the person with this name, and set the treeviews current item
         '''
         name = dialog.sender().text()
@@ -222,7 +225,7 @@ if __name__ == "__main__":
     model = treeModel()
     dialog = QDialog()
 
-    dialog.setMinimumSize(300,150)
+    dialog.setMinimumSize(300, 150)
     layout = QVBoxLayout(dialog)
 
     tv = QTreeView(dialog)

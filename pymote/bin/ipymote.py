@@ -1,9 +1,11 @@
 def start_ipymote():
-    import os, sys
+    import os
+    import sys
     if sys.platform.startswith("win32") or sys.platform.startswith("linux2"):
         try:
             os.environ['VIRTUAL_ENV'] = os.environ['PYMOTE_ENV']
-            os.environ['IPYTHONDIR'] = os.path.join(os.environ['PYMOTE_ENV'],'.ipython')
+            os.environ['IPYTHONDIR'] = os.path.join(os.environ['PYMOTE_ENV'],
+                                                    '.ipython')
         except KeyError:
             pass
         
