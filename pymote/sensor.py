@@ -122,7 +122,7 @@ class CompositeSensor(object):
 
     def __init__(self, node, componentSensors=None):
         """
-        Args:
+        Arguments:
             node (:class:`Node`): 
                 Node that has this composite sensor is attached to.
             componentSensors (tuple):
@@ -160,8 +160,7 @@ class ProbabilityFunction(object):
     """Provides a way to get noisy reading."""
 
     def __init__(self, settings_key):
-        """This is init.
-        
+        """
         Arguments:
             settings_key: a settings parameter
             
