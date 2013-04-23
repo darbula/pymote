@@ -96,7 +96,8 @@ class Node(object):
     @commRange.setter
     def commRange(self, commRange):
         self._commRange = commRange
-        self.network.recalculate_edges([self])
+        if self.network:
+            self.network.recalculate_edges([self])
 
     @property
     def warnings(self):
