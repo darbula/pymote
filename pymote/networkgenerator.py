@@ -3,6 +3,7 @@ from numpy.core.numeric import Inf
 from pymote.network import Network
 from pymote.logger import logger
 from conf import settings
+from numpy import sign
 
 
 class NetworkGenerator(object):
@@ -37,6 +38,14 @@ class NetworkGenerator(object):
         if self.n_count<n_min or self.n_count>n_max:
             raise NetworkGeneratorException('Number of nodes must be between '
                                             'n_min and n_max.')
+        if degree and degree>=n_max:
+            raise NetworkGeneratorException('Degree % d must be smaller than '
+                                            'maximum number of nodes %d.'
+                                            % (degree, n_max))
+        #TODO: optimize recalculation of edges on bigger commRanges
+        if degree and degree>16 and n_count!=Inf:
+            logger.warning("Generation could be slow for large degree"
+                           "parameter with bounded n_max.")
         self.n_min = n_min
         self.n_max = n_max
         self.connected = connected
@@ -44,14 +53,14 @@ class NetworkGenerator(object):
         self.degree = degree
         self.comm_range = comm_range
 
-    def _create_modify_network(self, net=None, direction=1):
+    def _create_modify_network(self, net=None, step=1):
         """Helper method for creating new or modifying given network.
         
         Arguments:
             net (int):
                 network to modify, if None create from scratch
-            direction:
-                if 1 new network should be more dense for -1 less dense
+            step:
+                if >0 new network should be more dense for <0 less dense
                 
         """
         if net is None:
@@ -59,63 +68,58 @@ class NetworkGenerator(object):
             for _n in range(self.n_count):
                 net.add_node(commRange=self.comm_range)
         else:
-            if direction==1:
+            if step>0:
                 if len(net)<self.n_max:
                     net.add_node()
-                    logger.debug("Adding node, number of nodes: %d"
-                                 % (len(net)+1))
+                    logger.debug("Added node, number of nodes: %d"
+                                 % len(net))
                 elif not self.comm_range:
-                    logger.debug("Increasing commRange to %d"
-                                 % (net.nodes()[0].commRange+1))
                     for node in net.nodes():
-                        node.commRange += 1
+                        node.commRange += step
+                    logger.debug("Increased commRange to %d"
+                                 % node.commRange)
                 else:
                     return None
             else:
                 if len(net)>self.n_min and len(net)>1:
                     net.remove_node(net.nodes()[0])
-                    logger.debug("Removing node, nodes left: %d"
-                                 % (len(net)-1))
+                    logger.debug("Removed node, nodes left: %d"
+                                 % len(net))
                 elif not self.comm_range:
-                    logger.debug("Decreasing commRange to %d"
-                                 % (net.nodes()[0].commRange+1))
                     for node in net.nodes():
-                        node.commRange -= 1
+                        node.commRange += step
+                    logger.debug("Decreased commRange to %d"
+                                 % net.nodes()[0].commRange)
                 else:
                     return None
         return net
     
     def _are_conditions_satisfied(self, net):
+        cr = net.nodes()[0].commRange
         if self.connected and not is_connected(net):
             logger.debug("Not connected")
-            return 1
-        elif self.degree and (net.avg_degree()<self.degree):
-            logger.debug("Degree too small %f" % net.avg_degree())
-            return 1
-        elif self.degree and (net.avg_degree()>self.degree+1):
-            logger.debug("Degree too big %f" % net.avg_degree())
-            return -1
+            return round(0.2*cr)
+        elif self.degree:
+            logger.debug("Degree not satisfied %f" % net.avg_degree())
+            diff = self.degree-net.avg_degree()
+            return round((sign(diff)*(round(diff)*2)**2)*cr/100)
         return 0
     
     def generate_random_network(self):
         """Basic method: generates network with randomly positioned nodes."""
         #TODO: try some more advanced algorithm for situation when
         # both connected network and too small degree are needed
-        #TODO: increase step for commRange adjustment
+        # that is agnostic to actual dimensions of the environment
         net = None
-        direction=[0]
+        steps = [0]
         while True:
-            net=self._create_modify_network(net, direction[-1])
+            net = self._create_modify_network(net, steps[-1])
             if not net:
                 break
-            direction.append(self._are_conditions_satisfied(net))
-            if len(direction)>1000:
+            steps.append(self._are_conditions_satisfied(net))
+            if len(steps)>1000:
                 break
-            if direction[-1]==0:
-                if len(direction)>1:
-                    logger.warning("Exact parameters could not be satisfied.\n"
-                                   "Number of nodes: %d\ncommRange: %d"
-                                   % (len(net), net.nodes()[0].commRange))
+            if steps[-1]==0:
                 return net
             
         logger.error("Could not generate connected network with given "
