@@ -56,10 +56,21 @@ Pymote can also be started by starting IPython directly and using dedicated ``py
 Simulation GUI
 --------------
 Pymote features simulation GUI which can be started as standalone application using 
-``pymote-simgui`` (in Windows ``pymote-simgui.exe``). The other, convenient way of starting and
-working with the GUI is from the interactive console by running ``simulationgui.py`` like this::
+``pymote-simgui`` (in Windows ``pymote-simgui.exe``). 
 
-    In [1]: %run pymote_env/Lib/site-packages/pymote/gui/simulationgui.py
+.. note::
+
+    If pymote is installed in virtual environment then `pymote-simgui` starts inside this 
+    environment. When network pickle is opened in simulator all algorithms this network is 
+    referencing must be importable from virtual environment. The easy and proper way to 
+    ensure that the algorithms are importable is to use bootstrap algorithms package that can be 
+    found [here](https://github.com/darbula/pymote-algorithms-bootstrap) and follow the
+    instructions found there.
+
+The other, convenient way of starting and working with the GUI is from the interactive console by 
+running ``simulationgui.py`` like this::
+
+    In [1]: %run path/to/pymote/gui/simulationgui.py
 
 The gui event loop is separated from the console. Simulation window can be accessed by using 
 ``simgui`` and network in the simulator window by using ``simgui.net`` so all simulation objects 

@@ -10,6 +10,7 @@ from channeltype import ChannelType
 from node import Node
 from numpy.random import rand
 from numpy import array, pi
+from numpy.lib.function_base import average
 
 
 class Network(Graph):
@@ -89,6 +90,9 @@ class Network(Graph):
 
     def remove_node(self, node):
         """ Remove node from network. """
+        if node not in self.nodes():
+            logger.error("Node not in network")
+            return
         Graph.remove_node(self, node)
         del self.pos[node]
         del self.labels[node]
@@ -136,7 +140,10 @@ class Network(Graph):
                 return n
         logger.error('Network has no node with id %d.' % id)
         return None
-
+    
+    def avg_degree(self):
+        return average(self.degree().values())
+    
     def get_current_algorithm(self):
         """ Try to return current algorithm based on algorithmState. """
         if len(self.algorithms) == 0:

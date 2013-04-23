@@ -30,7 +30,8 @@ class Environment2D(Environment):
     The Environment2D allows to define map and scale of 2D environment.
     """
 
-    def __init__(self, path='', scale=None):
+    def __init__(self, path='', scale=None, shape=None):
+        shape = shape if shape else settings.ENVIRONMENT2D_SHAPE
         if (path):
             try:
                 r = png.Reader(path)
@@ -39,9 +40,10 @@ class Environment2D(Environment):
                 assert((r.height, r.width) == self.im.shape)
             except IOError:
                 print 'Can\'t open %s creating new default environment.' % path
-                self.im = uint8(ones((settings.ENVIRONMENT2D_SHAPE)) * 255)
+                
+                self.im = uint8(ones((shape)) * 255)
         else:
-            self.im = uint8(ones((settings.ENVIRONMENT2D_SHAPE)) * 255)
+            self.im = uint8(ones((shape)) * 255)
 
         self.dim = 2
         scale = not scale and 1 or int(scale)

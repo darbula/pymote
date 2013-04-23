@@ -11,6 +11,7 @@ Reference
    :maxdepth: 2
 
    sensors
+   networkgenerator
 .. introduction
 
 
