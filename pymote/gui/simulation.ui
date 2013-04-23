@@ -212,7 +212,7 @@
               </rect>
              </property>
              <property name="text">
-              <string>mst</string>
+              <string>treeNeighbors</string>
              </property>
              <property name="frame">
               <bool>true</bool>

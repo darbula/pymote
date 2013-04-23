@@ -266,8 +266,10 @@ class SimulationGui(QMainWindow):
         """
         Show tree representation of network.
         
-        treeKey -- key in nodes memory (dictionary) where parent and
-                   children data is stored in format:
+        Attributes:
+            treeKey (str):
+                key in nodes memory (dictionary) where tree data is stored
+                storage format can be a list off tree neighbors or a dict:
                     {'parent': parent_node,
                      'children': [child_node1, child_node2 ...]}
         """

@@ -1,6 +1,5 @@
 from pymote.algorithm import NodeAlgorithm
 from pymote.algorithm import NetworkAlgorithm
-from pymote.utils.tree import get_root_node, MissingTreeKey
 from pymote.logger import logger
 from pymote.conf import settings
 from networkx import Graph
@@ -307,27 +306,25 @@ class Network(Graph):
                                   'finished': self.algorithmState['finished']}}
 
     def get_tree_net(self, treeKey):
-        """Returns new network with edges that are not in a tree removed."""
-        # TODO: levels not needed?
-        try:
-            nodesToCheck = [(get_root_node(self, treeKey), 0)]
-        except MissingTreeKey:
-            return None
-        if nodesToCheck[0][0] == None:
-            # TODO: raise exception?
-            return
+        """
+        Returns new network with edges that are not in a tree removed.
+        
+        Tree is defined in nodes memory under treeKey key as a list of tree
+        neighbors or a dict with 'parent' (node) and 'children' (list) keys.
+        
+        """
         edgelist = []
-        levels = [0] * len(self.nodes())  # level of node in tree, root is 0
-        while nodesToCheck:
-            (node, level) = nodesToCheck.pop()
-            edgelist += [(node, child) for child in
-                         node.memory[treeKey]['children']
-                         if child in self.nodes()]
-            levels[self.nodes().index(node)] = level
-            nodesToCheck += [(child, level + 1) for child in
-                             node.memory[treeKey]['children']
-                             if child in self.nodes()]
-
+        for node in self.nodes():
+            nodelist = []
+            if not treeKey in node.memory:
+                continue
+            if isinstance(node.memory[treeKey], list):
+                nodelist = node.memory[treeKey]
+            elif (isinstance(node.memory[treeKey], dict) and
+                  'children' in node.memory[treeKey]):
+                nodelist = node.memory[treeKey]['children']
+            edgelist.extend([(node, neighbor) for neighbor in nodelist
+                              if neighbor in self.nodes()])
         treeNet = self.copy()
         for e in treeNet.edges():
             if e not in edgelist and (e[1], e[0]) not in edgelist:

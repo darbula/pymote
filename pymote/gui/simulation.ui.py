@@ -310,7 +310,7 @@ class Ui_SimulationWindow(object):
         self.redrawNetworkButton.setText(QtGui.QApplication.translate("SimulationWindow", "Redraw", None, QtGui.QApplication.UnicodeUTF8))
         self.treeGroupBox.setToolTip(QtGui.QApplication.translate("SimulationWindow", "Enter memory key that has parent and child items.", None, QtGui.QApplication.UnicodeUTF8))
         self.treeGroupBox.setTitle(QtGui.QApplication.translate("SimulationWindow", "Tree", None, QtGui.QApplication.UnicodeUTF8))
-        self.treeKey.setText(QtGui.QApplication.translate("SimulationWindow", "mst", None, QtGui.QApplication.UnicodeUTF8))
+        self.treeKey.setText(QtGui.QApplication.translate("SimulationWindow", "treeNeighbors", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("SimulationWindow", "Key:", None, QtGui.QApplication.UnicodeUTF8))
         self.propagationError.setToolTip(QtGui.QApplication.translate("SimulationWindow", "Enter memory key that has stitch location data.", None, QtGui.QApplication.UnicodeUTF8))
         self.propagationError.setTitle(QtGui.QApplication.translate("SimulationWindow", "Propagation error", None, QtGui.QApplication.UnicodeUTF8))
