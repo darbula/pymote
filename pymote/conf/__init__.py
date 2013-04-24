@@ -1,6 +1,4 @@
 """
-Settings and configuration for pymote.
-
 Values are taken first from pymote.conf.global_settings as defaults.
 To override default values
 - specify PYMOTE_SETTINGS_MODULE environment variable as module name to be used
@@ -9,7 +7,7 @@ or if settings are imported but not configured (accessed):
 - use settings.configure(SETTING1=value1, SETTING2=value2)
 
 or if they are configured:
-- use settings.load(module)
+- use settings.load('package.settings_module')
 
 """
 

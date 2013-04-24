@@ -6,3 +6,4 @@ Developer Guide
 
    distributing-to-pypi
    running-tests
+   doc

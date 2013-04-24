@@ -7,9 +7,9 @@ the :doc:`../install/installation` section of this documentation.
 Hello distributed world
 =======================
 This tutorial demonstrates a distributed version of the classic *Hello world* example.
-Tutorial is currently available in form of IPython notebook which can be viewed 
-`here <http://nbviewer.ipython.org/url/raw.github.com/darbula/pymote/master/docs/static/notebooks/hello_distributed_world.ipynb>`_
-and downloaded `here <../_static/notebooks/hello_distributed_world.ipynb>`_.
+Tutorial is currently available in form of IPython notebook which can be 
+`viewed <http://nbviewer.ipython.org/url/raw.github.com/darbula/pymote/master/docs/static/notebooks/hello_distributed_world.ipynb>`_
+and `downloaded <../_static/notebooks/hello_distributed_world.ipynb>`_.
 
 
 ..

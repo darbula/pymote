@@ -12,6 +12,7 @@ Reference
 
    sensors
    networkgenerator
+   conf
 .. introduction
 
 

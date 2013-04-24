@@ -44,6 +44,9 @@ autosummary_generate = True
 # include class and __init__ docstring
 autoclass_content = 'both'
 
+#http://sphinx-doc.org/latest/ext/autodoc.htm#confval-autodoc_member_order
+autodoc_member_order = 'alphabetical'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -261,4 +264,8 @@ texinfo_documents = [
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {
+    'python': ('http://docs.python.org/', None),
+    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
+}
