@@ -301,7 +301,7 @@ class Network(Graph):
                 'algorithms': algorithms,
                 'algorithmState': {'name':
                                    self.get_current_algorithm().name
-                                   if algorithms else '',
+                                   if self.get_current_algorithm() else '',
                                   'step': self.algorithmState['step'],
                                   'finished': self.algorithmState['finished']}}
 

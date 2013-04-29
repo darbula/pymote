@@ -114,8 +114,7 @@ class SimulationGui(QMainWindow):
                      drawMessages=True):
         if not net:
             net = self.net
-        currentAlgorithm = self.net.get_current_algorithm()\
-                           if self.net.algorithms else None
+        currentAlgorithm = self.net.get_current_algorithm()
         if clear:
             self.axes.clear()
         self.axes.imshow(self.net.environment.im, vmin=0, cmap='binary_r')
@@ -135,7 +134,7 @@ class SimulationGui(QMainWindow):
         step_text = ' (step %d)' % self.net.algorithmState['step'] \
                     if isinstance(currentAlgorithm, NodeAlgorithm) else ''
         self.axes.set_title((currentAlgorithm.name
-                             if self.net.algorithms else '') + step_text)
+                             if currentAlgorithm else '') + step_text)
 
         self.refresh_visibility()
 
