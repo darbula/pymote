@@ -3,7 +3,7 @@ from numpy.core.numeric import Inf
 from pymote.network import Network
 from pymote.logger import logger
 from conf import settings
-from numpy import sign
+from numpy import sign, sqrt
 
 
 class NetworkGenerator(object):
@@ -86,7 +86,7 @@ class NetworkGenerator(object):
                     logger.debug("Removed node, nodes left: %d"
                                  % len(net))
                 elif not self.comm_range:
-                    for node in net.nodes():
+                    for node in net:
                         node.commRange += step
                     logger.debug("Decreased commRange to %d"
                                  % net.nodes()[0].commRange)
@@ -126,6 +126,26 @@ class NetworkGenerator(object):
                      "parameters. Try removing and/or modifying some of "
                      "them.")
         
-       
+    def generate_neigborhood_network(self):
+        """Generates network where all nodes are in one hop neighborhood of
+           at least one node.
+           
+           Finds out node in the middle, that is the node with minimum maximum
+           distance to all other nodes and sets that distance as new commRange.
+        
+        """
+        net = self._create_modify_network()
+        
+        max_distances = []
+        for node in net:
+            distances = [sqrt(sum((net.pos[node]-net.pos[neighbor])**2))\
+                                   for neighbor in net]
+            max_distances.append(max(distances))
+        min_distance = min(max_distances)
+        for node in net:
+            node.commRange = min_distance+1
+        return net
+
+
 class NetworkGeneratorException(Exception):
     pass

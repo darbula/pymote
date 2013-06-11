@@ -12,6 +12,7 @@ It defines parameters (conditions) that generated network must satisfy.
 Methods
 -------
 .. automethod:: pymote.networkgenerator.NetworkGenerator.generate_random_network
+.. automethod:: pymote.networkgenerator.NetworkGenerator.generate_neigborhood_network
 
 Default procedure
 -----------------
