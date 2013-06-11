@@ -9,6 +9,13 @@ Generally sensors should incorporate some model of measurement insecurity that
 is inherent in real world sensors. This is implemented as a
 :class:`ProbabilityFunction`.
 
+Basic usage:
+
+>>> node.compositeSensor = ('NeighborsSensor','AoASensor')
+>>> node.compositeSensor.sensors
+(<pymote.sensor.NeighborsSensor at 0x6d3fbb0>,
+ <pymote.sensor.AoASensor at 0x6d3f950>)
+
 """
 
 from pymote.conf import settings
@@ -137,6 +144,7 @@ class CompositeSensor(object):
 
     @sensors.setter
     def sensors(self, sensors):
+        self._sensors = ()
         # instantiate sensors passed by class name
         for cls in Sensor.__subclasses__():
             if (cls.__name__ in sensors):
