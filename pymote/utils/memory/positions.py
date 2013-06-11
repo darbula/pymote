@@ -3,7 +3,13 @@ from pymote.utils.memory import MemoryStructure
 
 
 class Positions(MemoryStructure):
-    """Class to represent subclusters positions data in node memory."""
+    """Class to represent subclusters positions data in node memory.
+    
+    Position instances have only one attribute ``subclusters`` It is a list of
+    dictionaries in form {node: position_array,}. Node can be part of multiple
+    subclusers.
+    
+    """
     
     def __init__(self, subclusters=None):
         if subclusters is None:
@@ -11,7 +17,7 @@ class Positions(MemoryStructure):
             self.subclusters = []
         else:
             assert(isinstance(subclusters, list))
-            self.subclusters = list(subclusters)  # make new list
+            self.subclusters = list(subclusters)  # dereference, copy list
         self.old_style_positions = {}
         self.old_style_subclusters = []
     
@@ -45,7 +51,7 @@ class Positions(MemoryStructure):
     
     def get_largest_subcluster(self):
         """ Returns new Positions instance with only one largest subcluster.
-            If multiple subclusters have maximal number of nodes, first one is
+            If multiple subclusters have maximum number of nodes, first one is
             returned. """
         return Positions([reduce(lambda x, y: len(x)>len(y) and
                                  x or y, self.subclusters)])
