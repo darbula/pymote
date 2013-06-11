@@ -1,5 +1,4 @@
-from pymote.algorithm import NodeAlgorithm
-from pymote.algorithm import NetworkAlgorithm
+import inspect
 from pymote.logger import logger
 from pymote.conf import settings
 from networkx import Graph
@@ -10,6 +9,7 @@ from node import Node
 from numpy.random import rand
 from numpy import array, pi
 from numpy.lib.function_base import average
+from algorithm import Algorithm
 
 
 class Network(Graph):
@@ -51,9 +51,14 @@ class Network(Graph):
     @property
     def algorithms(self):
         """
-        You can set algorithms by passing tuple of tuples that are in form
-        (AlgorithmClass, params). AlgorithmClass must be subclass of Algorithm
-        (NodeAlgorithm, NetworkAlgorithm) class.
+        Set algorithms by passing tuple of Algorithm subclasses.
+        
+        >>> net.algorithms = (Algorithm1, Algorithm2,)
+        
+        For params pass tuples in form (Algorithm, params) like this
+        
+        >>> net.algorithms = ((Algorithm1, {'param1': value,}), Algorithm2)
+         
         """
         return self._algorithms
 
@@ -64,13 +69,15 @@ class Network(Graph):
         if not isinstance(algorithms, tuple):
             raise PymoteNetworkError('algorithm')
         for algorithm in algorithms:
-            if not (isinstance(algorithm, tuple) and
-                    len(algorithm) == 2 and
-                    (issubclass(algorithm[0], NodeAlgorithm) or
-                     issubclass(algorithm[0], NetworkAlgorithm)) and
-                    isinstance(algorithm[1], dict)):
+            if inspect.isclass(algorithm) and issubclass(algorithm, Algorithm):
+                self._algorithms += algorithm(self),
+            elif (isinstance(algorithm, tuple) and
+                  len(algorithm) == 2 and
+                  issubclass(algorithm[0], Algorithm) and
+                  isinstance(algorithm[1], dict)):
+                self._algorithms += algorithm[0](self, **algorithm[1]),
+            else:
                 raise PymoteNetworkError('algorithm')
-            self._algorithms += algorithm[0](self, **algorithm[1]),
 
     @property
     def environment(self):
@@ -344,10 +351,9 @@ class PymoteMessageUndeliverable(Exception):
 class PymoteNetworkError(Exception):
     def __init__(self, type_):
         if type_ == 'algorithm':
-            self.message = ('\nAlgorithms must be tuple of tuples in form: '
-                            '(AlgorithmClass, params_dictionary).'
-                            'AlgorithmClass should be subclass of '
-                            'NodeAlgorithm or NetworkAlgorithm.')
+            self.message = ('\nAlgorithms must be in tuple (AlgorithmClass,)'
+                            ' or in form: ((AlgorithmClass, params_dict),).'
+                            'AlgorithmClass should be subclass of Algorithm')
         else:
             self.message = ''
 

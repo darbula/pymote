@@ -3,6 +3,7 @@ from pymote.networkgenerator import NetworkGenerator
 from pymote.algorithm import NodeAlgorithm, NetworkAlgorithm, Algorithm, \
     PymoteAlgorithmException
 from pymote.network import PymoteNetworkError
+from pymote import Node
 
 
 def set_algorithms(net, algorithms):
@@ -39,14 +40,15 @@ class TestAlgorithmsSetter(unittest.TestCase):
 
                               (SomeNetworkAlgorithm,
                               {}),
+                              
+                              SomeNetworkAlgorithm,
                               )
         self.check = [
                 # wrong_format
                 (PymoteNetworkError, [(SomeNodeAlgorithm,
                                        {'rp1': 1, 'rp2': 2, 'rp3': 3}), ]),
-                (PymoteNetworkError, ((SomeNodeAlgorithm),)),
                 # wrong_base_class
-                (PymoteNetworkError, ((Algorithm, {}),)),
+                (PymoteNetworkError, ((Node, {}),)),
                 # missing_req_params
                 (PymoteAlgorithmException, ((SomeNodeAlgorithm,
                                              {'rp1': 1, }),)),
