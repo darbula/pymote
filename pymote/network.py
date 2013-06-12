@@ -186,7 +186,8 @@ class Network(Graph):
         # figsize in inches
         # default matplotlibrc is dpi=80 for plt and dpi=100 for savefig
         plt.figure(figsize=fig_size, dpi=dpi)
-        plt.imshow(self._environment.im, cmap='binary_r', vmin=0)
+        plt.imshow(self._environment.im, cmap='binary_r', vmin=0,
+                   origin='lower')
         if positions:
             # truncate positions to [x, y], i.e. lose theta
             for k, v in positions.items():

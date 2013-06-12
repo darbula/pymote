@@ -6,7 +6,7 @@ from numpy.core.numeric import sign, sqrt, Inf
 
 
 class Environment(object):
-    """ ChannelType abstract base class """
+    """ Environment abstract base class """
 
     def __new__(self, **kwargs):
         """ return instance of default Environment """
@@ -37,6 +37,7 @@ class Environment2D(Environment):
                 r = png.Reader(path)
                 planes = r.read()[3]['planes']
                 self.im = vstack(imap(uint8, r.asDirect()[2]))[:, ::planes]
+                self.im = self.im[::-1, :]  # flip-up-down
                 assert((r.height, r.width) == self.im.shape)
             except IOError:
                 print 'Can\'t open %s creating new default environment.' % path
