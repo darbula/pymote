@@ -15,6 +15,12 @@ Basic usage:
 >>> node.compositeSensor.sensors
 (<pymote.sensor.NeighborsSensor at 0x6d3fbb0>,
  <pymote.sensor.AoASensor at 0x6d3f950>)
+ 
+To manually set sensor parameters first make an sensor instance:
+
+>>> import scipy.stats
+>>> aoa_sensor = AoASensor({'pf': scipy.stats.norm, 'scale': 10*pi/180 })
+>>> node.compositeSensor = (aoa_sensor,)
 
 """
 
@@ -33,9 +39,16 @@ class Sensor(object):
     to them or to get the environment temperature.
     
     """
-
-    def __init__(self):
-        self.probabilityFunction = None
+    
+    pf_settings_key = ''
+    
+    def __init__(self, pf_params={}):
+        if not pf_params:
+            pf_params = getattr(settings, self.pf_settings_key, {})
+        if pf_params:
+            self.probabilityFunction = ProbabilityFunction(pf_params)
+        else:
+            self.probabilityFunction = None
 
     def name(self):
         return self.__class__.__name__
@@ -58,19 +71,18 @@ def node_in_network(fun):
 class NeighborsSensor(Sensor):
 
     """Provides list of node's neighbors."""
-
+    
     @node_in_network
     def read(self, node):
         return {'Neighbors': node.network.neighbors(node)}
 
 
 class AoASensor(Sensor):
-
+    
     """Provides azimuth between node and its neighbors."""
-
-    def __init__(self):
-        self.probabilityFunction = ProbabilityFunction('AOA_PF_PARAMS')
-
+    
+    pf_settings_key = 'AOA_PF_PARAMS'
+    
     @node_in_network
     def read(self, node):
         network = node.network
@@ -88,10 +100,9 @@ class AoASensor(Sensor):
 class DistSensor(Sensor):
 
     """Provides distance between node and its neighbors."""
-
-    def __init__(self):
-        self.probabilityFunction = ProbabilityFunction('DIST_PF_PARAMS')
-
+    
+    pf_settings_key = 'DIST_PF_PARAMS'
+    
     @node_in_network
     def read(self, node):
         network = node.network
@@ -153,6 +164,10 @@ class CompositeSensor(object):
         for cls in sensors:
             if inspect.isclass(cls) and issubclass(cls, Sensor):
                 self._sensors += cls(),
+        # add sensors that are already instantiated
+        for sensor in sensors:
+            if isinstance(sensor, Sensor):
+                self._sensors += sensor,
 
     def read(self):
         measurements = {}
@@ -165,15 +180,17 @@ class ProbabilityFunction(object):
 
     """Provides a way to get noisy reading."""
 
-    def __init__(self, settings_key):
+    def __init__(self, params):
         """
         Arguments:
-            settings_key: a settings parameter
+            params: dict with keys:
+                pf: probability function (i.e. :py:data:`scipy.stats.norm`)
+                scale: pf parameter
             
         """
-        self.pf = getattr(settings, settings_key)['pf']  # class or gen object
+        self.pf = params['pf']  # class or gen object
         self.name = self.pf.__class__.__name__
-        self.scale = getattr(settings, settings_key)['scale']
+        self.scale = params['scale']
 
     def getNoisyReading(self, value):
         return self.pf.rvs(scale=self.scale, loc=value)
