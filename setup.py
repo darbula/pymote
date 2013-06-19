@@ -60,7 +60,7 @@ setup(
     entry_points={
         'pymote.algorithms': [],
         'console_scripts': [
-            'ipymote = pymote.bin.ipymote:start_ipymote',
+            'ipymote = pymote.scripts.ipymote:start_ipymote',
         ],
         'gui_scripts': [
             'pymote-simgui = pymote.gui.simulationgui:main',
