@@ -1,95 +1,26 @@
 from pymote.logger import logger
-from numpy import array, sqrt, dot, outer, concatenate, set_printoptions, \
-                  arctan2, sin, cos, nan
+from numpy import array, sqrt, dot, outer, set_printoptions, arctan2, sin, cos
 from numpy.linalg import eig, det
 from numpy.lib.twodim_base import eye
-from pymote.utils.localization.stitchsubclusterselectors \
-                                        import MaxCommonNodeSelector
+from pymote.utils.localization.basestitcher import BaseStitcher
+from pymote.utils.localization.stitchsubclusterselectors import \
+            MaxCommonNodeSelector, StitchSubclusterSelectorBase
 set_printoptions(precision=4)
 
 
-class DistStitcher(object):
+class DistStitcher(BaseStitcher):
 
-    def __init__(self, method='horn', weight='', refine=''):
-        self.method = method
-        self.weight = weight  # not used
-        self.refine = refine  # not used
-        if self.method == 'horn':
-            self.stitch_method = self.stitch_subclusters_horn
-        self.selector_class = MaxCommonNodeSelector
-
-    def stitch(self, dst, src, do_intra=True):
-        """
-        Stitch src cluster to dst cluster based on selector and its criteria.
-        
-        1. Stitch all src subclusters to dst.
-        2. Append unstitched source subclusters to dst cluster.
-        3. If do_intra stitch subclusters internally.
-        
-        src and dst clusters are in format defined in
-        pymote.utils.memory.positions.Positions.subclusters:
-        [{node1: array(x1,y1), node2: array(x2,y2), ...}, ...]
-        """
-
-        ###### extraStitch ######
-        selector = self.selector_class(dst, src, cn_count_treshold=2)
-        stitched = self._stitch(dst, src, selector)
-
-        ###### append unstitched ######
-        src_stitched = [s[1] for s in stitched]
-        for src_sc_index in range(len(src)):
-            if src_sc_index not in src_stitched:
-                new_subcluster = {}
-                for node, pos in src[src_sc_index].items():
-                    new_subcluster[node] = pos
-                dst.subclusters.append(new_subcluster)
-
-        if do_intra:
-            self.intrastitch(dst)
-
-    def intrastitch(self, dst):
-        selector = self.selector_class(dst, dst, cn_count_treshold=2)
-        self._stitch(dst, dst, selector, is_intra=True)
-
-    def _stitch(self, dst, src, selector, is_intra=False):
-        stitched = {}
-        while True:
-            dstSubIndex, srcSubIndex = selector.select(stitched, is_intra)
-
-            if dstSubIndex is None and srcSubIndex is None:
-                break
-
-            # stitch srcSub to dstSub using given method
-            R, s, t = self.stitch_method(dst[dstSubIndex], src[srcSubIndex])
-
-            # merge subclusters: append/update src nodes in dst
-            # TODO: apply flip ambiguity condition for new subcluster
-            for node in src[srcSubIndex].keys():
-                if not node in dst[dstSubIndex]:  # append only new
-                    dst[dstSubIndex][node] = \
-                        concatenate((t + dot(R, src[srcSubIndex][node][:2]),
-                                     [nan]))
-
-            stitched[(dstSubIndex, srcSubIndex)] = (R, s, t)
-
-            if is_intra:
-                dst.subclusters.pop(srcSubIndex)  # remove stitched subclusters
-                stitched = {}  # reset stitched as it is not useful after pop
-
-        return stitched
-
-    def align(self, dst, src):
-        """ Align (modify) src w.r.t. dst. """
-
-        for srcSubIndex in range(len(src)):
-            R, _s, t = self.stitch_method(dst[0], src[srcSubIndex])
-            for node in src[srcSubIndex].keys():
-                src[srcSubIndex][node] = \
-                    concatenate((t+dot(R, src[srcSubIndex][node][:2]), [nan]))
+    def __init__(self, selector=None, **kwargs):
+        super(DistStitcher, self).__init__(**kwargs)
+        self.selector = selector or MaxCommonNodeSelector(cn_count_treshold=2)
+        assert(isinstance(self.selector, StitchSubclusterSelectorBase))
 
     def stitch_subclusters_horn(self, dstSubPos, srcSubPos):
-        """ Take two subclusters as dictionaries in format {node: position}
-            where position is array([x,y,theta]) and return R, s and t. """
+        """
+        Take two subclusters as dictionaries in format {node: position}
+        where position is array([x,y,theta]) and return R, s and t.
+
+        """
 
         commonNodes = list(set(dstSubPos.keys()) & set(srcSubPos.keys()))
 

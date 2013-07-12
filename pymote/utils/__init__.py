@@ -1,8 +1,3 @@
-from localization import *
-from visualization import *
-from tree import *
-
-
 def itersubclasses(cls, _seen=None):
     """
     itersubclasses(cls)
