@@ -13,7 +13,7 @@ from pymote.utils.memory.positions import Positions
 class TestStitchers(unittest.TestCase):
 
     def setUp(self):
-        # devdoc/stitch_test.cdr
+        # stitch_test.cdr
         self.test_cluster = {0: array([0., 0., nan]),
                              1: array([3., -2., nan]),
                              2: array([6., 2., nan]),
@@ -27,9 +27,10 @@ class TestStitchers(unittest.TestCase):
         src = self.setup_positions([[0, 1, 2, 3, 4]])
         dst = self.setup_positions([[0, 1, 2, 5, 6]])
 
-        theta = 60/180.*pi
-        R = array([[cos(theta), -sin(theta)], [sin(theta), cos(theta)]])  # ccw
-        self.transform(src, R, [-1.62, -0.8], 0.5)  #transform src positions
+        #theta = 60/180.*pi
+        #R = array([[cos(theta), -sin(theta)], [sin(theta), cos(theta)]])  #ccw
+        #self.transform(src, R, [-1.62, -0.8], 0.5)  #transform src positions
+        self.transform(src)
 
         stitcher = AoAStitcher()
         stitcher.stitch(dst, src)
@@ -42,9 +43,7 @@ class TestStitchers(unittest.TestCase):
         src = self.setup_positions([[0, 1, 2, 3, 4]])
         dst = self.setup_positions([[0, 1, 2, 5, 6]])
 
-        theta = 60/180.*pi
-        R = array([[cos(theta), -sin(theta)], [sin(theta), cos(theta)]])  # ccw
-        self.transform(src, R, [1, 2])  #transform src positions
+        self.transform(src, s_i=1)
 
         stitcher = DistStitcher()
         stitcher.stitch(dst, src)
@@ -54,23 +53,26 @@ class TestStitchers(unittest.TestCase):
         self.assertTrue(rms<0.001, 'Stitching was not good enough.')
 
     def test_dist_stitcher2(self):
-        """ Test dist stitch with 2 common nodes. """
+        """ Test dist stitch with only 2 common nodes - not enough. """
         src = self.setup_positions([[0, 1, 3, 4]])
         dst = self.setup_positions([[0, 1, 2, 5, 6]])
-        self.transform(src)  #transform src positions
+        self.transform(src, s_i=1)  #transform src positions
 
         stitcher = DistStitcher()
         stitcher.stitch(dst, src)
 
         self.assertTrue(len(dst)==2, 'Wrong number of subclusters.')
         rms = get_rms(self.test_cluster, dst)
-        self.assertTrue(rms<0.001, 'Stitching was not good enough.')
+        self.assertFalse(rms<0.001, 'Stitching was too good.')
+        # with align rms should be ok
+        rms_align = get_rms(self.test_cluster, dst, align=True)
+        self.assertTrue(rms_align<0.001, 'Stitching was not good enough.')
 
     def test_dist_stitcher3(self):
-        """ Test dist stitch with 1 common node. """
+        """ Test dist stitch with only 1 common node - not enough. """
         src = self.setup_positions([[0, 3, 4]])
         dst = self.setup_positions([[0, 1, 2, 5, 6]])
-        self.transform(src)  #transform src positions
+        self.transform(src, s_i=1)  #transform src positions
 
         stitcher = DistStitcher()
         stitcher.stitch(dst, src)
@@ -84,14 +86,17 @@ class TestStitchers(unittest.TestCase):
         self.assertTrue(rms_align<0.001, 'Stitching was not good enough.')
 
     def test_dist_intrastitch(self):
-        """ Test intrastitch:
-            Clusters are setup so that first stitch is src[0] with dst[1] and
-            then dst[0] and dst[1] can be intrastitched.
+        """
+        Test dist intrastitch
+
+        Clusters are setup so that first stitch is src[0] with dst[1] and
+        then dst[0] and dst[1] can be intrastitched.
+
         """
         src = self.setup_positions([[1, 2, 4, 5, 6]])
         dst = self.setup_positions([[0, 2, 3, 4], [0, 1, 2, 6]])
-        self.transform(src)  #transform src positions
-        self.transform(dst)  #transform src positions
+        self.transform(src, s_i=1)  #transform src positions
+        self.transform(dst, s_i=1)  #transform src positions
 
         stitcher = DistStitcher()
         stitcher.stitch(dst, src)
@@ -115,9 +120,9 @@ class TestStitchers(unittest.TestCase):
 
     def transform(self, positions, R_i=None, t_i=None, s_i=None, flip=False):
         """
-        Return subclusters with (randomly) rotated translated and
-        scaled positions. If R, s or t is given then transformation is not
-        random.
+        Return subclusters with (randomly) rotated translated and scaled
+        positions. If R_i, s_i or t_i is given then that part of transformation
+        is not random.
 
         """
 
