@@ -6,10 +6,10 @@ class Algorithm(object):
 
     """
     Abstract base class for all algorithms.
-    
+
     Currently there are two subclasses NodeAlgorithm for distributed algorithms
     and NetworkAlgorithm for centralized algorithms.
-    
+
     """
 
     required_params = ()
@@ -43,9 +43,9 @@ class NodeAlgorithm(Algorithm):
 
     """
     Abstract base class for specific distributed algorithms.
-    
+
     In subclass following functions and attributes should be defined:
-    
+
     - class attribute STATUS - dictionary in which keys are all possible
       node statuses and values are functions defining what node should do
       if in that status.
@@ -54,10 +54,10 @@ class NodeAlgorithm(Algorithm):
     - initializer: (optionally) Pass INI message to nodes that should
       start the algorithm and set some attributes needed by the specific
       algorithm
-       
+
     As indication of global termination of algorithm some method could
     optionally return True.
-    
+
     """
 
     INI = 'initialize'
@@ -102,12 +102,12 @@ class NetworkAlgorithm(Algorithm):
 
     """
     Abstract base class for specific centralized algorithms.
-    
+
     This class is used as base class holding real network algorithm
     classes in its __subclassess__ for easy instantiation
-   
+
     Method __init__ and run should be implemented in subclass.
-       
+
     """
 
     def run(self):

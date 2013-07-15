@@ -4,7 +4,7 @@ from pymote.utils.tree import get_root_node
 def show_mst(net, treeKey='mst'):
     """
     Show tree representation of network.
-    
+
     treeKey -- key in nodes memory (dictionary) where parent and
                children data is stored in format:
                 {'parent': parent_node,

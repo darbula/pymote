@@ -6,18 +6,18 @@ import scipy.stats
 
 
 class TestSensor(unittest.TestCase):
-    
+
     def test_node_without_network(self):
         """Test if node without network raises exception on read sensor."""
         node = Node()
         self.assertRaises(Exception, node.compositeSensor.read)
-   
+
     def test_read(self):
         """Test read compositeSensor"""
         net = Network()
         node = net.add_node()
         node.compositeSensor.read()
-    
+
     def test_set_compositeSensor(self):
         """Test setting compositeSensors on a node"""
         net = Network()
@@ -29,5 +29,5 @@ class TestSensor(unittest.TestCase):
         self.assertTrue('Neighbors' in readings.keys() and
                         'AoA' in readings.keys() and
                         'Dist' in readings.keys())
-        
+
         #TODO: check normal distribution

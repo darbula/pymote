@@ -7,7 +7,7 @@ from pymote.algorithms.niculescu2003.dvhop import DVHop
 
 
 class TestNiculescu2003(unittest.TestCase):
-    
+
     def setUp(self):
         net_gen = NetworkGenerator(100)
         self.net = net_gen.generate_random_network()
@@ -22,7 +22,7 @@ class TestNiculescu2003(unittest.TestCase):
                           )
         for node in self.net.nodes()[:10]:
             node.compositeSensor = (TruePosSensor,)
-        
+
     def test_niculescu2003_sim(self):
         """Test niculescu2003 default simulation."""
         sim = Simulation(self.net)

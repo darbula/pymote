@@ -8,7 +8,7 @@ import sys
 def _get_fh(path, mode='r'):
     """Return a file handle for given path and attempt to uncompress/compress
     files ending in '.gz'"""
-    
+
     if path.endswith('.gz'):
         import gzip
         fh = gzip.open(path, mode=mode)
@@ -59,7 +59,7 @@ def _unpickle_method(func_name, obj, cls):
         else:
             break
     return func.__get__(obj, cls)
-        
+
 import copy_reg
 import types
 copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)

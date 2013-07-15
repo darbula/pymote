@@ -52,13 +52,13 @@ class Network(Graph):
     def algorithms(self):
         """
         Set algorithms by passing tuple of Algorithm subclasses.
-        
+
         >>> net.algorithms = (Algorithm1, Algorithm2,)
-        
+
         For params pass tuples in form (Algorithm, params) like this
-        
+
         >>> net.algorithms = ((Algorithm1, {'param1': value,}), Algorithm2)
-         
+
         """
         return self._algorithms
 
@@ -108,12 +108,12 @@ class Network(Graph):
     def add_node(self, node=None, pos=None, ori=None, commRange=None):
         """
         Add node to network.
-        
+
         Attributes:
           `node` -- node to add, default: new node is created
           `pos` -- position (x,y), default: random free position in environment
           `ori` -- orientation from 0 to 2*pi, default: random orientation
-            
+
         """
         if (not node):
             node = Node(commRange=commRange)
@@ -146,10 +146,10 @@ class Network(Graph):
                 return n
         logger.error('Network has no node with id %d.' % id)
         return None
-    
+
     def avg_degree(self):
         return average(self.degree().values())
-    
+
     def get_current_algorithm(self):
         """ Try to return current algorithm based on algorithmState. """
         if len(self.algorithms) == 0:
@@ -169,7 +169,7 @@ class Network(Graph):
         self.algorithmState = {'index': 0, 'step': 1, 'finished': False}
         self.reset_all_nodes()
 
-    def show(self, savefig='', positions=None, edgelist=None, nodeColor='r', \
+    def show(self, savefig='', positions=None, edgelist=None, nodeColor='r',
              show_labels=True):
 
         try:
@@ -316,10 +316,10 @@ class Network(Graph):
     def get_tree_net(self, treeKey):
         """
         Returns new network with edges that are not in a tree removed.
-        
+
         Tree is defined in nodes memory under treeKey key as a list of tree
         neighbors or a dict with 'parent' (node) and 'children' (list) keys.
-        
+
         """
         edgelist = []
         for node in self.nodes():

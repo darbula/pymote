@@ -24,7 +24,7 @@ class TestNetworkCreation(unittest.TestCase):
                              settings.ENVIRONMENT2D_SHAPE,
                              'incorrect default size')
         self.assertTrue(isinstance(self.net.channelType, ChannelType))
-        
+
     def test_visibility(self):
         """
         Pixel 22,22 is not space so node1 and node2 should not be visible

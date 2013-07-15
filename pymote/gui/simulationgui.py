@@ -264,7 +264,7 @@ class SimulationGui(QMainWindow):
     def draw_tree(self, treeKey, net=None):
         """
         Show tree representation of network.
-        
+
         Attributes:
             treeKey (str):
                 key in nodes memory (dictionary) where tree data is stored

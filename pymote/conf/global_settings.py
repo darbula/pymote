@@ -28,7 +28,7 @@ ALGORITHMS = ()
 CHANNEL_TYPE = 'Udg'
 
 # Node
- 
+
 #: Default communication range of nodes.
 COMM_RANGE = 100
 

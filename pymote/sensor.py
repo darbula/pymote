@@ -15,7 +15,7 @@ Basic usage:
 >>> node.compositeSensor.sensors
 (<pymote.sensor.NeighborsSensor at 0x6d3fbb0>,
  <pymote.sensor.AoASensor at 0x6d3f950>)
- 
+
 To manually set sensor parameters first make an sensor instance:
 
 >>> import scipy.stats
@@ -33,15 +33,15 @@ class Sensor(object):
 
     """
     Abstract base class for all Sensors.
-    
+
     Sensor provides a certain capability for a node, information about the
     outside world. It could could be a capability to detect neighbors, distance
     to them or to get the environment temperature.
-    
+
     """
-    
+
     pf_settings_key = ''
-    
+
     def __init__(self, pf_params={}):
         if not pf_params:
             pf_params = getattr(settings, self.pf_settings_key, {})
@@ -71,18 +71,18 @@ def node_in_network(fun):
 class NeighborsSensor(Sensor):
 
     """Provides list of node's neighbors."""
-    
+
     @node_in_network
     def read(self, node):
         return {'Neighbors': node.network.neighbors(node)}
 
 
 class AoASensor(Sensor):
-    
+
     """Provides azimuth between node and its neighbors."""
-    
+
     pf_settings_key = 'AOA_PF_PARAMS'
-    
+
     @node_in_network
     def read(self, node):
         network = node.network
@@ -100,9 +100,9 @@ class AoASensor(Sensor):
 class DistSensor(Sensor):
 
     """Provides distance between node and its neighbors."""
-    
+
     pf_settings_key = 'DIST_PF_PARAMS'
-    
+
     @node_in_network
     def read(self, node):
         network = node.network
@@ -129,11 +129,11 @@ class CompositeSensor(object):
 
     """
     Wrap multiple sensors, coalesce results and return composite readout.
-    
+
     This class is not a sensor itself, i.e. subclass of :class:`Sensor`,
     instead it serves as a placeholder for multiple sensors that can be
     attached to a :class:`Node`.
-    
+
     """
 
     def __init__(self, node, componentSensors=None):
@@ -143,7 +143,7 @@ class CompositeSensor(object):
                 Node that has this composite sensor is attached to.
             componentSensors (tuple):
                 Tuple of :class:`Sensor` subclasses or their class names.
-            
+
         """
         self.node = node
         self._sensors = ()
@@ -186,7 +186,7 @@ class ProbabilityFunction(object):
             params: dict with keys:
                 pf: probability function (i.e. :py:data:`scipy.stats.norm`)
                 scale: pf parameter
-            
+
         """
         self.pf = params['pf']  # class or gen object
         self.name = self.pf.__class__.__name__

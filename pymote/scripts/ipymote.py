@@ -8,11 +8,11 @@ def start_ipymote():
                                                     '.ipython')
         except KeyError:
             pass
-        
+
         from IPython.frontend.terminal.ipapp import TerminalIPythonApp
         app = TerminalIPythonApp.instance()
         app.initialize(argv=['--profile=pymote'])
         app.start()
-    
+
     #TODO: support other platforms
     #elif sys.platform.startswith("darwin"):

@@ -13,7 +13,7 @@ def get_root_node(net, treeKey='mst'):
     Return root node in network tree.
     """
     check_tree_key(net, treeKey)
-    
+
     node = net.nodes()[0]
     while node.memory[treeKey]['parent'] and \
           node.memory[treeKey]['parent'] in net.nodes():
@@ -83,10 +83,10 @@ def check_tree_key(net, treeKey):
 
 
 class MissingTreeKey(Exception):
-    
+
     def __init__(self, treeKey):
         self.treeKey = treeKey
-    
+
     def __str__(self):
         return 'At least one node is missing \'%s\' key in memory.' \
                 % self.treeKey

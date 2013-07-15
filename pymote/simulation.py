@@ -9,7 +9,7 @@ class Simulation(QThread):
     """ Controls single network algorithm and node algorithms simulation.
         It is responsible for visualization and logging, also. """
 
-    def __init__(self, network, type=None, logLevel=None):
+    def __init__(self, network, logLevel=None):
         assert(isinstance(network, Network))
         self._network = network
         self.stepsLeft = 0
@@ -39,7 +39,7 @@ class Simulation(QThread):
     def run(self, steps=0):
         """
         Run simulation from current state.
-        
+
         If steps = 0 it runs until all algorithms are finished.
         If steps > 0 simulation is in stepping mode.
         If steps > number of steps to finish current algorithm it finishes it.
@@ -61,7 +61,7 @@ class Simulation(QThread):
     def run_algorithm(self, algorithm):
         """
         Run given algorithm on given network.
-        
+
         Update stepsLeft and network.algorithmState['step'].
         If stepsLeft hit 0 it may return unfinished.
         """

@@ -1,7 +1,7 @@
 import unittest
 from pymote.networkgenerator import NetworkGenerator
-from pymote.algorithm import NodeAlgorithm, NetworkAlgorithm, Algorithm, \
-    PymoteAlgorithmException
+from pymote.algorithm import NodeAlgorithm, NetworkAlgorithm, \
+        PymoteAlgorithmException
 from pymote.network import PymoteNetworkError
 from pymote import Node
 
@@ -40,7 +40,7 @@ class TestAlgorithmsSetter(unittest.TestCase):
 
                               (SomeNetworkAlgorithm,
                               {}),
-                              
+
                               SomeNetworkAlgorithm,
                               )
         self.check = [

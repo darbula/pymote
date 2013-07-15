@@ -29,6 +29,7 @@ class BaseStitcher(object):
 
         ###### externalStitch ######
         stitched = self._stitch(dst, src)
+        print stitched
 
         ###### append unstitched, that is new_subclusters to dst ######
         src_stitched = [s[1] for s in stitched.keys()]
@@ -89,16 +90,8 @@ class BaseStitcher(object):
         assert not imag(R).any()
         R = real(R)
         if not isnan(ori):
-            print "usao"
             # angle of rotation matrix R in ccw
             Rtheta = arctan2(R[1, 0], R[0, 0])
             ori = mod(ori - Rtheta, 2*pi)
-        """
-        print ori
-        print s
-        print pos
-        print R
-        print t + dot(dot(s, R), pos)
-        """
-        
+
         return concatenate((t + dot(dot(s, R), pos), [ori]))

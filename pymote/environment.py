@@ -41,7 +41,7 @@ class Environment2D(Environment):
                 assert((r.height, r.width) == self.im.shape)
             except IOError:
                 print 'Can\'t open %s creating new default environment.' % path
-                
+
                 self.im = uint8(ones((shape)) * 255)
         else:
             self.im = uint8(ones((shape)) * 255)
@@ -78,10 +78,10 @@ class Environment2D(Environment):
         """
         Returns true if there is line of sight between source (x0,y0) and
         destination (x1,y1).
-        
+
         This is floating point version of Bresenham algorithm that does
         not spread on diagonal pixels.
-        
+
         """
         x = x0 = xy0[0]
         y = y0 = xy0[1]

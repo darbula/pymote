@@ -26,10 +26,10 @@ class LazySettings(object):
 
     """
     A lazy proxy for either global pymote settings or custom settings object.
-    
+
     The user can manually configure settings prior to using them. Otherwise,
     pymote uses the settings module pointed to by PYMOTE_SETTINGS_MODULE.
-    
+
     """
 
     def __init__(self):
@@ -75,10 +75,10 @@ class LazySettings(object):
     def _setup(self, settings_module=None):
         """
         Load the settings module pointed to by the environment variable.
-        
+
         This is used the first time we need any settings at all, if the user
         has not previously configured the settings manually.
-        
+
         """
         if settings_module is None:
             try:
@@ -102,10 +102,10 @@ class LazySettings(object):
     def configure(self, default_settings=global_settings, **options):
         """
         Called to manually configure the settings.
-        
+
         The `default_settings` parameter sets where to retrieve any unspecified
         values from (its argument must support attribute access (__getattr__)).
-        
+
         """
         if self._wrapped != None:
             raise RuntimeError('Settings already configured or accessed no'

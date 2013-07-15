@@ -27,12 +27,12 @@ class NetworkGenerator(object):
                 average number of neighbors per node
             comm_range (int):
                 nodes communication range, if None settings.COMM_RANGE is used
-            
+
         Basic usage:
-        
+
         >>> net_gen = NetworkGenerator()
         >>> net = net_gen.generate_random_network()
-        
+
         """
         self.n_count=n_count if n_count else settings.N_COUNT
         if self.n_count<n_min or self.n_count>n_max:
@@ -55,13 +55,13 @@ class NetworkGenerator(object):
 
     def _create_modify_network(self, net=None, step=1):
         """Helper method for creating new or modifying given network.
-        
+
         Arguments:
             net (int):
                 network to modify, if None create from scratch
             step:
                 if >0 new network should be more dense for <0 less dense
-                
+
         """
         if net is None:
             net = Network(environment=self.environment)
@@ -93,7 +93,7 @@ class NetworkGenerator(object):
                 else:
                     return None
         return net
-    
+
     def _are_conditions_satisfied(self, net):
         cr = net.nodes()[0].commRange
         if self.connected and not is_connected(net):
@@ -104,7 +104,7 @@ class NetworkGenerator(object):
             diff = self.degree-net.avg_degree()
             return round((sign(diff)*(round(diff)*2)**2)*cr/100)
         return 0
-    
+
     def generate_random_network(self):
         """Basic method: generates network with randomly positioned nodes."""
         #TODO: try some more advanced algorithm for situation when
@@ -121,21 +121,21 @@ class NetworkGenerator(object):
                 break
             if steps[-1]==0:
                 return net
-            
+
         logger.error("Could not generate connected network with given "
                      "parameters. Try removing and/or modifying some of "
                      "them.")
-        
+
     def generate_neigborhood_network(self):
         """Generates network where all nodes are in one hop neighborhood of
            at least one node.
-           
+
            Finds out node in the middle, that is the node with minimum maximum
            distance to all other nodes and sets that distance as new commRange.
-        
+
         """
         net = self._create_modify_network()
-        
+
         max_distances = []
         for node in net:
             distances = [sqrt(sum((net.pos[node]-net.pos[neighbor])**2))\

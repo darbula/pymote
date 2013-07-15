@@ -10,17 +10,17 @@ class DVHop(FloodingUpdate):
     required_params = FloodingUpdate.required_params + ('truePositionKey',
                                                         'hopsizeKey',
                                                         )
-    
+
     def initiator_condition(self, node):
         node.memory[self.truePositionKey] = node.compositeSensor.read().\
                                             get('TruePos', None)
         # true if node is one of the landmarks
         return node.memory[self.truePositionKey] is not None
-            
+
     def initiator_data(self, node):
         return {node:
                 concatenate((node.memory[self.truePositionKey][:2], [1]))}
-    
+
     def handle_flood_message(self, node, message):
         if not self.dataKey in node.memory:
             node.memory[self.dataKey] = {}
@@ -37,13 +37,13 @@ class DVHop(FloodingUpdate):
                 # increase hopcount
                 landmark_data[2] += 1
                 updated_data[landmark] = landmark_data
-                
+
         # if node is one of the landmarks then it should recalculate hopsize
         if node.memory[self.truePositionKey] is not None:
             self.recalculate_hopsize(node)
-            
+
         return updated_data
-    
+
     def recalculate_hopsize(self, node):
         pos = node.memory[self.truePositionKey]
         try:

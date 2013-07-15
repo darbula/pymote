@@ -41,7 +41,7 @@ class TreeItem(object):
 
     def columnCount(self):
         return 2
-    
+
     def data(self, column):
         if self.person == None:
             if column == 0:
@@ -57,7 +57,7 @@ class TreeItem(object):
 
     def parent(self):
         return self.parentItem
-    
+
     def row(self):
         if self.parentItem:
             return self.parentItem.childItems.index(self)
@@ -75,7 +75,7 @@ class treeModel(QAbstractItemModel):
         ("Fred", "Bloggs", 1), ("Sue", "Smith", 0)):
             person = person_class(sname, fname, isMale)
             self.people.append(person)
-            
+
         self.rootItem = TreeItem(None, "ALL", None)
         self.parents = {0: self.rootItem}
         self.setupModelData()
@@ -131,7 +131,7 @@ class treeModel(QAbstractItemModel):
         childItem = index.internalPointer()
         if not childItem:
             return QModelIndex()
-        
+
         parentItem = childItem.parent()
 
         if parentItem == self.rootItem:
@@ -147,14 +147,14 @@ class treeModel(QAbstractItemModel):
         else:
             p_Item = parent.internalPointer()
         return p_Item.childCount()
-    
+
     def setupModelData(self):
         for person in self.people:
             if person.isMale:
                 sex = "MALES"
             else:
                 sex = "FEMALES"
-            
+
             if not sex in self.parents:
                 newparent = TreeItem(None, sex, self.rootItem)
                 self.rootItem.appendChild(newparent)
@@ -164,7 +164,7 @@ class treeModel(QAbstractItemModel):
             parentItem = self.parents[sex]
             newItem = TreeItem(person, "", parentItem)
             parentItem.appendChild(newItem)
-        
+
     def searchModel(self, person):
         """
         get the modelIndex for a given appointment
@@ -177,16 +177,16 @@ class treeModel(QAbstractItemModel):
                 if person == child.person:
                     index = self.createIndex(child.row(), 0, child)
                     return index
-                    
+
                 if child.childCount() > 0:
                     result = searchNode(child)
                     if result:
                         return result
-        
+
         retarg = searchNode(self.parents[0])
         print retarg
         return retarg
-            
+
     def find_GivenName(self, fname):
         app = None
         for person in self.people:
@@ -205,7 +205,7 @@ if __name__ == "__main__":
         when a row is clicked... show the name
         '''
         print tv.model().data(index, Qt.UserRole)
-        
+
     def but_clicked():
         '''
         when a name button is clicked, I iterate over the model,
@@ -219,9 +219,9 @@ if __name__ == "__main__":
                 tv.setCurrentIndex(index)
                 return
         tv.clearSelection()
-        
+
     app = QApplication([])
-    
+
     model = treeModel()
     dialog = QDialog()
 
@@ -232,20 +232,20 @@ if __name__ == "__main__":
     tv.setModel(model)
     tv.setAlternatingRowColors(True)
     layout.addWidget(tv)
-    
+
     label = QLabel("Search for the following person")
     layout.addWidget(label)
-    
+
     buts = []
     frame = QFrame(dialog)
     layout2 = QHBoxLayout(frame)
-    
+
     for person in model.people:
         but = QPushButton(person.fname, frame)
         buts.append(but)
         layout2.addWidget(but)
         QObject.connect(but, SIGNAL("clicked()"), but_clicked)
-        
+
     layout.addWidget(frame)
 
     but = QPushButton("Clear Selection")
