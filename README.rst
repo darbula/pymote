@@ -14,8 +14,7 @@ Pymote's main goal is to provide framework for fast implementation and simulatio
 Installation
 ------------
 
-For installation instructions please visit 
-`documentation <https://pymote.readthedocs.org>`_.
+For installation instructions please visit `documentation <https://pymote.readthedocs.org>`_.
 
 Literature
 ----------

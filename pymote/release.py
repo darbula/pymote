@@ -1,12 +1,14 @@
 name = 'Pymote'
+# http://semver.org/
 major = 0
 minor = 2
+patch = 0
 
-## Declare current release as a development release.
-## Change to False before tagging a release; then change back.
-dev = True
+# Declare current release as a development release.
+# Change to False before tagging a release; then change back.
+dev = False
 
-version = ''.join([str(major), '.', str(minor)])
+version = ''.join([str(major), '.', str(minor), '.', str(patch)])
 if dev:
     version += '.dev'
 
