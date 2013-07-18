@@ -125,7 +125,7 @@ aviliable options, use one of them:
 Starting Pymote
 ===============
 
-Before starting, make sure that virtual environment is activated :ref:`windows <linux-venvact>` and run ``ipymote`` for interactive console or ``pymote-simgui`` for simualtion GUI. For more details refer to :doc:`starting`.
+Before starting, make sure that virtual environment is :ref:`activated <linux-venvact>` and run ``ipymote`` for interactive console or ``pymote-simgui`` for simualtion GUI. For more details refer to :doc:`starting`.
 
 .. 
     Ubuntu
