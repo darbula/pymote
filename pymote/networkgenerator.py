@@ -2,7 +2,7 @@ from networkx import is_connected
 from numpy.core.numeric import Inf
 from pymote.network import Network
 from pymote.logger import logger
-from conf import settings
+from pymote.conf import settings
 from numpy import sign, sqrt
 
 
