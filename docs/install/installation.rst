@@ -25,8 +25,7 @@ Requirements
 .. _NetworkX: http://networkx.lanl.gov/
 .. _PyPNG: https://github.com/drj11/pypng
 
-If you don't have all required packages already installed and/or want them installed in an isolated
-environment (see note below) please follow the instructions for your OS in the following sections.
+If you don't have all required packages already installed and/or want them installed in an isolated environment (see note below) please follow the instructions for your OS in the following sections.
 
 .. _discourage-systemwide:
 
@@ -111,8 +110,7 @@ To install it into virtual environment use these commands::
 
 Pymote
 ======
-Finally, in order to download and install Pymote and all other required packages there are two
-aviliable options, use one of them:
+Finally, in order to download and install Pymote and all other required packages there are two aviliable options, use one of them:
 
 #. *Stable*: for latest stable version use package from PyPI::
     
@@ -125,7 +123,7 @@ aviliable options, use one of them:
 Starting Pymote
 ===============
 
-Before starting, make sure that virtual environment is :ref:`activated <linux-venvact>` and run ``ipymote`` for interactive console or ``pymote-simgui`` for simualtion GUI. For more details refer to :doc:`starting`.
+Before starting, make sure that virtual environment is :ref:`activated <linux-venvact>` and run ``ipymote`` for interactive console or ``pymote-simgui`` for simulation GUI. For more details refer to :doc:`starting`.
 
 .. 
     Ubuntu
