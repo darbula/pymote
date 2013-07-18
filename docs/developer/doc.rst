@@ -60,6 +60,7 @@ In order for readthedocs.org to make documentation it needs to have certain pack
 
 3. In documentation ``conf.py`` put the following lines to import mock class for certain modules that are not present in virtual environment. 
    ::
+   
         if os.environ.get('READTHEDOCS', None) == 'True':
             sys.path.insert(0,'.')
             from readthedocs import *
