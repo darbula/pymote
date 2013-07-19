@@ -1,6 +1,7 @@
 from pymote.logger import logger
 from pymote.sensor import CompositeSensor
 from pymote.conf import settings
+import logging
 
 
 class Node(object):
@@ -99,20 +100,23 @@ class Node(object):
         if self.network:
             self.network.recalculate_edges([self])
 
-    @property
-    def warnings(self):
-        """ Special field in memory used to log warnings from algorithms. """
-        if not 'warnings' in self.memory:
-            self.memory['warnings'] = []
-        return self.memory['warnings']
+    def get_log(self):
+        """ Special field in memory used to log messages from algorithms. """
+        if not 'log' in self.memory:
+            self.memory['log'] = []
+        return self.memory['log']
 
-    @warnings.setter
-    def warnings(self, warning):
-        assert isinstance(warning, str)
-        if not 'warnings' in self.memory:
-            self.memory['warnings'] = [warning]
+    def log(self, message, level=logging.WARNING):
+        """ Insert a log message in node memory. """
+        assert isinstance(message, str)
+        context = {
+                   'algorithm': str(self.network.get_current_algorithm()),
+                   'algorithmState': self.network.algorithmState,
+                   }
+        if not 'log' in self.memory:
+            self.memory['log'] = [(level, message, context)]
         else:
-            self.memory['warnings'].append(warning)
+            self.memory['log'].append((level, message, context))
 
     def get_dic(self):
         return {'1. info': {'id': self.id,

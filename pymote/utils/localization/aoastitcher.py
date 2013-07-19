@@ -103,7 +103,7 @@ class AoAStitcher(BaseStitcher):
                 assert det(R) < 0  # Umeyama1991
                 logger.warning('M<0 indicates reflection not rotation, '
                                'check result')
-                commonNodes[0].warnings = 'M<0'
+                commonNodes[0].log('M<0')
         # translation vector
         t = p_d - dot(dot(s, R), p_s)
 
@@ -215,7 +215,7 @@ class AoAStitcher(BaseStitcher):
                 # TODO: Umeyama
                 logger.warning('det(R)<0 indicates reflection not rotation, '
                                'check result')
-                commonNodes[0].warnings = 'det(R)<0'
+                commonNodes[0].log('det(R)<0')
 
         # scaling factor
         s = sum(D) / sum([(srcSubPos[cn][0] - p_s[0]) ** 2 +
