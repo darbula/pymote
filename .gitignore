@@ -19,7 +19,9 @@ pip-log.txt
 
 *.log
 *.tar.gz
+.coverage
 .project*
 .pydevproject*
 .settings*
+coverage_html_report*
 docs/reference/generated*
