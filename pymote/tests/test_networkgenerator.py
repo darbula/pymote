@@ -17,7 +17,7 @@ class TestNetworkGeneration(unittest.TestCase):
                   # default N_COUNT and COMM_RANGE and ENVIRONMENT should be compatible
                   ({"n_count": None, "n_min": 0, "n_max": Inf, "connected": True, "environment": None, "degree": None, "comm_range": None}, range(settings.N_COUNT,settings.N_COUNT*2+1)),  
                   # regular default params
-                  ({"n_count": 100, "n_min": 0, "n_max": Inf,  "connected": True, "environment": env,  "degree": None, "comm_range": 100},  range(100,201)),
+                  ({"n_count": 100, "n_min": 0, "n_max": Inf,  "connected": True, "environment": env,  "degree": None, "comm_range": 100},  range(100,1001)),
                   
                   ############## connected True degree False
                   # increase node number
