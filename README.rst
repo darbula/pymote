@@ -1,5 +1,12 @@
+.. image:: https://api.travis-ci.org/darbula/pymote.png?branch=master
+  :target: http://travis-ci.org/darbula/pymote
+
+
+
+
 Pymote
 ======
+
 Pymote is a Python package for event based simulation and evaluation of distributed algorithms.
 
 Definition of distributed environment used as specifications for making Pymote are taken mainly from `Design and Analysis of Distributed Algorithms <http://eu.wiley.com/WileyCDA/WileyTitle/productCd-0471719978,descCd-description.html>`_ by Nicola Santoro.
