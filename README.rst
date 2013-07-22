@@ -1,7 +1,8 @@
 .. image:: https://api.travis-ci.org/darbula/pymote.png?branch=master
   :target: http://travis-ci.org/darbula/pymote
 
-
+.. image:: https://coveralls.io/repos/darbula/pymote/badge.png?branch=master
+  :target: https://coveralls.io/r/darbula/pymote?branch=master
 
 
 Pymote

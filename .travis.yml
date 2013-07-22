@@ -1,16 +1,19 @@
 language: python
 python:
-  - "2.7"
+ - 2.7
 virtualenv:
   system_site_packages: true
+
 before_install:
  - sudo apt-get install -qq python-numpy python-scipy
  - sudo apt-get install python-pyside python-matplotlib
+
 install: 
- - "pip install ipython==0.13.1 --use-mirrors"
- - "pip install networkx==1.7 --use-mirrors"
- - "pip install pypng==0.0.14 --use-mirrors"
- - "pip install python-coverall --use-mirrors"
-script: nosetests
+ - pip install -q ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls --use-mirrors
+
+script:
+ - nosetests
+# - coverage run --source=pymote setup.py nosetests
+
 after_success:
-  - coveralls
+ - coveralls

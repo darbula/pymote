@@ -52,7 +52,7 @@ setup(
         'pypng',
         'ipython',
         'matplotlib',
-        'PySide',
+        #'PySide',
     ],
     long_description=open(os.path.join(os.path.dirname(__file__),
                                        'README.rst')).read(),
@@ -66,9 +66,9 @@ setup(
             'pymote-simgui = pymote.gui.simulationgui:main',
         ]
     },
+    test_suite='nose.collector',
+    tests_require=['nose'],
 
-#    test_suite = 'runtests.main',
-#    tests_require=[],
 #    include_package_data=True,
 #    zip_safe = False,
 )
