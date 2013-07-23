@@ -8,7 +8,7 @@ class Node(object):
 
     cid = 1
 
-    def __init__(self, network=None, commRange=None, sensors=None):
+    def __init__(self, network=None, commRange=None, sensors=None, **kwargs):
         self._compositeSensor = CompositeSensor(self, sensors or
                                                 settings.SENSORS)
         self.network = network
@@ -89,6 +89,10 @@ class Node(object):
     @compositeSensor.setter
     def compositeSensor(self, compositeSensor):
         self._compositeSensor = CompositeSensor(self, compositeSensor)
+
+    @property
+    def sensors(self):
+        return self._compositeSensor.sensors
 
     @property
     def commRange(self):

@@ -15,10 +15,11 @@ from algorithm import Algorithm
 class Network(Graph):
 
     def __init__(self, environment=None, channelType=None, algorithms=(),
-                 networkRouting=True):
+                 networkRouting=True, **kwargs):
         self._environment = environment or Environment()
-        # assert(isinstance(self.environment,Environment))
+        # assert(isinstance(self.environment, Environment))
         self.channelType = channelType or ChannelType(self._environment)
+        self.channelType.environment = self._environment
         self.pos = {}
         self.ori = {}
         self.labels = {}

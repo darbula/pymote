@@ -4,12 +4,13 @@ from pymote.network import Network
 from pymote.logger import logger
 from pymote.conf import settings
 from numpy import sign, sqrt
+from pymote.node import Node
 
 
 class NetworkGenerator(object):
 
     def __init__(self, n_count=None, n_min=0, n_max=Inf, connected=True,
-                 environment=None, degree=None, comm_range=None):
+                 degree=None, comm_range=None, **kwargs):
         """
         Arguments:
             n_count (int):
@@ -20,13 +21,21 @@ class NetworkGenerator(object):
                 maximum number of nodes
             connected (bool):
                 if True network must be fully connected
-            environment (:class:`Environment`):
-                environment in which the network should be created, if None
-                settings.ENVIRONMENT is used
             degree (int):
                 average number of neighbors per node
             comm_range (int):
                 nodes communication range, if None settings.COMM_RANGE is used
+                and it is a signal that this value can be changed if needed to
+                satisfy other wanted properties (connected and degree)
+        kwargs can be network and node __init__ kwargs i.e.:
+            environment (:class:`Environment`):
+                environment in which the network should be created, if None
+                settings.ENVIRONMENT is used
+            channelType (:class:`ChannelType`)
+            algorithms (tuple)
+            commRange (int):
+                overrides `comm_range`
+            sensors (tuple)
 
         Basic usage:
 
@@ -49,9 +58,9 @@ class NetworkGenerator(object):
         self.n_min = n_min
         self.n_max = n_max
         self.connected = connected
-        self.environment = environment
         self.degree = degree
-        self.comm_range = comm_range
+        self.comm_range = kwargs.pop('commRange', comm_range)
+        self.kwargs = kwargs
 
     def _create_modify_network(self, net=None, step=1):
         """Helper method for creating new or modifying given network.
@@ -64,13 +73,15 @@ class NetworkGenerator(object):
 
         """
         if net is None:
-            net = Network(environment=self.environment)
+            net = Network(**self.kwargs)
             for _n in range(self.n_count):
-                net.add_node(commRange=self.comm_range)
+                node = Node(commRange=self.comm_range, **self.kwargs)
+                net.add_node(node)
         else:
             if step>0:
                 if len(net)<self.n_max:
-                    net.add_node()
+                    node = Node(**self.kwargs)
+                    net.add_node(node)
                     logger.debug("Added node, number of nodes: %d"
                                  % len(net))
                 elif not self.comm_range:
