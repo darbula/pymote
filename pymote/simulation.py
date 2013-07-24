@@ -9,7 +9,7 @@ class Simulation(QThread):
     """ Controls single network algorithm and node algorithms simulation.
         It is responsible for visualization and logging, also. """
 
-    def __init__(self, network, logLevel=None):
+    def __init__(self, network, logLevel=None, **kwargs):
         assert(isinstance(network, Network))
         self._network = network
         self.stepsLeft = 0
