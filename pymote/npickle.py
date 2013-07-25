@@ -2,7 +2,9 @@ __all__ = ['read_npickle', 'write_npickle']
 
 from pymote.logger import logger
 import cPickle as pickle
+import errno
 import sys
+import os
 
 
 def _get_fh(path, mode='r'):
@@ -17,13 +19,18 @@ def _get_fh(path, mode='r'):
     return fh
 
 
-def write_npickle(net, path):
+def write_npickle(net, path, makedir=True):
     """Write network object in Python pickle format and save environment image
     in separate file."""
     # TODO use normal pickling by implementing pickling protocol for Network
     # class http://docs.python.org/library/pickle.html#the-pickle-protocol
     # TODO: find out origin of maximum recursion depth problem, hack solution:
     sys.setrecursionlimit(6000)
+    try:
+        os.makedirs(os.path.split(path)[0])
+    except OSError, e:
+        if e.errno != errno.EEXIST:
+            raise
     fh = _get_fh(str(path), mode='wb')
     pickle.dump(net, fh, pickle.HIGHEST_PROTOCOL)
     fh.close()
