@@ -1,3 +1,4 @@
+from pymote.network import Network
 __all__ = ['read_npickle', 'write_npickle']
 
 from pymote.logger import logger
@@ -19,10 +20,9 @@ def _get_fh(path, mode='r'):
     return fh
 
 
-def write_npickle(net, path, makedir=True):
-    """Write network object in Python pickle format and save environment image
-    in separate file."""
-    # TODO use normal pickling by implementing pickling protocol for Network
+def write_pickle(obj, path, makedir=True):
+    """Write object in Python pickle format."""
+    # TODO: use normal pickling by implementing pickling protocol for Network
     # class http://docs.python.org/library/pickle.html#the-pickle-protocol
     # TODO: find out origin of maximum recursion depth problem, hack solution:
     sys.setrecursionlimit(6000)
@@ -32,17 +32,21 @@ def write_npickle(net, path, makedir=True):
         if e.errno != errno.EEXIST:
             raise
     fh = _get_fh(str(path), mode='wb')
-    pickle.dump(net, fh, pickle.HIGHEST_PROTOCOL)
+    pickle.dump(obj, fh, pickle.HIGHEST_PROTOCOL)
     fh.close()
-    logger.info('net saved %s' % path)
+    logger.info('%s saved: %s' % (repr(obj), path))
+
+write_npickle = write_pickle
 
 
-def read_npickle(path):
-    """Read network object in Python pickle format."""
+def read_pickle(path):
+    """Read object in Python pickle format."""
     fh = _get_fh(str(path), 'rb')
-    net = pickle.load(fh)
-    return net
+    obj = pickle.load(fh)
+    logger.info('%s loaded: %s' % (repr(obj), path))
+    return obj
 
+read_npickle = read_pickle
 
 # scipy.stats.norm (scipy.stats.distributions.norm_gen) object has some bounded
 # (instance) methods that needs to be pickled
