@@ -14,9 +14,9 @@ class Simulation(QThread):
         self._network = network
         self.stepsLeft = 0
         self.logger = logging.getLogger('pymote.simulation')
+        self.logger.level = logLevel or logging.DEBUG
         self.logger.debug('Simulation %s created successfully.' %
                           (hex(id(self))))
-        self.logger.level = logLevel or logging.DEBUG
         QThread.__init__(self)
 
     def __del__(self):

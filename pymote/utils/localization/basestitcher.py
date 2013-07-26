@@ -29,7 +29,6 @@ class BaseStitcher(object):
 
         ###### externalStitch ######
         stitched = self._stitch(dst, src)
-        print stitched
 
         ###### append unstitched, that is new_subclusters to dst ######
         src_stitched = [s[1] for s in stitched.keys()]

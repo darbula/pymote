@@ -29,7 +29,7 @@ class Network(Graph):
         self.algorithmState = {'index': 0, 'step': 1, 'finished': False}
         self.outbox = []
         self.networkRouting = networkRouting
-        logger.debug("Instance of Network has been initialized.")
+        logger.info("Instance of Network has been initialized.")
 
     # TODO: incomplete add other properties
     def subgraph(self, nbunch, pos=None):
