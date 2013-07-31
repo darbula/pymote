@@ -7,9 +7,13 @@ from environment import Environment
 from channeltype import ChannelType
 from node import Node
 from numpy.random import rand
+from numpy.core.numeric import Inf, allclose
 from numpy import array, pi
 from numpy.lib.function_base import average
 from algorithm import Algorithm
+from networkx.algorithms.components.connected import is_connected
+from pymote.sensor import CompositeSensor
+from pymote.utils import pymote_equal_objects
 
 
 class Network(Graph):
@@ -305,7 +309,6 @@ class Network(Graph):
         pos = {n: 'x: %.2f y: %.2f theta: %.2f deg' %
                (self.pos[n][0], self.pos[n][1], self.ori[n] * 180. / pi)
                for n in self.nodes()}
-        # TODO: environment, channeltype
         return {'nodes': pos,
                 'algorithms': algorithms,
                 'algorithmState': {'name':
@@ -339,6 +342,53 @@ class Network(Graph):
             if e not in edgelist and (e[1], e[0]) not in edgelist:
                 treeNet.remove_edge(*e)
         return treeNet
+
+    def validate_params(self, params):
+        """ Validate if given network params match its real params. """
+        logger.info('Validating parms')
+        count = params.get('count', None)  #  for unit tests
+        if count:
+            if isinstance(count, list):
+                assert(len(self) in count)
+            else:
+                assert(len(self)==count)
+        n_min = params.get('n_min', 0)
+        n_max = params.get('n_max', Inf)
+        assert(len(self)>=n_min and len(self)<=n_max)
+        for param, value in params.items():
+            if param=='connected':
+                assert(not value or is_connected(self))
+            elif param=='degree':
+                allclose(self.avg_degree(), value, atol=1)
+            elif param=='environment':
+                assert(self.environment.__class__==value.__class__)
+            elif param=='channelType':
+                assert(self.channelType.__class__==value.__class__)
+            elif param=='algorithms':
+                alg = self._algorithms
+                self.algorithms = value
+                assert(all(map(lambda a1, a2: pymote_equal_objects(a1, a2),
+                               alg, self.algorithms)))
+                #restore alg
+                self._algorithms = alg
+            elif param=='comm_range':
+                for node in self:
+                    assert(node.commRange==value)
+            elif param=='sensors':
+                compositeSensor = CompositeSensor(Node(), value)
+                for node in self:
+                    assert(all(map(lambda s1, s2: pymote_equal_objects(s1, s2),
+                                   node.sensors, compositeSensor.sensors)))
+            elif param=='aoa_pf_scale':
+                for node in self:
+                    for sensor in node.sensors:
+                        if sensor.name()=='AoASensor':
+                            assert(sensor.probabilityFunction.scale==value)
+            elif param=='dist_pf_scale':
+                for node in self:
+                    for sensor in node.sensors:
+                        if sensor.name()=='DistSensor':
+                            assert(sensor.probabilityFunction.scale==value)
 
 
 class PymoteMessageUndeliverable(Exception):

@@ -7,6 +7,7 @@ from pymote.environment import Environment2D
 from pymote.channeltype import Udg
 from pymote.sensor import NeighborsSensor
 from pymote.algorithms.readsensors import ReadSensors
+from inspect import isclass
 
 
 class TestNetworkGeneration(unittest.TestCase):
@@ -30,6 +31,8 @@ class TestNetworkGeneration(unittest.TestCase):
                   ({"n_count": 10, "n_min": 0, "n_max": Inf, "connected": True, "environment": env, "degree": None, "comm_range": 100},  {'count': range(11,301)}),
                   # increase commRange
                   ({"n_count": 10, "n_min": 0, "n_max": 10,  "connected": True, "environment": env, "degree": None, "comm_range": None}, {'count': 10}),
+                  # decrease commRange
+                  ({"n_count": 10, "n_min": 10, "n_max": 10,  "connected": True, "environment": env, "degree": 0, "comm_range": None}, {'count': 10}),
                   
                   ############## connected True degree True
                   # increase node number
@@ -48,9 +51,9 @@ class TestNetworkGeneration(unittest.TestCase):
                   # low degree 
                   ({"n_count": 10, "n_min": 0, "n_max": 100, "connected": False, "environment": env, "degree": 3,  "comm_range": 100},    {'count': range(10,101)}),
                   # degree too high for node number
-                  ({"n_count": 10, "n_min": 0, "n_max": 10,  "connected": False, "environment": env, "degree": 10,   "comm_range": None}, 'NetworkGeneratorException'),
-                  ({"n_count": 11, "n_min": 0, "n_max": 10,  "connected": False, "environment": env, "degree": None, "comm_range": None}, 'NetworkGeneratorException'),
-                  ({"n_count": 9, "n_min": 10, "n_max": 10,  "connected": False, "environment": env, "degree": None, "comm_range": None}, 'NetworkGeneratorException'),
+                  ({"n_count": 10, "n_min": 0, "n_max": 10,  "connected": False, "environment": env, "degree": 10,   "comm_range": None}, NetworkGeneratorException),
+                  ({"n_count": 11, "n_min": 0, "n_max": 10,  "connected": False, "environment": env, "degree": None, "comm_range": None}, NetworkGeneratorException),
+                  ({"n_count": 9, "n_min": 10, "n_max": 10,  "connected": False, "environment": env, "degree": None, "comm_range": None}, NetworkGeneratorException),
                   
                   ############## connected False degree False - no need for modifying initially created network
                   # also remove environment from kwargs to test default and change comm_range to commRange 
@@ -66,29 +69,16 @@ class TestNetworkGeneration(unittest.TestCase):
 
     def test_random_generation(self):
         """Test different random generation parameters"""
-        for io in self.in_out:
-            out = io[1]
-            if out=='NetworkGeneratorException':
-                self.assertRaises(NetworkGeneratorException, NetworkGenerator, io[0])
+        for input, output in self.in_out:
+            if isclass(output) and issubclass(output, Exception):
+                self.assertRaises(output, NetworkGenerator, input)
                 continue
-            net_gen = NetworkGenerator(**io[0])
-            if out==None:
+            net_gen = NetworkGenerator(**input)
+            if output==None:
                 self.assertEqual(None, net_gen.generate_random_network())
-            elif isinstance(out, dict):
+            elif isinstance(output, dict):
                 net = net_gen.generate_random_network()
-                count = out.pop('count', None)
-                if count:
-                    expected_nodes_number = [count] if not isinstance(count, list) else count
-                    self.assertNotEquals(net, None, "Network not generated with following params:\n%s" % str(io[0]))
-                    self.assertIn(len(net), expected_nodes_number, "Unexpected number of nodes with following params:\n%s" % str(io[0]))
-                for k,v in out.items():
-                    if k in ["channelType", "algorithms"]:
-                        value = getattr(net, k)
-                    elif k in ["commRange", "sensors"]:
-                        value = getattr(net.nodes()[0], k)
-                    # get classes
-                    if k in ["algorithms", "sensors"]:
-                        value = tuple(map(lambda alg: alg.__class__, value))
-                    self.assertTrue(value==v, "Unexpected property %s with following input params:\n%s" % (k, str(io[0])))
-                    
-            
+                try:
+                    net.validate_params(output)
+                except AssertionError:
+                    self.fail("Network params did not validate.")
