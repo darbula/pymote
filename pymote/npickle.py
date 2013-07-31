@@ -1,5 +1,4 @@
-from pymote.network import Network
-__all__ = ['read_npickle', 'write_npickle']
+__all__ = ['read_pickle', 'write_pickle']
 
 from pymote.logger import logger
 import cPickle as pickle
@@ -34,19 +33,29 @@ def write_pickle(obj, path, makedir=True):
     fh = _get_fh(str(path), mode='wb')
     pickle.dump(obj, fh, pickle.HIGHEST_PROTOCOL)
     fh.close()
-    logger.info('%s saved: %s' % (repr(obj), path))
+    logger.info('instance of %s saved in %s' % (str(obj.__class__), path))
 
 write_npickle = write_pickle
 
 
-def read_pickle(path):
-    """Read object in Python pickle format."""
-    fh = _get_fh(str(path), 'rb')
-    obj = pickle.load(fh)
-    logger.info('%s loaded: %s' % (repr(obj), path))
-    return obj
+def read_pickle(path, allow_missing=False):
+    """
+    Read object in Python pickle format. If allow_missing is False then raise
+    an exception if file is missing.
+    """
+    try:
+        fh = _get_fh(str(path), 'rb')
+        obj = pickle.load(fh)
+        logger.info('instance of %s loaded: %s' % (str(obj.__class__), path))
+        return obj
+    except IOError, e:
+        # if error is some other than errno.ENOENT ='file not found raise
+        if not allow_missing or e.errno!=errno.ENOENT:
+            raise
+        return None
 
 read_npickle = read_pickle
+
 
 # scipy.stats.norm (scipy.stats.distributions.norm_gen) object has some bounded
 # (instance) methods that needs to be pickled
