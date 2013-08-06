@@ -38,9 +38,9 @@ def write_pickle(obj, path, makedir=True):
 write_npickle = write_pickle
 
 
-def read_pickle(path, allow_missing=False):
+def read_pickle(path, not_found_raises=True):
     """
-    Read object in Python pickle format. If allow_missing is False then raise
+    Read object in Python pickle format. If not_found_raises is True then raise
     an exception if file is missing.
     """
     try:
@@ -50,7 +50,7 @@ def read_pickle(path, allow_missing=False):
         return obj
     except IOError, e:
         # if error is some other than errno.ENOENT ='file not found raise
-        if not allow_missing or e.errno!=errno.ENOENT:
+        if not_found_raises or e.errno!=errno.ENOENT:
             raise
         return None
 

@@ -345,7 +345,7 @@ class Network(Graph):
 
     def validate_params(self, params):
         """ Validate if given network params match its real params. """
-        logger.info('Validating parms')
+        logger.info('Validating params')
         count = params.get('count', None)  #  for unit tests
         if count:
             if isinstance(count, list):
