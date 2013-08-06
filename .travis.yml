@@ -6,7 +6,7 @@ virtualenv:
 
 before_install:
  - sudo apt-get install -qq python-numpy python-scipy
- - sudo apt-get install python-pyside python-matplotlib
+ - sudo apt-get install python-pyside python-matplotlib --fix-missing
 
 install: 
  - pip install -q ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls --use-mirrors
