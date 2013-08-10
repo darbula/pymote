@@ -1,7 +1,7 @@
 import inspect
 from pymote.logger import logger
 from pymote.conf import settings
-from networkx import Graph
+from networkx import Graph, is_connected
 import networkx as nx
 from environment import Environment
 from channeltype import ChannelType
@@ -11,7 +11,6 @@ from numpy.core.numeric import Inf, allclose
 from numpy import array, pi
 from numpy.lib.function_base import average
 from algorithm import Algorithm
-from networkx.algorithms.components.connected import is_connected
 from pymote.sensor import CompositeSensor
 from pymote.utils import pymote_equal_objects
 
