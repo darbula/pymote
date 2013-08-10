@@ -49,7 +49,11 @@ Windows version can be installed in an isolated environment very easy:
 
 #. Install `WinPython <https://code.google.com/p/winpython/>`_. WinPython has included python and all required packages inside simple exe installer and they are all installed one relocatable directory.
 
-#. Run ``WinPython Command Prompt.exe`` located in WinPython installation dir and install latest official version of Pymote with ``pip install pymote`` or for latest development version use ``pip install -e git+https://github.com/darbula/pymote.git#egg=Pymote``.
+#. Run ``WinPython Command Prompt.exe`` located in WinPython installation dir and install latest official version of Pymote with ``pip install pymote`` 
+
+..  note::
+
+    For latest development version instead of ``pip intall pymote`` use ``pip install -e git+https://github.com/darbula/pymote.git#egg=Pymote`` and for upgrade after git pull use run ``python setup.py develop`` inside pymote dir.
 
 For starting Pymote interactive console just run ``ipymote`` from the WinPython Command Prompt, and for simulation GUI run ``pymote-simgui``. For more details refer to :doc:`starting`.
 
