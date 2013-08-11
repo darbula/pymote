@@ -189,7 +189,7 @@ class Network(Graph):
 
         # figsize in inches
         # default matplotlibrc is dpi=80 for plt and dpi=100 for savefig
-        plt.figure(figsize=fig_size, dpi=dpi)
+        fig = plt.figure(figsize=fig_size, dpi=dpi)
         plt.imshow(self._environment.im, cmap='binary_r', vmin=0,
                    origin='lower')
         if positions:
@@ -214,6 +214,7 @@ class Network(Graph):
             plt.savefig(savefig)
         else:
             plt.show()
+        return fig
 
     def savefig(self, fname='network.png'):
         self.show(savefig=fname)
