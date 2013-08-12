@@ -94,6 +94,10 @@ class Node(object):
     def sensors(self):
         return self._compositeSensor.sensors
 
+    @sensors.setter
+    def sensors(self, sensors):
+        self._compositeSensor = CompositeSensor(self, sensors)
+
     @property
     def commRange(self):
         return self._commRange
