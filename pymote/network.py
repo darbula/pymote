@@ -359,18 +359,11 @@ class Network(Graph):
             if param=='connected':
                 assert(not value or is_connected(self))
             elif param=='degree':
-                allclose(self.avg_degree(), value, atol=1)
+                assert(allclose(self.avg_degree(), value, atol=1))
             elif param=='environment':
                 assert(self.environment.__class__==value.__class__)
             elif param=='channelType':
                 assert(self.channelType.__class__==value.__class__)
-            elif param=='algorithms':
-                alg = self._algorithms
-                self.algorithms = value
-                assert(all(map(lambda a1, a2: pymote_equal_objects(a1, a2),
-                               alg, self.algorithms)))
-                #restore alg
-                self._algorithms = alg
             elif param=='comm_range':
                 for node in self:
                     assert(node.commRange==value)
@@ -389,6 +382,16 @@ class Network(Graph):
                     for sensor in node.sensors:
                         if sensor.name()=='DistSensor':
                             assert(sensor.probabilityFunction.scale==value)
+            #TODO: refactor this part as setting algorithms resets nodes
+            """
+            elif param=='algorithms':
+                alg = self._algorithms
+                self.algorithms = value
+                assert(all(map(lambda a1, a2: pymote_equal_objects(a1, a2),
+                               alg, self.algorithms)))
+                #restore alg
+                self._algorithms = alg
+            """
 
 
 class PymoteMessageUndeliverable(Exception):
