@@ -34,8 +34,13 @@ class Network(Graph):
         self.networkRouting = networkRouting
         logger.info("Instance of Network has been initialized.")
 
+    def subgraph(self, nbunch):
+        """ Returns Graph instance with nbunch nodes, see subnetwork. """
+        return Graph(self).subgraph(nbunch)
+
     # TODO: incomplete add other properties
-    def subgraph(self, nbunch, pos=None):
+    def subnetwork(self, nbunch, pos=None):
+        """ Returns Network instance with nbunch nodes, see subgraph. """
         if not pos:
             pos = self.pos
         H = Graph.subgraph(self, nbunch)
@@ -173,9 +178,15 @@ class Network(Graph):
         self.algorithmState = {'index': 0, 'step': 1, 'finished': False}
         self.reset_all_nodes()
 
-    def show(self, savefig='', positions=None, edgelist=None, nodeColor='r',
-             show_labels=True):
+    def show(self, ):
+        fig = self.get_fig()
+        fig.show()
 
+    def savefig(self, fname='network.png'):
+        self.get_fig().savefig(fname)
+
+    def get_fig(self, positions=None, edgelist=None, nodeColor='r',
+                show_labels=True):
         try:
             from matplotlib import pyplot as plt
         except ImportError:
@@ -210,14 +221,7 @@ class Network(Graph):
                 label_pos[n] = pos[n].copy() + label_delta
             nx.draw_networkx_labels(net, label_pos, labels=net.labels)
         # plt.axis('off')
-        if savefig:
-            plt.savefig(savefig)
-        else:
-            plt.show()
         return fig
-
-    def savefig(self, fname='network.png'):
-        self.show(savefig=fname)
 
     def recalculate_edges(self, nodes=[]):
         """ Recalculate edges for given nodes or for all self.nodes().
