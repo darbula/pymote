@@ -178,12 +178,12 @@ class Network(Graph):
         self.algorithmState = {'index': 0, 'step': 1, 'finished': False}
         self.reset_all_nodes()
 
-    def show(self, ):
-        fig = self.get_fig()
+    def show(self, *args, **kwargs):
+        fig = self.get_fig(*args, **kwargs)
         fig.show()
 
-    def savefig(self, fname='network.png'):
-        self.get_fig().savefig(fname)
+    def savefig(self, fname='network.png', *args, **kwargs):
+        self.get_fig(*args, **kwargs).savefig(fname)
 
     def get_fig(self, positions=None, edgelist=None, nodeColor='r',
                 show_labels=True):
@@ -208,7 +208,7 @@ class Network(Graph):
             for k, v in positions.items():
                 positions[k] = v[:2]
             pos = positions
-            net = self.subgraph(pos.keys())
+            net = self.subnetwork(pos.keys())
         else:
             pos = self.pos
             net = self
