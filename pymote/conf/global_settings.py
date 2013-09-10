@@ -27,6 +27,9 @@ ALGORITHMS = ()
 #: Unit disc graph is the default channel type.
 CHANNEL_TYPE = 'Udg'
 
+#: Absolute tolerance of network degree
+DEG_ATOL = 1
+
 # Node
 
 #: Default communication range of nodes.

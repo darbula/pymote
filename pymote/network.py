@@ -8,7 +8,7 @@ from channeltype import ChannelType
 from node import Node
 from numpy.random import rand
 from numpy.core.numeric import Inf, allclose
-from numpy import array, pi
+from numpy import array, pi, sign
 from numpy.lib.function_base import average
 from algorithm import Algorithm
 from pymote.sensor import CompositeSensor
@@ -158,6 +158,26 @@ class Network(Graph):
 
     def avg_degree(self):
         return average(self.degree().values())
+
+    def modify_avg_degree(self, value):
+        """
+        Modifies (increases) average degree based on given value by
+        modifying nodes commRange."""
+        # assert all nodes have same commRange
+        assert allclose([n.commRange for n in self], self.nodes()[0].commRange)
+        #TODO: implement decreasing of degree, preserve connected network
+        assert value + settings.DEG_ATOL > self.avg_degree()  # only increment
+        step_factor = 7.
+        steps = [0]
+        #TODO: while condition should call validate
+        while not allclose(self.avg_degree(), value, atol=settings.DEG_ATOL):
+            steps.append((value - self.avg_degree())*step_factor)
+            for node in self:
+                node.commRange += steps[-1]
+            # variable step_factor for step size for over/undershoot cases
+            if len(steps)>2 and sign(steps[-2])!=sign(steps[-1]):
+                step_factor /= 2
+        logger.debug("Modified degree to %f" % self.avg_degree())
 
     def get_current_algorithm(self):
         """ Try to return current algorithm based on algorithmState. """
@@ -363,7 +383,8 @@ class Network(Graph):
             if param=='connected':
                 assert(not value or is_connected(self))
             elif param=='degree':
-                assert(allclose(self.avg_degree(), value, atol=1))
+                assert(allclose(self.avg_degree(), value,
+                                atol=settings.DEG_ATOL))
             elif param=='environment':
                 assert(self.environment.__class__==value.__class__)
             elif param=='channelType':
