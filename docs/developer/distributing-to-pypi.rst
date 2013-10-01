@@ -26,6 +26,6 @@ Create ``C:\Users\<user>\.pypirc`` file::
 Issue these commands::
 
     > setx HOME C:\Users\<user>
-    > python setup.py sdist upload register
+    > python setup.py sdist register upload
     
     
