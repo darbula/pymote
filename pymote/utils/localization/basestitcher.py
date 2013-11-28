@@ -3,7 +3,7 @@ from numpy.lib.type_check import real, imag
 from pymote.utils.localization.stitchsubclusterselectors import \
             MaxCommonNodeSelector, StitchSubclusterSelectorBase
 from pymote.logger import logger
-from numpy import array, sqrt, outer, sin, cos
+from numpy import array, sqrt, outer
 from numpy.linalg import eig, det
 
 
@@ -12,7 +12,7 @@ class BaseStitcher(object):
     Base class for stitching two clusters.
 
     Subclasses should implement own methods for subcluster stitching named:
-        stitch_subclusters_<name>
+        stitch_subclusters
     These methods should take two subclusters as dictionary {node: position}
     where position is array([x,y,theta]) with at least one common node and
     return rotation matrix R, scaling factor s and translation vector t.
@@ -23,14 +23,7 @@ class BaseStitcher(object):
 
     """
 
-    def __init__(self, method='horn', selector=None):
-        """ Default method is horn for backward compatibility. """
-        try:
-            self.stitch_method = self.__getattribute__("stitch_subclusters_" +
-                                                       method)
-        except AttributeError:
-            raise NotImplementedError("Stitch method %s not implemented" %
-                                      method)
+    def __init__(self, selector=None):
         self.selector = selector or MaxCommonNodeSelector()
         assert(isinstance(self.selector, StitchSubclusterSelectorBase))
 
@@ -93,7 +86,8 @@ class BaseStitcher(object):
                 break
 
             # stitch srcSub to dstSub using given method
-            R, s, t = self.stitch_method(dst[dstSubIndex], src[srcSubIndex])
+            R, s, t = self.stitch_subclusters(dst[dstSubIndex],
+                                              src[srcSubIndex])
 
             if None in (R, s, t):  # skip unreliable stitches
                 stitched[(dstSubIndex, srcSubIndex)] = (R, s, t)
@@ -122,7 +116,7 @@ class BaseStitcher(object):
         """ Align (modify) src w.r.t. dst. """
 
         for srcSubIndex in range(len(src)):
-            R, s, t = self.stitch_method(dst[0], src[srcSubIndex])
+            R, s, t = self.stitch_subclusters(dst[0], src[srcSubIndex])
             for node in src[srcSubIndex].keys():
                 src_pos = src[srcSubIndex][node][:2]
                 src[srcSubIndex][node] = self.transform(R, s, t, src_pos)
@@ -146,7 +140,7 @@ class BaseStitcher(object):
     def _get_common_nodes(self, dstSubPos, srcSubPos):
         return list(set(dstSubPos.keys()) & set(srcSubPos.keys()))
 
-    def _get_centroids(self, commonNodes, w_d, dstSubPos, srcSubPos, w_d=None):
+    def _get_centroids(self, commonNodes, dstSubPos, srcSubPos, w_d=None):
         if w_d is None:
             w_d = {node: 1. / len(commonNodes) for node in commonNodes}
         p_s = array([0., 0.])
@@ -155,23 +149,6 @@ class BaseStitcher(object):
             p_s += srcSubPos[cn][:2] * w_d[cn]
             p_d += dstSubPos[cn][:2] * w_d[cn]
         return (p_s, p_d, w_d)
-
-    def _get_rotation_matrix_2_nodes(self, commonNodes, dstSubPos, srcSubPos):
-        """
-        Calculates rotation matrix based only on two common nodes
-
-        Warning: should be used cautiously when local systems could be
-        reflected i.e. when they are formed by distance measurements.
-
-        """
-        vector1 = dstSubPos[commonNodes[0]] - dstSubPos[commonNodes[1]]
-        vector2 = srcSubPos[commonNodes[0]] - srcSubPos[commonNodes[1]]
-        theta1 = arctan2(vector1[1], vector1[0])
-        theta2 = arctan2(vector2[1], vector2[0])
-        theta = theta1 - theta2
-        # in ccw direction
-        R = array([[cos(theta), -sin(theta)], [sin(theta), cos(theta)]])
-        return R
 
     def _get_rotation_matrix_horn(self, commonNodes, dstSubPos, srcSubPos,
                                   p_d, p_s):
