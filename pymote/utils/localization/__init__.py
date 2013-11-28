@@ -1,3 +1,8 @@
+# Declare namespace package
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)  #@ReservedAssignment
+
+
 from pymote.logger import logger
 from numpy import asarray, array, sqrt, dot, outer, concatenate, \
                   set_printoptions, arctan2, sin, cos, pi, mod, \
