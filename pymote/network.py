@@ -12,7 +12,7 @@ from numpy import array, pi, sign
 from numpy.lib.function_base import average
 from algorithm import Algorithm
 from pymote.sensor import CompositeSensor
-from pymote.utils import pymote_equal_objects
+from pymote.utils.helpers import pymote_equal_objects
 
 
 class Network(Graph):

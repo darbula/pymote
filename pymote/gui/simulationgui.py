@@ -17,6 +17,7 @@ import networkx as nx
 from pymote.algorithm import NodeAlgorithm
 from simulationui import Ui_SimulationWindow
 from dictionarytreemodel import DictionaryTreeModel
+from pymote.utils.localization.helpers import align_clusters
 
 
 class SimulationGui(QMainWindow):
