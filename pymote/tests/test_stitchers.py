@@ -2,7 +2,7 @@ import unittest
 from numpy import array
 from pymote.utils.localization.aoastitcher import AoAStitcher
 from pymote.utils.localization.diststitcher import DistStitcher
-from pymote.utils.localization import get_rms
+from pymote.utils.localization.helpers import get_rms
 from numpy.core.numeric import dot, concatenate, nan
 from numpy.ma.core import cos, sin
 from scipy.constants.constants import pi
