@@ -5,7 +5,7 @@ class StitchSubclusterSelectorBase(object):
     def __init__(self, *args, **kwargs):
         pass
 
-    def select(self, stitched):
+    def select(self, dst, src, stitched, is_intra=False):
         raise NotImplementedError
 
 
@@ -36,7 +36,7 @@ class MaxCommonNodeSelector(StitchSubclusterSelectorBase):
                 commonNodes = [node for node in dst_sc.keys()
                                if node in src_sc.keys()]
                 cn_count = len(commonNodes)
-                if cn_count>cn_count_max and cn_count>self.cn_count_treshold:
+                if cn_count>cn_count_max and cn_count>=self.cn_count_treshold:
                     cn_count_max = cn_count
                     dstSubIndex = dst_index
                     srcSubIndex = src_index
