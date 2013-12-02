@@ -19,5 +19,5 @@ from pymote.utils.localization import *
 
 
 # Declare namespace package
-from pkgutil import extend_path
+from pkgutil import extend_path  #@Reimport
 __path__ = extend_path(__path__, __name__)  # @ReservedAssignment

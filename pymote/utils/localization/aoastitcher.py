@@ -36,11 +36,12 @@ class AoAStitcher(BaseStitcher):
               for cn in commonNodes]))
         return s
 
-    def _get_rotation_matrix_2_nodes(self, commonNodes, dstSubPos, srcSubPos):
+    def _get_rotation_matrix_2_common_nodes(self, commonNodes, dstSubPos,
+                                            srcSubPos):
         """
         Calculates rotation matrix based only on two common nodes
 
-        Warning: should be used cautiously when local systems could be
+        Warning: should not be used when local systems could be
         reflected i.e. when they are formed by distance measurements.
 
         """

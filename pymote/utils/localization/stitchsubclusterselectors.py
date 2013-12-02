@@ -44,8 +44,5 @@ class MaxCommonNodeSelector(StitchSubclusterSelectorBase):
         # in intraStitch make sure that dstSub is larger one
         if is_intra and cn_count_max!=0 and \
         len(src[srcSubIndex])>len(dst[dstSubIndex]):
-            tmp = dstSubIndex
-            dstSubIndex = srcSubIndex
-            srcSubIndex = tmp
-
+            return (srcSubIndex, dstSubIndex)  # swapped src and dst indexes
         return (dstSubIndex, srcSubIndex)

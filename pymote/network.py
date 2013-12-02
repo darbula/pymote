@@ -8,7 +8,7 @@ from channeltype import ChannelType
 from node import Node
 from numpy.random import rand
 from numpy.core.numeric import Inf, allclose
-from numpy import array, pi, sign
+from numpy import array, pi, sign, max, min
 from numpy.lib.function_base import average
 from algorithm import Algorithm
 from pymote.sensor import CompositeSensor
@@ -213,8 +213,9 @@ class Network(Graph):
             raise ImportError("Matplotlib required for show()")
 
         # TODO: environment when positions defined
-        node_size = 30
-        label_delta = array([10, 10])
+        node_size = 30  # in points^2
+        # calculate label delta based on network size
+        label_delta = self.get_size()/len(self)
         dpi = 100
         fig_size = tuple(array(self._environment.im.shape) / dpi)
 
@@ -229,6 +230,8 @@ class Network(Graph):
                 positions[k] = v[:2]
             pos = positions
             net = self.subnetwork(pos.keys())
+            label_delta = (max(pos.values(), axis=0) -
+                           min(pos.values(), axis=0))/max([60, len(positions)])
         else:
             pos = self.pos
             net = self
@@ -325,6 +328,10 @@ class Network(Graph):
             raise PymoteMessageUndeliverable('Destination not in network.',
                                              message)
 
+    def get_size(self):
+        """ Returns network width and height based on nodes positions. """
+        return max(self.pos.values(), axis=0) - min(self.pos.values(), axis=0)
+    
     def get_dic(self):
         """ Return all network data in form of dictionary. """
         algorithms = {'%d %s' % (ind, alg.name): 'active'

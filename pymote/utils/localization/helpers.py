@@ -1,5 +1,5 @@
 from pymote.logger import logger
-from numpy import asarray, sqrt, dot, concatenate, diag, mean, zeros
+from numpy import asarray, sqrt, dot, concatenate, diag, mean, zeros, min, max
 from pymote.utils.localization.aoastitcher import AoAStitcher
 from numpy.linalg import inv, pinv
 from copy import deepcopy
@@ -147,7 +147,17 @@ def show_localized(net, estimated, scale=False, align=True,\
     else:
         estimated_sc = estimated[0]
 
-        net.show(positions=estimated_sc, show_labels=show_labels)
+        #net.show(positions=estimated_sc, show_labels=show_labels)
+        fig = net.get_fig(positions=estimated_sc, show_labels=show_labels)
+        ax = fig.gca()
+        minpos = min(estimated_sc.values(), axis=0)
+        maxpos = max(estimated_sc.values(), axis=0)
+        minpos -= (maxpos-minpos)*0.1
+        maxpos += (maxpos-minpos)*0.1
+
+        ax.set_xlim(minpos[0], maxpos[0])
+        ax.set_ylim(minpos[1], maxpos[1])
+        #fig.show()
         if display_loc_err:
             #TODO: not working in ipython notepad
             ax = gca()

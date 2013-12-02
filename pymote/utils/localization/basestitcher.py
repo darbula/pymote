@@ -91,6 +91,7 @@ class BaseStitcher(object):
 
             if None in (R, s, t):  # skip unreliable stitches
                 stitched[(dstSubIndex, srcSubIndex)] = (R, s, t)
+                stitched[(srcSubIndex, dstSubIndex)] = (R, s, t)
                 continue
 
             # merge subclusters: append src nodes in dst
@@ -122,11 +123,8 @@ class BaseStitcher(object):
                 src[srcSubIndex][node] = self.transform(R, s, t, src_pos)
 
     def transform(self, R, s, t, pos, ori=nan):
-        """ Transform node position based on params that are not None. """
-        # assumption is that t is never None
-        assert t is not None
-        R = eye(2) if R is None else R
-        s = 1 if s is None else s
+        """ Transform node position. """
+        assert None not in (R, s, t)
         assert not imag(R).any()
         R = real(R)
         if not isnan(ori):
@@ -162,7 +160,4 @@ class BaseStitcher(object):
         if det(M) < 0:
             # TODO: Umeyama
             assert det(R) < 0  # Umeyama1991
-            logger.warning('M<0 indicates reflection not rotation, '
-                           'check result')
-            commonNodes[0].log('M<0')
         return R
