@@ -10,22 +10,26 @@ def align_clusters(dst, src, scale):
     """ Scale, rotate, translate srcLoc w.r.t. dst. """
     assert(isinstance(dst, list))
     if scale:
-        stitcher = AoAStitcher()
+        stitcher = AoAStitcher(reflectable=True)
     else:
         stitcher = DistStitcher()
     stitcher.align(dst, src)
 
 
 def get_rms(truePos, estimated, align=False, scale=False):
-    """ Return root mean square error of estimated positions.
+    """
+    Returns root mean square error of estimated positions.
 
     Set align if estimated positions need to be transformed (rotated and
     translated) before calculating rms error of localization. Set scale=True
-    if it needs to be scaled also. """
+    if they needs to be scaled also.
 
+    """
     if not isinstance(truePos, list):
         truePos = [truePos]
     assert(len(truePos) == 1)
+    if not isinstance(estimated, list):
+        estimated = [estimated]
 
     if align:
         estimated = deepcopy(estimated)
