@@ -4,11 +4,13 @@ from pymote.utils.localization.aoastitcher import AoAStitcher
 from numpy.linalg import inv, pinv
 from copy import deepcopy
 from pymote.utils.localization.diststitcher import DistStitcher
+from pymote.utils.memory.positions import Positions
 
 
 def align_clusters(dst, src, scale):
     """ Scale, rotate, translate srcLoc w.r.t. dst. """
-    assert(isinstance(dst, list))
+    assert(isinstance(src, Positions))
+    assert(isinstance(dst, Positions))
     if scale:
         stitcher = AoAStitcher(reflectable=True)
     else:
@@ -25,11 +27,9 @@ def get_rms(truePos, estimated, align=False, scale=False):
     if they needs to be scaled also.
 
     """
-    if not isinstance(truePos, list):
-        truePos = [truePos]
+    truePos = Positions.create(truePos)
     assert(len(truePos) == 1)
-    if not isinstance(estimated, list):
-        estimated = [estimated]
+    estimated = Positions.create(estimated)
 
     if align:
         estimated = deepcopy(estimated)
@@ -139,11 +139,13 @@ def show_localized(net, estimated, scale=False, align=True,\
     from matplotlib.pylab import gca
     from matplotlib.collections import LineCollection
 
+    truePos = Positions.create(net.pos)
+    estimated = Positions.create(estimated)
     # copy estimated so that passed estimated remains unchanged
     estimated = deepcopy(estimated)
     if align:
         # rotate, translate and if needed scale estimated w.r.t. true positions
-        align_clusters([net.pos], estimated, scale)
+        align_clusters(truePos, estimated, scale)
 
     #TODO: implement display of all subclusters
     if len(estimated)>1:

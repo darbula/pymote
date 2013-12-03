@@ -5,9 +5,9 @@ from pymote.utils.memory import MemoryStructure
 class Positions(MemoryStructure):
     """Class to represent subclusters positions data in node memory.
 
-    Position instances have only one attribute ``subclusters`` It is a list of
-    dictionaries in form {node: position_array,}. Node can be part of multiple
-    subclusers.
+    Position instances initializer has only one attribute ``subclusters``a
+    list of dictionaries in form {node: position_array,}. Node can be part of
+    multiple subclusters.
 
     """
 
@@ -20,6 +20,16 @@ class Positions(MemoryStructure):
             self.subclusters = list(subclusters)  # dereference, copy list
         self.old_style_positions = {}
         self.old_style_subclusters = []
+
+    @classmethod
+    def create(cls, obj):
+        """ Create Positions instance from obj which can be dict or list. """
+        if not isinstance(obj, cls):
+            if not isinstance(obj, list):
+                assert isinstance(obj, dict)
+                obj = [obj]
+            obj = cls(obj)
+        return obj
 
     @property
     def subclusters_nodes(self):
