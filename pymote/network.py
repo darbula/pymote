@@ -215,7 +215,7 @@ class Network(Graph):
         # TODO: environment when positions defined
         node_size = 30  # in points^2
         # calculate label delta based on network size
-        label_delta = self.get_size()/len(self)
+        label_delta = self.get_size()/max([30, len(self)])
         dpi = 100
         fig_size = tuple(array(self._environment.im.shape) / dpi)
 
