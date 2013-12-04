@@ -10,7 +10,8 @@ from pymote.node import Node
 class NetworkGenerator(object):
 
     def __init__(self, n_count=None, n_min=0, n_max=Inf, connected=True,
-                 degree=None, comm_range=None, **kwargs):
+                 degree=None, comm_range=None, method="random_network",
+                 **kwargs):
         """
         Arguments:
             n_count (int):
@@ -27,6 +28,8 @@ class NetworkGenerator(object):
                 nodes communication range, if None settings.COMM_RANGE is used
                 and it is a signal that this value can be changed if needed to
                 satisfy other wanted properties (connected and degree)
+            method (str):
+                sufix of the name of the method used to generate network
         kwargs can be network and node __init__ kwargs i.e.:
             environment (:class:`Environment`):
                 environment in which the network should be created, if None
@@ -40,7 +43,7 @@ class NetworkGenerator(object):
         Basic usage:
 
         >>> net_gen = NetworkGenerator()
-        >>> net = net_gen.generate_random_network()
+        >>> net = net_gen.generate()
 
         """
         self.n_count=n_count if n_count else settings.N_COUNT
@@ -60,6 +63,8 @@ class NetworkGenerator(object):
         self.connected = connected
         self.degree = degree
         self.comm_range = kwargs.pop('commRange', comm_range)
+        #TODO: use subclass based generators instead of method based
+        self.generate = self.__getattribute__("generate_" + method)
         self.kwargs = kwargs
 
     def _create_modify_network(self, net=None, step=1):
@@ -138,11 +143,12 @@ class NetworkGenerator(object):
                      "them.")
 
     def generate_neigborhood_network(self):
-        """Generates network where all nodes are in one hop neighborhood of
-           at least one node.
+        """
+        Generates network where all nodes are in one hop neighborhood of
+        at least one node.
 
-           Finds out node in the middle, that is the node with minimum maximum
-           distance to all other nodes and sets that distance as new commRange.
+        Finds out node in the middle, that is the node with minimum maximum
+        distance to all other nodes and sets that distance as new commRange.
 
         """
         net = self._create_modify_network()
