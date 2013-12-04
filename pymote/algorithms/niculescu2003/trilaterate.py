@@ -5,14 +5,14 @@ from numpy import linalg
 
 class Trilaterate(FloodingUpdate):
 
-    required_params = FloodingUpdate.required_params + (\
-                        # key in memory for true position data (only landmarks)
-                        'truePositionKey',
-                        # key in memory for storing estimated position
-                        'positionKey',
-                        # key in memory for storing hopsize data
-                        'hopsizeKey',
-                        )
+    required_params = (
+                       # key in memory for true position data (only landmarks)
+                       'truePositionKey',
+                       # key in memory for storing estimated position
+                       'positionKey',
+                       # key in memory for storing hopsize data
+                       'hopsizeKey',
+                       )
 
     def initiator_condition(self, node):
         return node.memory[self.truePositionKey] is not None  # if landmark

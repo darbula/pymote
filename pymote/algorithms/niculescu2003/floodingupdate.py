@@ -11,9 +11,7 @@ class FloodingUpdate(NodeAlgorithm):
     Costs: ?
     """
 
-    required_params = ('dataKey',  # key in memory key where data being updated
-                                   # is stored
-                       )
+    required_params = ('dataKey',)  # memory key for data being updated
     default_params = {}
 
     def initializer(self):

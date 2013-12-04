@@ -7,9 +7,7 @@ class DVHop(FloodingUpdate):
     Data is {landmark: [x,y,hop_count], ...}
     """
 
-    required_params = FloodingUpdate.required_params + ('truePositionKey',
-                                                        'hopsizeKey',
-                                                        )
+    required_params = ('truePositionKey', 'hopsizeKey')
 
     def initiator_condition(self, node):
         node.memory[self.truePositionKey] = node.compositeSensor.read().\
