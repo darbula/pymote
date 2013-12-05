@@ -46,7 +46,7 @@ class Sensor(object):
         if not pf_params:
             pf_params = getattr(settings, self.pf_settings_key, {})
         if pf_params:
-            self.probabilityFunction = ProbabilityFunction(pf_params)
+            self.probabilityFunction = ProbabilityFunction(**pf_params)
         else:
             self.probabilityFunction = None
 
@@ -180,17 +180,14 @@ class ProbabilityFunction(object):
 
     """Provides a way to get noisy reading."""
 
-    def __init__(self, params):
+    def __init__(self, scale, pf):
         """
-        Arguments:
-            params: dict with keys:
-                pf: probability function (i.e. :py:data:`scipy.stats.norm`)
-                scale: pf parameter
-
+        pf: probability function (i.e. :py:data:`scipy.stats.norm`)
+        scale: pf parameter
         """
-        self.pf = params['pf']  # class or gen object
+        self.pf = pf  # class or gen object
         self.name = self.pf.__class__.__name__
-        self.scale = params['scale']
+        self.scale = scale
 
     def getNoisyReading(self, value):
         return self.pf.rvs(scale=self.scale, loc=value)
