@@ -80,8 +80,12 @@ Install pip and virtualenv::
 
 Create virtual environment::
     
-    $ virtualenv pymote_env
+    $ virtualenv pymote_env --system-site-packages
 
+.. warning::
+
+    If you want to avoid using `--system-site-packages` then PySide package has to be installed in virtualenv which is slightly involved or time and disk-space consuming. Both procedures are described below in PySide section.
+    
 .. _linux-venvact:
 
 Activate virtual environment::
@@ -103,16 +107,20 @@ Optionally for IPython notebook install these::
     
 PySide
 ------
-Installing PySide into virtual environment can take some time and disk space. To avoid this, it can be installed systemwide using `these instructions <http://qt-project.org/wiki/PySide_Binaries_Linux>`_ like this::
+Installing PySide into virtual environment can take some skill or time and disk space. To avoid this, it can be installed systemwide (if `--system-site-packages` option is used when creating virtualenv, as noted above) using `these instructions <http://qt-project.org/wiki/PySide_Binaries_Linux>`_ or simply like this::
 
     $ sudo add-apt-repository ppa:pyside
     $ sudo apt-get update
     $ sudo apt-get install python-pyside
-    
-To install it into virtual environment use these commands::
+
+
+If you really want to install PySide into virtual environment quick option is to follow `this solution <http://stackoverflow.com/a/1962076>`_ or simmilar and even better `solution <http://stackoverflow.com/a/8160111>`_ 
+
+More time consuming option is to use pip but then you'll have to install packages needed for compliation like this::
 
     $ sudo apt-get install cmake qt4-qmake qt-sdk
     (pymote_env)$ pip install pyside
+
 
 Pymote
 ======
