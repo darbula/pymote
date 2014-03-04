@@ -8,7 +8,7 @@ term_app = c.TerminalIPythonApp
 load_subconfig('ipython_config.py', profile='default')  # @UndefinedVariable
 lines = """
 from pymote import *
-autoreload 2
+%autoreload 2
 """
 
 # You have to make sure that attributes that are containers already
