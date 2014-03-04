@@ -116,7 +116,7 @@ Installing PySide into virtual environment can take some skill or time and disk 
 
 If you really want to install PySide into virtual environment quick option is to follow `this solution <http://stackoverflow.com/a/1962076>`_ or simmilar and even better `solution <http://stackoverflow.com/a/8160111>`_ 
 
-More time consuming option is to use pip but then you'll have to install packages needed for compliation like this::
+More time consuming option is to use pip. In this case you'll have to install packages needed for compilation using following commands::
 
     $ sudo apt-get install cmake qt4-qmake qt-sdk
     (pymote_env)$ pip install pyside
