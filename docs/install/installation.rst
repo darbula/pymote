@@ -103,7 +103,7 @@ IPython notebook
 ----------------
 Optionally for IPython notebook install these::
 
-    (pymote_env)$ pip install tornado pyzmq pygments
+    (pymote_env)$ pip install tornado pyzmq pygments jinja2
     
 PySide
 ------
