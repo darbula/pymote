@@ -61,22 +61,32 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
      `compass` -- 'off' (default) or 'on' which means all nodes have compass
      `loc_type` -- 'anchor-free' (default) or 'anchored'
      `anchors` -- list of anchor nodes, used only when loc_type is 'anchored'
+
+    References:
+        Savvides2003 - Savvides et al,
+                        On the Error Characteristics of Multihop Node
+                        Localization in Ad-Hoc Sensor Networks, 2003
+        Patwari2005 - Patwari et al,
+                        Locating the nodes: cooperative localization in
+                        wireless sensor networks
+        Chang2006 - Chen Chang et al,
+                        Cramer-Rao-Type Bounds for Localization, 2006
     """
 
     if loc_type == 'anchored' and not anchors:
-        raise(Exception('Anchors not defined.'))
+        raise Exception('Anchors not defined.')
     if loc_type == 'anchor-free' and anchors:
         logger.warning('Anchors are ignored')
         anchors = []
 
     nodes = [node for node in net.nodes() if node not in anchors]
 
-    if sensor.name() == 'AoASensor' and compass == 'off':
-        u = 3  # x,y,theta
+    if sensor.name()=='AoASensor' and compass=='off':
+        u = 3  # x, y, theta
     else:  # DistSensor or AoASensor with compass on
-        u = 2  # x,y
+        u = 2  # x, y
 
-    # number of mesurments, number of unknowns times number of not anchor nodes
+    # number of measurements x number of unknowns
     G = zeros((2 * len(net.edges()), u * len(nodes)))
     m = 0
     for r, node in enumerate(nodes):
@@ -97,16 +107,16 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
                 G[m, t*u+1] = (x_t-x_r)/d**2
                 if u == 3:
                     G[m, t * u + 2] = -1.
-            m += 1  # next row
+            m += 1  # next measurement
 
     for s in nodes[0].compositeSensor.sensors:
         if s.name() == sensor.name():
             sigma = s.probabilityFunction.scale
             break
     else:
-        raise(Exception('Sensor not found in nodes'))
+        raise Exception('Sensor not found in nodes')
 
-    J = 1 / sigma ** 2 * (dot(G.T, G))
+    J = (dot(G.T, G)) / sigma ** 2
 
     #print matrix_rank(J)
 
@@ -115,6 +125,7 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
     elif loc_type=='anchored':
         cov = inv(J)
 
+    # Chang2006 (28)
     di = diag(cov)
     # extract only position from cov
     di = concatenate((di[::3], di[1::3]))
