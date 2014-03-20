@@ -28,7 +28,7 @@ def write_pickle(obj, path, makedir=True):
     try:
         os.makedirs(os.path.split(path)[0])
     except OSError, e:
-        if e.errno != errno.EEXIST:
+        if e.errno!=errno.EEXIST and e.filename!='':
             raise
     fh = _get_fh(str(path), mode='wb')
     pickle.dump(obj, fh, pickle.HIGHEST_PROTOCOL)
