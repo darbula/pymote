@@ -18,6 +18,7 @@ from pymote.algorithm import NodeAlgorithm
 from simulationui import Ui_SimulationWindow
 from dictionarytreemodel import DictionaryTreeModel
 from pymote.utils.localization.helpers import align_clusters, get_rms
+from copy import deepcopy
 
 
 class SimulationGui(QMainWindow):
@@ -384,7 +385,7 @@ class SimulationGui(QMainWindow):
                                             start, filters, selectedFilter)[0]
         if fname:
             try:
-                write_npickle(self.net, fname)
+                write_pickle(self.net, fname)
             except Exception, e:
                 QMessageBox.critical(
                     self, "Error saving file", str(e),
@@ -405,7 +406,7 @@ class SimulationGui(QMainWindow):
         if fname:
             try:
                 print "open" + fname
-                net = read_npickle(fname)
+                net = read_pickle(fname)
                 self.init_sim(net)
             except Exception, e:
                 print "Error opening file %s" % str(e),
@@ -487,7 +488,7 @@ def create_window(window_class, **kwargs):
     if len(sys.argv) > 1:
         fname = sys.argv[1]
         if os.path.exists(fname):
-            net = read_npickle(fname)
+            net = read_pickle(fname)
         else:
             QMessageBox.critical(
                         None, "Error opening file %s", fname,
