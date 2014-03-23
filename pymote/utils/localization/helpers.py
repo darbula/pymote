@@ -1,10 +1,12 @@
 from pymote.logger import logger
-from numpy import asarray, sqrt, dot, concatenate, diag, mean, zeros, min, max
+from numpy import asarray, sqrt, dot, concatenate, diag, mean, zeros, min, \
+max, arctan2, sin, cos
 from pymote.utils.localization.aoastitcher import AoAStitcher
 from numpy.linalg import inv, pinv
 from copy import deepcopy
 from pymote.utils.localization.diststitcher import DistStitcher
 from pymote.utils.memory.positions import Positions
+from xml.dom import NotSupportedErr
 
 
 def align_clusters(dst, src, scale):
@@ -131,6 +133,39 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
     di = concatenate((di[::3], di[1::3]))
 
     return sqrt(2*mean(di))
+
+
+def get_gdop(net, sensor, node, sigma=10):
+    """
+    Calculate geometric dilution of precision for node in formation pos.
+    Node is in formation pos and all other nodes should be neighbors of
+    node. If measurement sigmas are all equal gdop doesnt depend on sigma.
+    """
+    if sensor.name()!='AoASensor':
+        raise NotSupportedErr('Only angle of arrival based gdop is supported')
+    neighbors = net.neighbors(node)
+    x, y = net.pos[node][:2]
+    fi = []
+    d = []
+
+    for n in neighbors:
+        xi, yi = net.pos[n][:2]
+        if n != node:
+            fi.append(arctan2(y - yi, x - xi))
+            d.append(sqrt((x - xi) ** 2 + (y - yi) ** 2))
+
+    mi = ni = l = 0
+    for fii, di in zip(fi, d):
+        mi += (cos(fii) / di / sigma) ** 2
+        l += (sin(fii) / di / sigma) ** 2
+        ni += sin(fii) * cos(fii) / (di * sigma) ** 2
+
+    sigma1 = sqrt(mi / (mi * l - ni ** 2))
+    sigma2 = sqrt(l / (mi * l - ni ** 2))
+    # sigma12 = sqrt(ni/(mi*l-ni**2))
+
+    sigmad = sqrt(sum((di * sigma) ** 2 for di in d) / len(d))
+    return sqrt((sigma1 ** 2 + sigma2 ** 2)) / sigmad
 
 
 def show_subclusters(net, subclusters):
