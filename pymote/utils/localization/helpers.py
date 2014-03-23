@@ -135,21 +135,30 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
     return sqrt(2*mean(di))
 
 
-def get_gdop(net, sensor, node, sigma=10):
+def get_aoa_gdop_node(net, estimated, node):
     """
-    Calculate geometric dilution of precision for node in formation pos.
-    Node is in formation pos and all other nodes should be neighbors of
-    node. If measurement sigmas are all equal gdop doesnt depend on sigma.
+    Calculate geometric dilution of precision for node in estimated formation.
+    Node is in the formation and all other nodes should be neighbors of
+    node.
     """
-    if sensor.name()!='AoASensor':
+    if 'AoASensor' not in [sensor.name() for sensor in node.sensors]:
         raise NotSupportedErr('Only angle of arrival based gdop is supported')
+    sensor = node.compositeSensor.get_sensor('AoASensor')
+    sigma = sensor.probabilityFunction.scale
     neighbors = net.neighbors(node)
-    x, y = net.pos[node][:2]
+    for n in neighbors:
+        sensor = n.compositeSensor.get_sensor('AoASensor')
+        if sensor.probabilityFunction.scale!=sigma:
+            raise NotSupportedErr('All nodes AoA sensors should have '
+                                  'same scale')
+    # Note from Torrieri, Statistical Theory of Passive Location Systems
+    # if measurement sigmas are all equal gdop doesn't depend on sigma.
+    x, y = estimated[node][:2]
     fi = []
     d = []
 
     for n in neighbors:
-        xi, yi = net.pos[n][:2]
+        xi, yi = estimated[n][:2]
         if n != node:
             fi.append(arctan2(y - yi, x - xi))
             d.append(sqrt((x - xi) ** 2 + (y - yi) ** 2))
@@ -166,6 +175,10 @@ def get_gdop(net, sensor, node, sigma=10):
 
     sigmad = sqrt(sum((di * sigma) ** 2 for di in d) / len(d))
     return sqrt((sigma1 ** 2 + sigma2 ** 2)) / sigmad
+
+
+def get_aoa_gdop(net, estimated):
+    return sum([get_aoa_gdop_node(net, estimated, node) for node in estimated])
 
 
 def show_subclusters(net, subclusters):

@@ -169,6 +169,13 @@ class CompositeSensor(object):
             if isinstance(sensor, Sensor):
                 self._sensors += sensor,
 
+    def get_sensor(self, name):
+        sensor = [s for s in self._sensors if s.name()==name]
+        if len(sensor)!=1:
+            raise Exception("Multiple or no sensors found with name %s"
+                            % name)
+        return sensor[0]
+
     def read(self):
         measurements = {}
         for sensor in self._sensors:

@@ -133,8 +133,8 @@ class Network(Graph):
             logger.warning('Node is already in another network, can\'t add.')
             return None
 
-        pos = pos or self.find_random_pos(n=100)
-        ori = ori or rand() * 2 * pi
+        pos = pos if pos is not None else self.find_random_pos(n=100)
+        ori = ori if ori is not None else rand() * 2 * pi
         ori = ori % (2 * pi)
 
         if (self._environment.is_space(pos)):
