@@ -165,16 +165,16 @@ def get_aoa_gdop_node(net, estimated, node):
 
     mi = ni = l = 0
     for fii, di in zip(fi, d):
-        mi += (cos(fii) / di / sigma) ** 2
-        l += (sin(fii) / di / sigma) ** 2
-        ni += sin(fii) * cos(fii) / (di * sigma) ** 2
+        mi += (cos(fii) / di / sigma) ** 2  # (129)
+        l += (sin(fii) / di / sigma) ** 2  # (130)
+        ni += sin(fii) * cos(fii) / (di * sigma) ** 2  # (131)
 
-    sigma1 = sqrt(mi / (mi * l - ni ** 2))
-    sigma2 = sqrt(l / (mi * l - ni ** 2))
+    sigma1 = sqrt(mi / (mi * l - ni ** 2))  # (126)
+    sigma2 = sqrt(l / (mi * l - ni ** 2))  # (127)
     # sigma12 = sqrt(ni/(mi*l-ni**2))
 
-    sigmad = sqrt(sum((di * sigma) ** 2 for di in d) / len(d))
-    return sqrt((sigma1 ** 2 + sigma2 ** 2)) / sigmad
+    sigmad = sqrt(sum((di * sigma) ** 2 for di in d) / len(d))  # (138)
+    return sqrt((sigma1 ** 2 + sigma2 ** 2)) / sigmad  # (139)
 
 
 def get_aoa_gdop(net, estimated):
