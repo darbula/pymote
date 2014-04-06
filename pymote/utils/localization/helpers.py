@@ -1,6 +1,7 @@
 from pymote.logger import logger
+from numpy import sum as nsum
 from numpy import asarray, sqrt, dot, concatenate, diag, mean, zeros, min, \
-max, arctan2, sin, cos
+max, arctan2, sin, cos, square
 from pymote.utils.localization.aoastitcher import AoAStitcher
 from numpy.linalg import inv, pinv
 from copy import deepcopy
@@ -135,6 +136,15 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
     return sqrt(2*mean(di))
 
 
+def get_crb_norm(*args, **kwargs):
+    """
+    Calculates crb that is not dependent on scale i.e. to check correlation
+    with gdop.
+    """
+    net = args[0]
+    return get_crb(*args, **kwargs)/sqrt(nsum(square(net.pos.values())[:, :2]))
+
+
 def get_aoa_gdop_node(net, estimated, node):
     """
     Calculate geometric dilution of precision for node in estimated formation.
@@ -178,6 +188,9 @@ def get_aoa_gdop_node(net, estimated, node):
 
 
 def get_aoa_gdop(net, estimated):
+    estimated = Positions.create(estimated)
+    assert len(estimated.subclusters)==1
+    estimated = estimated.subclusters[0]
     return sum([get_aoa_gdop_node(net, estimated, node) for node in estimated])
 
 

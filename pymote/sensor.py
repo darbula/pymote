@@ -43,10 +43,10 @@ class Sensor(object):
     pf_settings_key = ''
 
     def __init__(self, pf_params={}):
-        if not pf_params:
-            pf_params = getattr(settings, self.pf_settings_key, {})
-        if pf_params:
-            self.probabilityFunction = ProbabilityFunction(**pf_params)
+        pf_params_final = getattr(settings, self.pf_settings_key, {})
+        pf_params_final.update(pf_params)
+        if pf_params_final:
+            self.probabilityFunction = ProbabilityFunction(**pf_params_final)
         else:
             self.probabilityFunction = None
 
