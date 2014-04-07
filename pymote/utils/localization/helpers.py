@@ -176,8 +176,7 @@ def get_aoa_gdop_node(net, estimated, node):
         raise NotSupportedErr('Only angle of arrival based gdop is supported')
     sensor = node.compositeSensor.get_sensor('AoASensor')
     sigma = sensor.probabilityFunction.scale
-    neighbors = net.neighbors(node)
-    for n in neighbors:
+    for n in estimated:
         sensor = n.compositeSensor.get_sensor('AoASensor')
         if sensor.probabilityFunction.scale!=sigma:
             raise NotSupportedErr('All nodes\' AoA sensors should have '
@@ -190,7 +189,7 @@ def get_aoa_gdop_node(net, estimated, node):
     fi = []
     d = []
 
-    for n in neighbors:
+    for n in estimated:
         xi, yi = estimated[n][:2]
         if n != node:
             fi.append(arctan2(y - yi, x - xi))
