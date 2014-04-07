@@ -5,25 +5,38 @@ from pymote.utils.memory import MemoryStructure
 class Positions(MemoryStructure):
     """Class to represent subclusters positions data in node memory.
 
-    Position instances initializer has only one attribute ``subclusters``a
+    Position instances initializer has only one attribute ``subclusters`` a
     list of dictionaries in form {node: position_array,}. Node can be part of
     multiple subclusters.
 
     """
 
     def __init__(self, subclusters=None):
-        if subclusters is None:
+        self.subclusters = []
+        if subclusters is not None:
             # list of dictionaries of positioned subclusters
-            self.subclusters = []
-        else:
             assert(isinstance(subclusters, list))
-            self.subclusters = list(subclusters)  # dereference, copy list
+            # create subclusters by copying from given list and its dicts
+            ini_subclusters = list(subclusters)
+            self.subclusters = []
+            for subcluster in ini_subclusters:
+                new_subcluster = {}
+                for n, p in subcluster.items():
+                    new_subcluster.update({n: copy(p)})
+                self.subclusters.append(new_subcluster)
         self.old_style_positions = {}
         self.old_style_subclusters = []
 
     @classmethod
     def create(cls, obj):
-        """ Create Positions instance from obj which can be dict or list. """
+        """ Create Positions instance from obj which can be dict or list.
+
+        If it's dict this method wraps it in list. Returns Position object
+        dereferenced from the initial list or dict.
+
+        For example ``obj`` can be ``net.pos`` dict.
+
+        """
         if not isinstance(obj, cls):
             if not isinstance(obj, list):
                 assert isinstance(obj, dict)
@@ -40,7 +53,7 @@ class Positions(MemoryStructure):
         return cl
 
     def set_pos_copy(self, positions):
-        """ Copy positions data """
+        """ Empty all subclusters and copy in data from ``positions``. """
         assert isinstance(positions, Positions)
         self.subclusters = []
         for subcluster in positions.subclusters:
