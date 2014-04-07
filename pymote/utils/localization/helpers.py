@@ -1,7 +1,7 @@
 from pymote.logger import logger
 from numpy import sum as nsum
 from numpy import asarray, sqrt, dot, concatenate, diag, mean, zeros, min, \
-max, arctan2, sin, cos, square
+max, arctan2, sin, cos, square, tile
 from pymote.utils.localization.aoastitcher import AoAStitcher
 from numpy.linalg import inv, pinv
 from copy import deepcopy
@@ -21,13 +21,16 @@ def align_clusters(dst, src, scale):
     stitcher.align(dst, src)
 
 
-def get_rms(truePos, estimated, align=False, scale=False):
+def get_rms(truePos, estimated, align=False, scale=False, norm=False):
     """
     Returns root mean square error of estimated positions.
 
     Set align if estimated positions need to be transformed (rotated and
     translated) before calculating rms error of localization. Set scale=True
     if they needs to be scaled also.
+
+    If norm is True then rms is divided with norm of the true formation
+    translated to centroid.
 
     """
     truePos = Positions.create(truePos)
@@ -47,6 +50,8 @@ def get_rms(truePos, estimated, align=False, scale=False):
             node_count += 1
 
     rms = sqrt(suma / node_count)
+    if norm:
+        rms = rms/get_pos_norm(truePos)
     return rms
 
 
@@ -142,7 +147,23 @@ def get_crb_norm(*args, **kwargs):
     with gdop.
     """
     net = args[0]
-    return get_crb(*args, **kwargs)/sqrt(nsum(square(net.pos.values())[:, :2]))
+    norm = get_pos_norm(net.pos)
+    return get_crb(*args, **kwargs)/norm
+
+
+def get_pos_norm(pos):
+    """ Translate positions so that centroid is in the origin and return mean
+    norm of the translated positions. """
+    pos = Positions.create(pos)
+    assert(len(pos) == 1)
+    n = len(pos[0])
+    p = zeros((n, 2))
+    for i, node in enumerate(pos[0]):
+        p[i, :] = pos[0][node]
+    centroid = p.sum(axis=0)/n
+    p -= tile(centroid, (n, 1))
+    p_norm = nsum(sqrt(nsum(square(p), axis=1)))/n
+    return p_norm
 
 
 def get_aoa_gdop_node(net, estimated, node):
@@ -159,10 +180,12 @@ def get_aoa_gdop_node(net, estimated, node):
     for n in neighbors:
         sensor = n.compositeSensor.get_sensor('AoASensor')
         if sensor.probabilityFunction.scale!=sigma:
-            raise NotSupportedErr('All nodes AoA sensors should have '
+            raise NotSupportedErr('All nodes\' AoA sensors should have '
                                   'same scale')
     # Note from Torrieri, Statistical Theory of Passive Location Systems
     # if measurement sigmas are all equal gdop doesn't depend on sigma.
+    sigma = 1
+
     x, y = estimated[node][:2]
     fi = []
     d = []
@@ -187,11 +210,15 @@ def get_aoa_gdop_node(net, estimated, node):
     return sqrt((sigma1 ** 2 + sigma2 ** 2)) / sigmad  # (139)
 
 
-def get_aoa_gdop(net, estimated):
+def get_aoa_gdops(net, estimated):
     estimated = Positions.create(estimated)
     assert len(estimated.subclusters)==1
     estimated = estimated.subclusters[0]
-    return sum([get_aoa_gdop_node(net, estimated, node) for node in estimated])
+    return [get_aoa_gdop_node(net, estimated, node) for node in estimated]
+
+
+def get_aoa_gdop(net, estimated):
+    return sum(get_aoa_gdops(net, estimated))
 
 
 def show_subclusters(net, subclusters):
