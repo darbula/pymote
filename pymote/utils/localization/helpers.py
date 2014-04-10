@@ -51,6 +51,9 @@ def get_rms(truePos, estimated, align=False, scale=False, norm=False):
 
     rms = sqrt(suma / node_count)
     if norm:
+        sc = truePos.subclusters[0]
+        truePos.subclusters[0] = {n: p for n, p in sc.items()
+                                  if n in estimated.subclusters[0]}
         rms = rms/get_pos_norm(truePos)
     return rms
 
@@ -166,11 +169,11 @@ def get_pos_norm(pos):
     return p_norm
 
 
-def get_aoa_gdop_node(net, estimated, node):
+def get_aoa_gdop_node(estimated, node):
     """
     Calculate geometric dilution of precision for node in estimated formation.
     Node is in the formation and all other nodes should be neighbors of
-    node.
+    node. Node should have Neighbors sensorReadings in it memory.
     """
     if 'AoASensor' not in [sensor.name() for sensor in node.sensors]:
         raise NotSupportedErr('Only angle of arrival based gdop is supported')
@@ -191,7 +194,7 @@ def get_aoa_gdop_node(net, estimated, node):
 
     for n in estimated:
         xi, yi = estimated[n][:2]
-        if n != node:
+        if n != node and n in node.memory['sensorReadings']['Neighbors']:
             fi.append(arctan2(y - yi, x - xi))
             d.append(sqrt((x - xi) ** 2 + (y - yi) ** 2))
 
@@ -209,15 +212,15 @@ def get_aoa_gdop_node(net, estimated, node):
     return sqrt((sigma1 ** 2 + sigma2 ** 2)) / sigmad  # (139)
 
 
-def get_aoa_gdops(net, estimated):
+def get_aoa_gdops(estimated):
     estimated = Positions.create(estimated)
     assert len(estimated.subclusters)==1
     estimated = estimated.subclusters[0]
-    return [get_aoa_gdop_node(net, estimated, node) for node in estimated]
+    return [get_aoa_gdop_node(estimated, node) for node in estimated]
 
 
-def get_aoa_gdop(net, estimated):
-    return sum(get_aoa_gdops(net, estimated))
+def get_aoa_gdop(estimated):
+    return sum(get_aoa_gdops(estimated))
 
 
 def show_subclusters(net, subclusters):
