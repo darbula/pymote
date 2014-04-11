@@ -59,6 +59,10 @@ class Environment2D(Environment):
     def is_space(self, xy):
         """ Returns true if selected space (x,y) is space. If point xy
         is exactly on the edge or crossing check surrounding pixels. """
+        x, y = xy
+        h, w = self.im.shape
+        if x<0 or x>w or y<0 or y>h:
+            return False
         check = True
         points = [xy]
         if (xy[0] % 1 == 0):

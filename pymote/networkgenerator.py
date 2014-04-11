@@ -3,8 +3,10 @@ from numpy.core.numeric import Inf
 from pymote.network import Network
 from pymote.logger import logger
 from pymote.conf import settings
-from numpy import sign, sqrt
+from numpy import sign, sqrt, array, all
 from pymote.node import Node
+from pymote.utils.sobol_seq import i4_sobol_generate
+from numpy.random import rand
 
 
 class NetworkGenerator(object):
@@ -121,12 +123,11 @@ class NetworkGenerator(object):
             return round((sign(diff)*(round(diff)*2)**2)*cr/100)
         return 0
 
-    def generate_random_network(self):
+    def generate_random_network(self, net=None):
         """Basic method: generates network with randomly positioned nodes."""
         #TODO: try some more advanced algorithm for situation when
         # both connected network and too small degree are needed
         # that is agnostic to actual dimensions of the environment
-        net = None
         steps = [0]
         while True:
             net = self._create_modify_network(net, steps[-1])
@@ -162,6 +163,36 @@ class NetworkGenerator(object):
         for node in net:
             node.commRange = min_distance+1
         return net
+
+    def generate_homogeneous_network(self, randomness=0.1):
+        """
+        Generates network where nodes are located approximately homogeneous.
+
+        Parameter randomness controls random perturbation of the nodes, it is
+        given as a part of the environment size.
+
+        """
+        net = self._create_modify_network()
+        n = len(net)
+        h, w = net.environment.im.shape
+        assert net.environment.dim==2  # works only for 2d environments
+        assert h==w  # works only for square environment
+        assert all(net.environment.im==255)  # works only for environments without obstacles
+        size = w
+
+        positions = i4_sobol_generate(2, n, 1)
+        positions = positions.T * size
+        for i in range(n):
+            pos = array([-1, -1])  # some non space point
+            while(not net.environment.is_space(pos)):
+                pos = positions[i, :] + (rand(2) - 0.5)*(size*randomness)
+            net.pos[net.nodes()[i]] = pos
+        net.recalculate_edges()
+        #TODO: this is not intuitive but generate_random network with net
+        # given as argument will check if conditions are satisfied and act
+        # accordingly, to change only commRange set limits to number of nodes
+        self.n_count = self.n_max = self.n_min = n
+        return self.generate_random_network(net)
 
 
 class NetworkGeneratorException(Exception):

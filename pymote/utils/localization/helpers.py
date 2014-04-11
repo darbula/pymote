@@ -184,6 +184,8 @@ def get_aoa_gdop_node(estimated, node):
         if sensor.probabilityFunction.scale!=sigma:
             raise NotSupportedErr('All nodes\' AoA sensors should have '
                                   'same scale')
+    if len(estimated)<=2:
+        return 0.
     # Note from Torrieri, Statistical Theory of Passive Location Systems
     # if measurement sigmas are all equal gdop doesn't depend on sigma.
     sigma = 1
