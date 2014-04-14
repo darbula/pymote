@@ -58,6 +58,50 @@ def get_rms(truePos, estimated, align=False, scale=False, norm=False):
     return rms
 
 
+def construct_G(pos, edges, u, sensor):
+    """
+    Construct Jacobian of vector mu(pos) that defines expectation of
+    measurement given  positions.
+
+    u - number of unknowns i.e. 3 - (x, y, theta)
+    edges - list of edges as tuples, if there is (i, j) then there should not
+            be (j, i)
+    sensor - 'DistSensor' or 'AoASensor'
+
+    For AoA and measurement between nodes i and j:
+    mu(pos) = arctan((pos_y_j - pos_y_i)/(pos_x_j - pos_x_i) - alpha_i)
+
+    """
+    nodes = pos.keys()
+    neighbors = {n: [] for n in nodes}
+    for n1, n2 in edges:
+        neighbors[n1].append(n2)
+        neighbors[n2].append(n1)
+    # number of measurements x number of unknowns
+    G = zeros((2 * len(edges), u * len(nodes)))
+    m = 0
+    for r, node in enumerate(nodes):
+        (x_r, y_r) = pos[node]
+        for neighbor in neighbors[node]:
+            t = nodes.index(neighbor)
+            (x_t, y_t) = pos[neighbor]
+            d = sqrt((x_r - x_t) ** 2 + (y_r - y_t) ** 2)
+            if sensor == 'DistSensor':
+                G[m, r*u] = (x_r-x_t)/d
+                G[m, r*u+1] = (y_r-y_t)/d
+                G[m, t*u] = (x_t-x_r)/d
+                G[m, t*u+1] = (y_t-y_r)/d
+            elif sensor == 'AoASensor':
+                G[m, r*u] = (y_t-y_r)/d**2
+                G[m, r*u+1] = (x_r-x_t)/d**2
+                G[m, t*u] = (y_r-y_t)/d**2
+                G[m, t*u+1] = (x_t-x_r)/d**2
+                if u == 3:
+                    G[m, t * u + 2] = -1.
+            m += 1  # next measurement
+    return G
+
+
 #TODO: only one per row -1 element in G?
 def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
     """
@@ -97,28 +141,7 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
     else:  # DistSensor or AoASensor with compass on
         u = 2  # x, y
 
-    # number of measurements x number of unknowns
-    G = zeros((2 * len(net.edges()), u * len(nodes)))
-    m = 0
-    for r, node in enumerate(nodes):
-        (x_r, y_r) = net.pos[node]
-        for neighbor in net.neighbors(node):
-            t = nodes.index(neighbor)
-            (x_t, y_t) = net.pos[neighbor]
-            d = sqrt((x_r - x_t) ** 2 + (y_r - y_t) ** 2)
-            if sensor.name() == 'DistSensor':
-                G[m, r*u] = (x_r-x_t)/d
-                G[m, r*u+1] = (y_r-y_t)/d
-                G[m, t*u] = (x_t-x_r)/d
-                G[m, t*u+1] = (y_t-y_r)/d
-            elif sensor.name() == 'AoASensor':
-                G[m, r*u] = (y_t-y_r)/d**2
-                G[m, r*u+1] = (x_r-x_t)/d**2
-                G[m, t*u] = (y_r-y_t)/d**2
-                G[m, t*u+1] = (x_t-x_r)/d**2
-                if u == 3:
-                    G[m, t * u + 2] = -1.
-            m += 1  # next measurement
+    G = construct_G(net.pos, net.edges(), u, sensor.name())
 
     for s in nodes[0].compositeSensor.sensors:
         if s.name() == sensor.name():
@@ -141,6 +164,7 @@ def get_crb(net, sensor, compass='off', loc_type='anchor-free', anchors=[]):
     # extract only position from cov
     di = concatenate((di[::3], di[1::3]))
 
+    #return is lower bound on rms -> sqrt(1/n*sum_i^n((x_i'-x_i)^2+(y_i'-y_i)^2))
     return sqrt(2*mean(di))
 
 
@@ -167,6 +191,29 @@ def get_pos_norm(pos):
     p -= tile(centroid, (n, 1))
     p_norm = nsum(sqrt(nsum(square(p), axis=1)))/n
     return p_norm
+
+
+def get_aoa_gdop_rel(estimated):
+    """
+    Calculation of relative GDOP is based on CRB.
+
+    GDOP_rel = sigma_CRB/sigma_d = sqrt(tr((G^TG)^-1)/(sum(Di^2))/M)
+    As regular GDOP, it is not dependent on scale nor on sigma_AoA.
+    """
+    estimated = Positions.create(estimated)
+    assert len(estimated.subclusters)==1
+    pos = estimated.subclusters[0]
+    edges = pos.keys()[0].network.edges()
+    G = construct_G(pos, edges, 3, 'AoASensor')
+    J = (dot(G.T, G))
+    cov = pinv(J)
+    di = diag(cov)
+    di = concatenate((di[::3], di[1::3]))
+    var_p = sum(di)
+    distances = [sqrt(dot(pos[n1] - pos[n2], pos[n1] - pos[n2]))
+                 for n1, n2 in edges]
+    var_d = sum(square(distances))/len(edges)
+    return sqrt(var_p/var_d)
 
 
 def get_aoa_gdop_node(estimated, node):
