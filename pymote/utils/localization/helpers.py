@@ -81,10 +81,10 @@ def construct_G(pos, edges, u, sensor):
     G = zeros((2 * len(edges), u * len(nodes)))
     m = 0
     for r, node in enumerate(nodes):
-        (x_r, y_r) = pos[node]
+        (x_r, y_r) = pos[node][:2]
         for neighbor in neighbors[node]:
             t = nodes.index(neighbor)
-            (x_t, y_t) = pos[neighbor]
+            (x_t, y_t) = pos[neighbor][:2]
             d = sqrt((x_r - x_t) ** 2 + (y_r - y_t) ** 2)
             if sensor == 'DistSensor':
                 G[m, r*u] = (x_r-x_t)/d
@@ -205,12 +205,13 @@ def get_aoa_gdop_rel(estimated):
     pos = estimated.subclusters[0]
     edges = pos.keys()[0].network.edges()
     G = construct_G(pos, edges, 3, 'AoASensor')
-    J = (dot(G.T, G))
+    J = dot(G.T, G)
     cov = pinv(J)
     di = diag(cov)
     di = concatenate((di[::3], di[1::3]))
     var_p = sum(di)
-    distances = [sqrt(dot(pos[n1] - pos[n2], pos[n1] - pos[n2]))
+    distances = [sqrt(dot(pos[n1][:2] - pos[n2][:2],
+                          pos[n1][:2] - pos[n2][:2]))
                  for n1, n2 in edges]
     var_d = sum(square(distances))/len(edges)
     return sqrt(var_p/var_d)
