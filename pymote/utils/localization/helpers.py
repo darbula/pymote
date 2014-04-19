@@ -203,13 +203,15 @@ def get_aoa_gdop_rel(estimated):
     estimated = Positions.create(estimated)
     assert len(estimated.subclusters)==1
     pos = estimated.subclusters[0]
-    edges = pos.keys()[0].network.edges()
+    nodes = pos.keys()
+    edges = [e for e in pos.keys()[0].network.edges()
+             if e[0] in nodes and e[1] in nodes]
     G = construct_G(pos, edges, 3, 'AoASensor')
     J = dot(G.T, G)
     cov = pinv(J)
     di = diag(cov)
     di = concatenate((di[::3], di[1::3]))
-    var_p = sum(di)
+    var_p = sum(di)/len(nodes)
     distances = [sqrt(dot(pos[n1][:2] - pos[n2][:2],
                           pos[n1][:2] - pos[n2][:2]))
                  for n1, n2 in edges]
