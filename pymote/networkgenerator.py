@@ -3,9 +3,8 @@ from numpy.core.numeric import Inf
 from pymote.network import Network
 from pymote.logger import logger
 from pymote.conf import settings
-from numpy import sign, sqrt, array, all
+from numpy import sign, sqrt, array
 from pymote.node import Node
-from pymote.utils.sobol_seq import i4_sobol_generate
 from numpy.random import rand
 from itertools import product
 
