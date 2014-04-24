@@ -7,6 +7,7 @@ from numpy import sign, sqrt, array, all
 from pymote.node import Node
 from pymote.utils.sobol_seq import i4_sobol_generate
 from numpy.random import rand
+from itertools import product
 
 
 class NetworkGenerator(object):
@@ -164,7 +165,7 @@ class NetworkGenerator(object):
             node.commRange = min_distance+1
         return net
 
-    def generate_homogeneous_network(self, randomness=0.1):
+    def generate_homogeneous_network(self, randomness=0.07):
         """
         Generates network where nodes are located approximately homogeneous.
 
@@ -176,16 +177,13 @@ class NetworkGenerator(object):
         n = len(net)
         h, w = net.environment.im.shape
         assert net.environment.dim==2  # works only for 2d environments
-        assert h==w  # works only for square environment
-        assert all(net.environment.im==255)  # works only for environments without obstacles
         size = w
 
-        positions = i4_sobol_generate(2, n, 1)
-        positions = positions.T * size
+        positions = generate_mesh_positions(net.environment, n)
         for i in range(n):
             pos = array([-1, -1])  # some non space point
             while(not net.environment.is_space(pos)):
-                pos = positions[i, :] + (rand(2) - 0.5)*(size*randomness)
+                pos = positions[i, :n] + (rand(2) - 0.5)*(size*randomness)
             net.pos[net.nodes()[i]] = pos
         net.recalculate_edges()
         #TODO: this is not intuitive but generate_random network with net
@@ -193,6 +191,36 @@ class NetworkGenerator(object):
         # accordingly, to change only commRange set limits to number of nodes
         self.n_count = self.n_max = self.n_min = n
         return self.generate_random_network(net)
+
+
+def generate_mesh_positions(env, n):
+    """
+    Strategy: put rectangle mesh with intersections distance d above
+    environment image and try to minimize difference between number of
+    intersections in environment's free space and n by varying d.
+    """
+    h, w = env.im.shape
+    # initial d
+    d = sqrt(h*w/n)
+
+    def get_mesh_pos(d, dx, dy, w, h):
+        return map(lambda (xi, yi): (xi*d+dx, yi*d+dy),
+                   product(range(int(round(w/d))), range(int(round(h/d)))))
+    n_mesh = 0
+    direction = []
+    while True:
+        n_mesh = len([1 for pos in get_mesh_pos(d, 0.5*d, 0.5*d, w, h)
+                      if env.is_space(pos)])
+        direction.append(sign(n-n_mesh))
+        if n_mesh==n or \
+            (len(direction)>=10 and abs(sum(direction[-3:]))<3 and n_mesh>n):
+            break
+        d *= sqrt(n_mesh/float(n))
+    return array(tuple(pos for pos in get_mesh_pos(d, 0.5*d, 0.5*d, w, h)
+                       if env.is_space(pos)))
+    #TODO: n_mesh could be brought closer to n with modification of dx and dy
+    #dx = 0.5*d
+    #dy = 0.5*d
 
 
 class NetworkGeneratorException(Exception):
