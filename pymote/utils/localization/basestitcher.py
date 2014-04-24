@@ -88,7 +88,6 @@ class BaseStitcher(object):
             # stitch srcSub to dstSub using given method
             R, s, t = self.stitch_subclusters(dst[dstSubIndex],
                                               src[srcSubIndex])
-
             if None in (R, s, t):  # skip unreliable stitches
                 stitched[(dstSubIndex, srcSubIndex)] = (R, s, t)
                 stitched[(srcSubIndex, dstSubIndex)] = (R, s, t)
@@ -104,6 +103,7 @@ class BaseStitcher(object):
                     except IndexError:
                         ori = nan
                     dst[dstSubIndex][node] = self.transform(R, s, t, pos, ori)
+                    assert isnan(dst[dstSubIndex][node][:2])==False
 
             stitched[(dstSubIndex, srcSubIndex)] = (R, s, t)
 
@@ -160,4 +160,5 @@ class BaseStitcher(object):
         if det(M) < 0:
             # TODO: Umeyama
             assert det(R) < 0  # Umeyama1991
+        assert isnan(R).any()==False
         return R
