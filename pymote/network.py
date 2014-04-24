@@ -267,7 +267,8 @@ class Network(Graph):
         """ Returns random position, position is free space in environment if
          it can find free space in n iterations """
         while (n > 0):
-            pos = rand(self._environment.dim) * self._environment.im.shape
+            pos = rand(self._environment.dim) * \
+                tuple(reversed(self._environment.im.shape))
             if self._environment.is_space(pos):
                 break
             n -= 1
