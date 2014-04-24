@@ -103,7 +103,7 @@ class BaseStitcher(object):
                     except IndexError:
                         ori = nan
                     dst[dstSubIndex][node] = self.transform(R, s, t, pos, ori)
-                    assert isnan(dst[dstSubIndex][node][:2])==False
+                    assert isnan(dst[dstSubIndex][node][:2]).any()==False
 
             stitched[(dstSubIndex, srcSubIndex)] = (R, s, t)
 
