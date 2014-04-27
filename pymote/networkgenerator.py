@@ -120,7 +120,8 @@ class NetworkGenerator(object):
         elif self.degree:
             logger.debug("Degree not satisfied %f" % net.avg_degree())
             diff = self.degree-net.avg_degree()
-            return round((sign(diff)*(round(diff)*2)**2)*cr/100)
+            diff = sign(diff)*min(abs(diff), 7)
+            return round((sign(diff)*(round(diff))**2)*cr/100)
         return 0
 
     def generate_random_network(self, net=None):
@@ -164,7 +165,7 @@ class NetworkGenerator(object):
             node.commRange = min_distance+1
         return net
 
-    def generate_homogeneous_network(self, randomness=0.07):
+    def generate_homogeneous_network(self, randomness=0.11):
         """
         Generates network where nodes are located approximately homogeneous.
 
