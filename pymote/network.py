@@ -202,8 +202,8 @@ class Network(Graph):
         fig = self.get_fig(*args, **kwargs)
         fig.show()
 
-    def savefig(self, fname='network.png', *args, **kwargs):
-        self.get_fig(*args, **kwargs).savefig(fname)
+    def savefig(self, fname='network.png', figkwargs={}, *args, **kwargs):
+        self.get_fig(*args, **kwargs).savefig(fname, **figkwargs)
 
     def get_fig(self, positions=None, edgelist=None, nodeColor='r',
                 show_labels=True):

@@ -139,6 +139,9 @@ class SimulationGui(QMainWindow):
                              if currentAlgorithm else '') + step_text)
 
         self.refresh_visibility()
+        # To save multiple figs of the simulation uncomment next two lines:
+        #self.fig.savefig('network-alg-%d-step-%d.png' %
+        #                 (self.net.algorithmState['index'], self.net.algorithmState['step']))
 
     def draw_nodes(self, net=None, node_colors={}, node_radius={}):
         if not net:
