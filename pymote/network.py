@@ -13,6 +13,7 @@ from numpy.lib.function_base import average
 from algorithm import Algorithm
 from pymote.sensor import CompositeSensor
 from pymote.utils.helpers import pymote_equal_objects
+from copy import deepcopy
 
 
 class Network(Graph):
@@ -51,6 +52,8 @@ class Network(Graph):
             else:
                 H.ori.update({node: self.ori[node]})
             H.labels.update({node: self.labels[node]})
+        H._environment = deepcopy(self._environment)
+        assert(isinstance(H, Network))
         return H
 
     def nodes(self, data=False):
@@ -221,7 +224,7 @@ class Network(Graph):
 
         # figsize in inches
         # default matplotlibrc is dpi=80 for plt and dpi=100 for savefig
-        fig = plt.figure(figsize=fig_size, dpi=dpi)
+        fig = plt.figure(figsize=fig_size, dpi=dpi, frameon=False)
         plt.imshow(self._environment.im, cmap='binary_r', vmin=0,
                    origin='lower')
         if positions:
