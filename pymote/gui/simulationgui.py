@@ -18,6 +18,7 @@ from pymote.algorithm import NodeAlgorithm
 from simulationui import Ui_SimulationWindow
 from dictionarytreemodel import DictionaryTreeModel
 from pymote.utils.localization.helpers import align_clusters, get_rms
+from pymote.utils.memory.positions import Positions
 from copy import deepcopy
 
 
@@ -119,7 +120,8 @@ class SimulationGui(QMainWindow):
         currentAlgorithm = self.net.get_current_algorithm()
         if clear:
             self.axes.clear()
-        self.axes.imshow(self.net.environment.im, vmin=0, cmap='binary_r')
+        self.axes.imshow(net.environment.im, vmin=0, cmap='binary_r',
+                         origin='lower')
 
         self.draw_tree(str(self.ui.treeKey.text()), net)
         self.draw_edges(net)
@@ -352,26 +354,27 @@ class SimulationGui(QMainWindow):
         if len(self.ui.nodeInspector.selectedIndexes()) == 1:
             qModelIndex = self.ui.nodeInspector.selectedIndexes()[0]
             treeItem = qModelIndex.internalPointer()
-            assert(isinstance(treeItem.itemDataValue, dict))
+            assert(isinstance(treeItem.itemDataValue, Positions))
 
             estimated = deepcopy(treeItem.itemDataValue)
+            estimatedsub = estimated.subclusters[0]
             # rotate, translate and optionally scale
             # w.r.t. original positions (pos)
-            align_clusters([self.net.pos], [estimated], False)
-            net = self.net.subgraph(estimated.keys(), pos=estimated)
+            align_clusters(Positions.create(self.net.pos), estimated, True)
+            net = self.net.subnetwork(estimatedsub.keys(), pos=estimatedsub)
 
             self.draw_network(net=net, drawMessages=False)
 
-            edge_pos = numpy.asarray([(self.net.pos[node], estimated[node][:2])
+            edge_pos = numpy.asarray([(self.net.pos[node], estimatedsub[node][:2])
                                        for node in net])
             error_collection = LineCollection(edge_pos, colors='r')
             self.axes.add_collection(error_collection)
 
-            rms = get_rms(self.net.pos, [estimated], scale=False)
+            rms = get_rms(self.net.pos, estimated, scale=False)
             self.update_log('rms = %.3f' % rms)
             self.update_log('localized = %.2f%% (%d/%d)' %
-                            (len(estimated) * 1. / len(self.net.pos) * 100,
-                            len(estimated), len(self.net.pos)))
+                            (len(estimatedsub) * 1. / len(self.net.pos) * 100,
+                            len(estimatedsub), len(self.net.pos)))
 
     def on_actionSaveNetwork_triggered(self, *args):
         default_filetype = 'gz'
