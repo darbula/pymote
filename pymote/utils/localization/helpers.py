@@ -186,7 +186,7 @@ def get_pos_norm(pos):
     n = len(pos[0])
     p = zeros((n, 2))
     for i, node in enumerate(pos[0]):
-        p[i, :] = pos[0][node]
+        p[i, :] = pos[0][node][:2]
     centroid = p.sum(axis=0)/n
     p -= tile(centroid, (n, 1))
     p_norm = nsum(sqrt(nsum(square(p), axis=1)))/n
