@@ -156,7 +156,7 @@ class Network(Graph):
         for n in self.nodes():
             if (n.id == id_):
                 return n
-        logger.error('Network has no node with id %d.' % id)
+        logger.error('Network has no node with id %d.' % id_)
         return None
 
     def avg_degree(self):
