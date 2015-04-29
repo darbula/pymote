@@ -1,7 +1,5 @@
 import os
 import sys
-import distribute_setup
-distribute_setup.use_setuptools()
 from setuptools import setup, find_packages
 
 # transfer profile_pymote for ipython into IPYTHONDIR
