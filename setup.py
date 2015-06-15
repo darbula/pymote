@@ -49,7 +49,7 @@ setup(
     install_requires=[
         'networkx',
         'numpy',
-        'scipy==0.12',
+        'scipy<=0.12',
         'pypng',
         'ipython',
         'matplotlib',
