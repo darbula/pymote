@@ -71,7 +71,7 @@ class TestNetworkGeneration(unittest.TestCase):
         """Test different random generation parameters"""
         for input, output in self.in_out:
             if isclass(output) and issubclass(output, Exception):
-                self.assertRaises(output, NetworkGenerator, input)
+                self.assertRaises(output, NetworkGenerator, **input)
                 continue
             net_gen = NetworkGenerator(**input)
             if output==None:
