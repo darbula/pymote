@@ -11,7 +11,7 @@ from itertools import product
 
 class NetworkGenerator(object):
 
-    def __init__(self, n_count=None, n_min=0, n_max=Inf, connected=True,
+    def __init__(self, n_count=None, n_min=None, n_max=None, connected=True,
                  degree=None, comm_range=None, method="random_network",
                  **kwargs):
         """
@@ -19,9 +19,9 @@ class NetworkGenerator(object):
             n_count (int):
                 number of nodes, if None settings.N_COUNT is used
             n_min (int):
-                minimum number of nodes
+                minimum number of nodes, if not set it is equal to n_count
             n_max (int):
-                maximum number of nodes
+                maximum number of nodes, if not set it is equal to n_count
             connected (bool):
                 if True network must be fully connected
             degree (int):
@@ -48,8 +48,10 @@ class NetworkGenerator(object):
         >>> net = net_gen.generate()
 
         """
-        self.n_count=n_count if n_count else settings.N_COUNT
-        if self.n_count<n_min or self.n_count>n_max:
+        self.n_count = n_count or settings.N_COUNT
+        self.n_min = self.n_count if n_min is None else n_min
+        self.n_max = self.n_count if n_max is None else n_max
+        if self.n_count<self.n_min or self.n_count>self.n_max:
             raise NetworkGeneratorException('Number of nodes must be between '
                                             'n_min and n_max.')
         if degree and degree>=n_max:
@@ -60,8 +62,6 @@ class NetworkGenerator(object):
         if degree and degree>16 and n_count!=Inf:
             logger.warning("Generation could be slow for large degree"
                            "parameter with bounded n_max.")
-        self.n_min = n_min
-        self.n_max = n_max
         self.connected = connected
         self.degree = degree
         self.comm_range = kwargs.pop('commRange', comm_range)
