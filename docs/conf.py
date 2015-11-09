@@ -11,7 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import sys
+import os
 
 if os.environ.get('READTHEDOCS', None) == 'True':
     sys.path.insert(0,'.')
@@ -30,12 +31,12 @@ if os.environ.get('READTHEDOCS', None) == 'True':
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 
-              'sphinx.ext.autosummary','sphinx.ext.todo','sphinx.ext.doctest', 
-              'sphinx.ext.intersphinx', 
-              'sphinx.ext.coverage', 
-              'sphinx.ext.pngmath', 
-              'sphinx.ext.ifconfig', 
+extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.autosummary','sphinx.ext.todo','sphinx.ext.doctest',
+              'sphinx.ext.intersphinx',
+              'sphinx.ext.coverage',
+              'sphinx.ext.pngmath',
+              'sphinx.ext.ifconfig',
               'sphinx.ext.viewcode']
 
 # generate autosummary pages
@@ -68,7 +69,14 @@ copyright = u'2011-2013, Damir Arbula'
 # built documents.
 #
 # The short X.Y version.
-from pymote import __version__
+try:
+    from pymote import __version__
+except ImportError:
+    # avoid pymote requirements on rtd server
+    sys.path.append(os.path.abspath(os.path.join('..', 'pymote')))
+    tmp = __import__('release', globals(), locals(), 'version', 0)
+    sys.path.pop()
+    __version__ = tmp.version
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__.replace('_','')
