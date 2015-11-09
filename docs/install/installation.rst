@@ -47,7 +47,7 @@ Windows
 *******
 Windows version can be installed in an isolated environment very easy:
 
-#. Install `WinPython <https://code.google.com/p/winpython/>`_. WinPython has included python and all required packages inside simple exe installer and they are all installed one relocatable [*]_ directory.
+#. Install `WinPython <https://winpython.github.io/>`_ 2.7. WinPython has included python and all required packages inside simple exe installer and they are all installed one relocatable [*]_ directory.
 
     .. [*] After directory reloacation change links in headers of ``Scripts/ipymote`` and ``Scripts/pymote-simgui`` and paths in ``Lib/site-packages/easy_install.pth`` and ``Lib/site-packages/Pymote.egg-link``.
 
