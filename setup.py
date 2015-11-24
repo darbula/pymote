@@ -48,7 +48,7 @@ setup(
     exclude_package_data={'': ['README.rst']},
     install_requires=[
         'networkx',
-        'numpy',
+        'numpy==1.7.0',
         'scipy<=0.12',
         'pypng',
         'ipython',

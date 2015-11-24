@@ -2,10 +2,15 @@ Distributing to PyPI
 ====================
 
 http://docs.python.org/2/distutils/index.html#distutils-index
+https://python-packaging-user-guide.readthedocs.org/en/latest/current/
 
 
 Windows
 -------
+
+Install required packages::
+
+    > pip install twine wheel
 
 Create ``C:\Users\<user>\.pypirc`` file::
 
@@ -27,5 +32,4 @@ Issue these commands::
 
     > setx HOME C:\Users\<user>
     > python setup.py sdist register upload
-    
-    
+    > twine upload dist/*
