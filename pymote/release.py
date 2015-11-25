@@ -2,7 +2,7 @@ name = 'Pymote'
 # http://semver.org/
 major = 0
 minor = 2
-patch = 1
+patch = 2
 
 # Declare current release as a development release.
 # Change to False before tagging a release; then change back.

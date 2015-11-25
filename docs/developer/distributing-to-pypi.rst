@@ -31,5 +31,5 @@ Create ``C:\Users\<user>\.pypirc`` file::
 Issue these commands::
 
     > setx HOME C:\Users\<user>
-    > python setup.py sdist register upload
+    > python setup.py sdist bdist_wheel
     > twine upload dist/*
