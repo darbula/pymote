@@ -48,11 +48,11 @@ setup(
     exclude_package_data={'': ['README.rst']},
     install_requires=[
         'networkx',
-        'numpy==1.7.0',
+        'numpy',
         'scipy<=0.12',
         'pypng',
         'ipython',
-        'matplotlib',
+        'matplotlib==1.2',
         'PySide',
     ],
     long_description=open(os.path.join(os.path.dirname(__file__),
