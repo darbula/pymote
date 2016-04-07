@@ -2,6 +2,7 @@ from pymote.logger import logger
 from pymote.sensor import CompositeSensor
 from pymote.conf import settings
 import logging
+import collections
 
 
 class Node(object):
@@ -42,7 +43,7 @@ class Node(object):
 
         """
         message.source = self
-        message.destination = isinstance(message.destination, list) and\
+        message.destination = isinstance(message.destination, collections.Iterable) and \
                               message.destination or [message.destination]
         for destination in message.destination:
             logger.debug('Node %d sent message %s.' %
