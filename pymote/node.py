@@ -43,8 +43,8 @@ class Node(object):
 
         """
         message.source = self
-        message.destination = isinstance(message.destination, collections.Iterable) and \
-                              message.destination or [message.destination]
+        if not isinstance(message.destination, collections.Iterable):
+            message.destination = [message.destination]
         for destination in message.destination:
             logger.debug('Node %d sent message %s.' %
                          (self.id, message.__repr__()))
