@@ -209,17 +209,13 @@ class Network(Graph):
         self.get_fig(*args, **kwargs).savefig(fname, **figkwargs)
 
     def get_fig(self, positions=None, edgelist=None, nodeColor='r',
-                show_labels=True):
+                show_labels=True, labels=None, dpi=100, node_size=30):
         try:
             from matplotlib import pyplot as plt
         except ImportError:
             raise ImportError("Matplotlib required for show()")
 
         # TODO: environment when positions defined
-        node_size = 30  # in points^2
-        # calculate label delta based on network size
-        label_delta = self.get_size()/max([30, len(self)])
-        dpi = 100
         fig_size = tuple(array(self._environment.im.shape) / dpi)
 
         # figsize in inches
@@ -233,19 +229,22 @@ class Network(Graph):
                 positions[k] = v[:2]
             pos = positions
             net = self.subnetwork(pos.keys())
-            label_delta = (max(pos.values(), axis=0) -
-                           min(pos.values(), axis=0))/max([60, len(positions)])
         else:
             pos = self.pos
             net = self
+        labels = labels or net.labels
         nx.draw_networkx_edges(net, pos, alpha=0.6, edgelist=edgelist)
         nx.draw_networkx_nodes(net, pos, node_size=node_size,
                                node_color=nodeColor, cmap='YlOrRd')
         if (show_labels):
             label_pos = {}
+            from math import sqrt
+            label_delta = sqrt(node_size*0.6)*dpi/100
             for n in net.nodes():
                 label_pos[n] = pos[n].copy() + label_delta
-            nx.draw_networkx_labels(net, label_pos, labels=net.labels)
+            nx.draw_networkx_labels(net, label_pos, labels=labels,
+                                    horizontalalignment='left',
+                                    verticalalignment='bottom')
         # plt.axis('off')
         return fig
 
