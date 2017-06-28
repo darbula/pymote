@@ -1,3 +1,5 @@
+import unittest
+
 from pymote import NetworkGenerator, Simulation, write_pickle, Network
 from pymote.algorithms.santoro2007.yoyo import YoYo
 
