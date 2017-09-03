@@ -9,8 +9,8 @@ before_install:
  - sudo apt-get install -qq python-numpy python-scipy
  - sudo apt-get install python-pyside python-matplotlib
 
-install: 
- - pip install -q ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls --use-mirrors
+install:
+ - pip install -q ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls
 
 script:
  - nosetests
