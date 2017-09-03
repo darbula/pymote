@@ -6,7 +6,7 @@ virtualenv:
 
 before_install:
  - sudo apt-get update
- - sudo apt-get install -qq python-numpy python-scipy
+ - sudo apt-get install -qq python-numpy python-scipy=0.12
  - sudo apt-get install python-pyside python-matplotlib
 
 install:
