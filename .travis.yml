@@ -6,11 +6,11 @@ virtualenv:
 
 before_install:
  - sudo apt-get update
- - sudo apt-get install -qq python-numpy python-scipy=0.12
+ - sudo apt-get install libatlas-base-dev gfortran python-pip
  - sudo apt-get install python-pyside python-matplotlib
 
 install:
- - pip install -q ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls
+ - pip install -q ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls numpy scipy
 
 script:
  - nosetests
