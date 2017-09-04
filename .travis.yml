@@ -10,7 +10,7 @@ before_install:
  - sudo apt-get install python-pyside python-matplotlib
 
 install:
- - pip install -q ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls numpy scipy
+ - pip install ipython==0.13.1 networkx==1.7 pypng==0.0.14 python-coveralls numpy scipy
 
 script:
  - nosetests
@@ -18,3 +18,7 @@ script:
 
 after_success:
  - coveralls
+
+# Force precise (Ubuntu 12.04) because of systemwide packages
+# like PySide http://ebanshi.cc/questions/1415911/how-can-i-install-pyside-on-travis
+dist: precise
