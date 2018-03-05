@@ -49,10 +49,10 @@ setup(
     install_requires=[
         'networkx',
         'numpy',
-        'scipy<=0.12',
+        'scipy',
         'pypng',
         'ipython',
-        'matplotlib==1.2',
+        'matplotlib',
         'PySide',
     ],
     long_description=open(os.path.join(os.path.dirname(__file__),

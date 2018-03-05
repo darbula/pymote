@@ -8,7 +8,7 @@ from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg \
                                             as FigureCanvas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg \
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT \
                                             as NavigationToolbar
 from networkx.drawing.nx_pylab import draw_networkx_edges
 from datetime import datetime

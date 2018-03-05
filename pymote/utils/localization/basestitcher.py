@@ -46,7 +46,7 @@ class BaseStitcher(object):
 
         # First remove incomplete stitches from stitched
         for k, v in stitched.items():
-            if None in v:
+            if not all([vv is not None for vv in v]):
                 stitched.pop(k)
         # Then using stitched dictionary keys find out which subclusters are
         # not stitched and append them to dst.subclusters
@@ -88,7 +88,7 @@ class BaseStitcher(object):
             # stitch srcSub to dstSub using given method
             R, s, t = self.stitch_subclusters(dst[dstSubIndex],
                                               src[srcSubIndex])
-            if None in (R, s, t):  # skip unreliable stitches
+            if R is None or s is None or t is None:  # skip unreliable stitches
                 stitched[(dstSubIndex, srcSubIndex)] = (R, s, t)
                 stitched[(srcSubIndex, dstSubIndex)] = (R, s, t)
                 continue
@@ -124,7 +124,7 @@ class BaseStitcher(object):
 
     def transform(self, R, s, t, pos, ori=nan):
         """ Transform node position. """
-        assert None not in (R, s, t)
+        assert R is not None and s is not None and t is not None
         assert not imag(R).any()
         R = real(R)
         if not isnan(ori):
