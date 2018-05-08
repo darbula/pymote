@@ -52,6 +52,7 @@ class Network(Graph):
             else:
                 H.ori.update({node: self.ori[node]})
             H.labels.update({node: self.labels[node]})
+            node.network = H
         H._environment = deepcopy(self._environment)
         assert(isinstance(H, Network))
         return H
@@ -334,7 +335,7 @@ class Network(Graph):
     def get_size(self):
         """ Returns network width and height based on nodes positions. """
         return max(self.pos.values(), axis=0) - min(self.pos.values(), axis=0)
-    
+
     def get_dic(self):
         """ Return all network data in form of dictionary. """
         algorithms = {'%d %s' % (ind, alg.name): 'active'
