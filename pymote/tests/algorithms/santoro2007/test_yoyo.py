@@ -4,9 +4,9 @@ from pymote import NetworkGenerator, Simulation, write_pickle, Network
 from pymote.algorithms.santoro2007.yoyo import YoYo
 
 
-class TestSantoro2007(unittest.TestCase):
+class TestYoYo(unittest.TestCase):
 
-    def test_santoro2007(self):
+    def test_yoyo(self):
         N_ITERS = 5
         N_NETWORKS = 15
         N_NODES_STEP = 5
