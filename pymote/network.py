@@ -334,7 +334,7 @@ class Network(Graph):
     def get_size(self):
         """ Returns network width and height based on nodes positions. """
         return max(self.pos.values(), axis=0) - min(self.pos.values(), axis=0)
-    
+
     def get_dic(self):
         """ Return all network data in form of dictionary. """
         algorithms = {'%d %s' % (ind, alg.name): 'active'
@@ -366,6 +366,8 @@ class Network(Graph):
                 continue
             if isinstance(node.memory[treeKey], list):
                 nodelist = node.memory[treeKey]
+            elif isinstance(node.memory[treeKey], Node):
+                nodelist = [node.memory[treeKey], ]
             elif (isinstance(node.memory[treeKey], dict) and
                   'children' in node.memory[treeKey]):
                 nodelist = node.memory[treeKey]['children']
