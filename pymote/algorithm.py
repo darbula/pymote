@@ -159,7 +159,6 @@ class NodeAlgorithm(Algorithm):
         return ret
 
     def statuserr(self, node, message):
-        logger.error('Can\'t handle status %s.' % self.__class__.STATUS.get(node.status))
         logger.error('Can\'t handle status %s.' % node.status)
 
 
